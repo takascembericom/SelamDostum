@@ -233,7 +233,7 @@ export default function Home() {
                 >
                   <Link href="/items">
                     <Search className="h-5 w-5 mr-2" />
-                    Eşyaları Keşfet
+                    İlanları Keşfet
                   </Link>
                 </Button>
               </>
@@ -245,7 +245,7 @@ export default function Home() {
               >
                 <Link href="/add-item">
                   <Plus className="h-5 w-5 mr-2" />
-                  İlk Eşyanı Ekle
+                  İlk İlanını Ekle
                 </Link>
               </Button>
             )}
