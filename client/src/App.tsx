@@ -57,6 +57,7 @@ function App() {
             </main>
             <Footer />
           </div>
+          <LiveChat />
           <Toaster />
         </TooltipProvider>
       </AuthProvider>
