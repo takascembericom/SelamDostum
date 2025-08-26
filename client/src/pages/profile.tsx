@@ -19,7 +19,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function Profile() {
   const { user, profile, loading } = useAuth();
-  const [selectedTab, setSelectedTab] = useState<'active-items' | 'expired-items' | 'offers'>('active-items');
+  const [selectedTab, setSelectedTab] = useState<'pending-items' | 'active-items' | 'rejected-items' | 'expired-items' | 'offers'>('pending-items');
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -72,7 +72,9 @@ export default function Profile() {
     return <Redirect to="/" />;
   }
 
+  const pendingItems = userItems.filter(item => item.status === 'pending');
   const activeItems = userItems.filter(item => item.status === 'aktif');
+  const rejectedItems = userItems.filter(item => item.status === 'reddedildi');
   const expiredItems = userItems.filter(item => {
     // Check if item is older than 30 days
     const thirtyDaysAgo = new Date();
@@ -370,7 +372,18 @@ export default function Profile() {
         {/* Tabs */}
         <div className="mb-6">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
+            <nav className="-mb-px flex flex-wrap space-x-8">
+              <button
+                onClick={() => setSelectedTab('pending-items')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  selectedTab === 'pending-items'
+                    ? 'border-orange-500 text-orange-500'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+                data-testid="tab-pending-items"
+              >
+                Bekleyen İlanlarım ({pendingItems.length})
+              </button>
               <button
                 onClick={() => setSelectedTab('active-items')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
@@ -381,6 +394,17 @@ export default function Profile() {
                 data-testid="tab-active-items"
               >
                 Aktif İlanlarım ({activeItems.length})
+              </button>
+              <button
+                onClick={() => setSelectedTab('rejected-items')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  selectedTab === 'rejected-items'
+                    ? 'border-red-500 text-red-500'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+                data-testid="tab-rejected-items"
+              >
+                Reddedilen İlanlarım ({rejectedItems.length})
               </button>
               <button
                 onClick={() => setSelectedTab('expired-items')}
@@ -409,6 +433,47 @@ export default function Profile() {
         </div>
 
         {/* Tab Content */}
+        {selectedTab === 'pending-items' && (
+          <div data-testid="content-pending-items">
+            {itemsLoading ? (
+              <div className="text-center py-16">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-gray-600">Bekleyen ilanlarınız yükleniyor...</p>
+              </div>
+            ) : pendingItems.length > 0 ? (
+              <div className="space-y-4">
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-orange-600 text-sm">⏳</span>
+                    <span className="text-orange-800 font-medium">Bu ilanlar admin onayı bekliyor</span>
+                  </div>
+                  <p className="text-orange-700 text-sm mt-1">
+                    İlanlarınız admin tarafından incelendikten sonra yayınlanacak.
+                  </p>
+                </div>
+                <ItemGrid
+                  items={pendingItems}
+                  onViewDetails={handleViewDetails}
+                />
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                  <span className="text-orange-400 text-2xl">⏳</span>
+                </div>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">Bekleyen ilan yok</h3>
+                <p className="text-gray-500 mb-4">Yeni eklediğiniz ilanlar admin onayından sonra burada görünür</p>
+                <Button asChild>
+                  <Link href="/add-item">
+                    <Plus className="h-4 w-4 mr-2" />
+                    İlan Ekle
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+
         {selectedTab === 'active-items' && (
           <div data-testid="content-active-items">
             {itemsLoading ? (
@@ -434,6 +499,41 @@ export default function Profile() {
                     İlan Ekle
                   </Link>
                 </Button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {selectedTab === 'rejected-items' && (
+          <div data-testid="content-rejected-items">
+            {itemsLoading ? (
+              <div className="text-center py-16">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-gray-600">Reddedilen ilanlar yükleniyor...</p>
+              </div>
+            ) : rejectedItems.length > 0 ? (
+              <div className="space-y-4">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-red-600 text-sm">❌</span>
+                    <span className="text-red-800 font-medium">Bu ilanlar admin tarafından reddedildi</span>
+                  </div>
+                  <p className="text-red-700 text-sm mt-1">
+                    İlanlarınız uygun olmadığı için yayınlanmadı. Yeni ilan ekleyebilirsiniz.
+                  </p>
+                </div>
+                <ItemGrid
+                  items={rejectedItems}
+                  onViewDetails={handleViewDetails}
+                />
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <div className="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                  <span className="text-red-400 text-2xl">❌</span>
+                </div>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">Reddedilen ilan yok</h3>
+                <p className="text-gray-500 mb-4">İlanlarınız henüz reddedilmemiş</p>
               </div>
             )}
           </div>

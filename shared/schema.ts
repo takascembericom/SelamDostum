@@ -12,6 +12,7 @@ export const userSchema = z.object({
   totalListings: z.number().default(0),
   createdAt: z.date(),
   emailVerified: z.boolean().default(false),
+  isAdmin: z.boolean().default(false),
 });
 
 export const insertUserSchema = userSchema.omit({
@@ -19,6 +20,7 @@ export const insertUserSchema = userSchema.omit({
   createdAt: true,
   emailVerified: true,
   totalListings: true,
+  isAdmin: true,
 });
 
 // Item schema for Firestore
@@ -33,10 +35,13 @@ export const itemSchema = z.object({
   ownerName: z.string(),
   ownerAvatar: z.string().optional(),
   location: z.string(),
-  status: z.enum(['aktif', 'takas_edildi', 'pasif']).default('aktif'),
+  status: z.enum(['pending', 'aktif', 'takas_edildi', 'pasif', 'reddedildi']).default('pending'),
   isPaid: z.boolean().default(false),
   paymentId: z.string().optional(),
   rating: z.number().min(0).max(5).optional(),
+  adminNotes: z.string().optional(),
+  approvedAt: z.date().optional(),
+  approvedBy: z.string().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

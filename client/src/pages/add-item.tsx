@@ -188,7 +188,7 @@ export default function AddItem() {
         ownerId: user.uid,
         ownerName: `${profile.firstName} ${profile.lastName}`,
         ownerAvatar: profile.avatar || "",
-        status: 'aktif',
+        status: 'pending',
         isPaid,
         paymentId: paymentId || undefined,
         createdAt: serverTimestamp(),
@@ -207,7 +207,7 @@ export default function AddItem() {
 
       toast({
         title: "İlan başarıyla eklendi",
-        description: isPaid ? "Ücretli ilanınız aktif" : "Ücretsiz ilanınız aktif",
+        description: "İlanınız admin onayından sonra yayınlanacak",
       });
 
       // Redirect to profile
