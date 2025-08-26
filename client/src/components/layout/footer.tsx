@@ -9,7 +9,7 @@ export function Footer() {
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center mr-2">
                 <span className="text-white font-bold text-lg">T</span>
               </div>
-              <span className="text-2xl font-bold">Takas</span>
+              <span className="text-2xl font-bold">Takas Çemberi</span>
             </div>
             <p className="text-gray-400 mb-6" data-testid="text-company-description">
               Türkiye'nin en güvenilir eşya değişim platformu. 
