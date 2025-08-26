@@ -29,10 +29,17 @@ import {
 } from "@/components/ui/select";
 import { Upload, X, Camera, CreditCard } from "lucide-react";
 import { ITEM_CATEGORIES, CATEGORY_LABELS, CONDITION_LABELS, TASINMAZLAR_SUBCATEGORIES, TURKISH_CITIES, CAR_BRANDS } from "@shared/schema";
+import { containsInappropriateContent, getContentFilterErrorMessage } from "@/lib/content-filter";
 
 const addItemSchema = z.object({
-  title: z.string().min(3, "En az 3 karakter").max(100, "En fazla 100 karakter"),
-  description: z.string().min(10, "En az 10 karakter").max(1000, "En fazla 1000 karakter"),
+  title: z.string().min(3, "En az 3 karakter").max(100, "En fazla 100 karakter")
+    .refine(val => !containsInappropriateContent(val), {
+      message: getContentFilterErrorMessage()
+    }),
+  description: z.string().min(10, "En az 10 karakter").max(1000, "En fazla 1000 karakter")
+    .refine(val => !containsInappropriateContent(val), {
+      message: getContentFilterErrorMessage()
+    }),
   category: z.enum(ITEM_CATEGORIES, { required_error: "Kategori seçin" }),
   subcategory: z.string().optional(),
   carBrand: z.string().optional(),
