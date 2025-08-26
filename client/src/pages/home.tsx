@@ -121,7 +121,7 @@ export default function Home() {
               className="h-40 w-auto mx-auto drop-shadow-2xl"
               style={{
                 filter: 'hue-rotate(240deg) saturate(5) sepia(0.8) contrast(1.8) brightness(1)',
-                backgroundColor: '#ef4444',
+                backgroundColor: '#ff4500',
                 borderRadius: '50%',
                 padding: '12px'
               }}
