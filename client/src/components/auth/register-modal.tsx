@@ -65,8 +65,8 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
       const { acceptTerms, ...userData } = data;
       await registerUser(userData);
       toast({
-        title: "Kayıt başarılı",
-        description: "E-posta adresinize doğrulama bağlantısı gönderildi.",
+        title: "Kayıt başarılı! 🎉",
+        description: "E-posta adresinize doğrulama bağlantısı gönderildi. Eğer gelen kutusunda yoksa SPAM klasörünüze bakınız. E-posta doğrulaması yapmadan giriş yapamazsınız.",
       });
       onClose();
       form.reset();

@@ -53,7 +53,7 @@ export const loginUser = async (email: string, password: string) => {
     
     if (!user.emailVerified) {
       await signOut(auth);
-      throw new Error("E-posta adresinizi doğrulamanız gerekiyor. Lütfen e-postanızı kontrol edin.");
+      throw new Error("E-posta adresinizi doğrulamanız gerekiyor. Lütfen e-postanızı (SPAM klasörü dahil) kontrol edin ve doğrulama linkine tıklayın.");
     }
     
     return user;
