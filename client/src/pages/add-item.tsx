@@ -241,9 +241,9 @@ export default function AddItem() {
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl" data-testid="title-add-item">Yeni Eşya Ekle</CardTitle>
+            <CardTitle className="text-2xl" data-testid="title-add-item">Yeni İlan Ekle</CardTitle>
             <p className="text-gray-600">
-              Takas etmek istediğiniz eşyanızın bilgilerini ekleyin
+              Takas etmek istediğiniz ilanınızın bilgilerini ekleyin
             </p>
             
             {/* Payment Status */}

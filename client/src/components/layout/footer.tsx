@@ -12,7 +12,7 @@ export function Footer() {
               <span className="text-2xl font-bold">Takas Çemberi</span>
             </div>
             <p className="text-gray-400 mb-6" data-testid="text-company-description">
-              Türkiye'nin en güvenilir eşya değişim platformu. 
+              Türkiye'nin en güvenilir ilan değişim platformu. 
               Sürdürülebilir bir gelecek için takasla değişim!
             </p>
             <div className="flex space-x-4">

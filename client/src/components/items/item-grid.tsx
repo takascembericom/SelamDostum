@@ -13,8 +13,8 @@ export function ItemGrid({ items, onViewDetails }: ItemGridProps) {
         <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
           <span className="text-gray-400 text-2xl">📦</span>
         </div>
-        <h3 className="text-xl font-medium text-gray-900 mb-2">Henüz eşya yok</h3>
-        <p className="text-gray-500">İlk eşyanızı ekleyerek başlayın!</p>
+        <h3 className="text-xl font-medium text-gray-900 mb-2">Henüz ilan yok</h3>
+        <p className="text-gray-500">İlk ilanınızı ekleyerek başlayın!</p>
       </div>
     );
   }

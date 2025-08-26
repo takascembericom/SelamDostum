@@ -168,7 +168,7 @@ export default function Items() {
         {/* Results */}
         <div className="mb-4 flex items-center justify-between">
           <p className="text-gray-600" data-testid="text-results-count">
-            {isLoading ? 'Yükleniyor...' : `${items.length} eşya bulundu`}
+            {isLoading ? 'Yükleniyor...' : `${items.length} ilan bulundu`}
           </p>
         </div>
 

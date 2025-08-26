@@ -30,14 +30,14 @@ export default function Home() {
     },
     {
       icon: <Plus className="h-8 w-8" />,
-      title: "2. Eşya Ekle",
-      description: "Eşyanızın fotoğrafını ekleyin",
+      title: "2. İlan Ekle",
+      description: "İlanınızın fotoğrafını ekleyin",
       color: "bg-secondary/10 text-secondary"
     },
     {
       icon: <Search className="h-8 w-8" />,
-      title: "3. Eşya Bul",
-      description: "İstediğiniz eşyayı arayın",
+      title: "3. İlan Bul",
+      description: "İstediğiniz ilanı arayın",
       color: "bg-accent/10 text-accent"
     },
     {
@@ -58,7 +58,7 @@ export default function Home() {
       icon: "🏠",
       title: "Beyaz Eşya",
 
-      description: "Beyaz eşya değiştirin"
+      description: "Beyaz eşyalar değiştirin"
     },
     {
       icon: "🪑",
@@ -211,7 +211,7 @@ export default function Home() {
             Hemen Başla!
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Ücretsiz kayıt ol ve binlerce eşya arasından seç. 
+            Ücretsiz kayıt ol ve binlerce ilan arasından seç. 
             İlk takas özel indirimli!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
