@@ -28,14 +28,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Upload, X, Camera } from "lucide-react";
-import { ITEM_CATEGORIES, CATEGORY_LABELS, CONDITION_LABELS } from "@shared/schema";
+import { ITEM_CATEGORIES, CATEGORY_LABELS, CONDITION_LABELS, TASINMAZLAR_SUBCATEGORIES, TURKISH_CITIES } from "@shared/schema";
 
 const addItemSchema = z.object({
   title: z.string().min(3, "En az 3 karakter").max(100, "En fazla 100 karakter"),
   description: z.string().min(10, "En az 10 karakter").max(1000, "En fazla 1000 karakter"),
   category: z.enum(ITEM_CATEGORIES, { required_error: "Kategori seçin" }),
+  subcategory: z.string().optional(),
   condition: z.enum(['yeni', 'cok_iyi', 'iyi', 'orta', 'kullanilmis'], { required_error: "Durum seçin" }),
-  location: z.string().min(2, "En az 2 karakter"),
+  city: z.string().min(1, "İl seçin"),
+  district: z.string().min(1, "İlçe seçin"),
+  neighborhood: z.string().min(1, "Mahalle seçin"),
 });
 
 type AddItemFormData = z.infer<typeof addItemSchema>;
@@ -47,6 +50,7 @@ export default function AddItem() {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imageURLs, setImageURLs] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const form = useForm<AddItemFormData>({
     resolver: zodResolver(addItemSchema),
@@ -54,8 +58,11 @@ export default function AddItem() {
       title: "",
       description: "",
       category: undefined,
+      subcategory: "",
       condition: undefined,
-      location: "",
+      city: "",
+      district: "",
+      neighborhood: "",
     },
   });
 
@@ -114,6 +121,7 @@ export default function AddItem() {
       // Create item document
       const itemData = {
         ...data,
+        location: `${data.city}, ${data.district}, ${data.neighborhood}`,
         images: imageUrls,
         ownerId: user.uid,
         ownerName: `${profile.firstName} ${profile.lastName}`,
@@ -260,7 +268,7 @@ export default function AddItem() {
                   )}
                 />
 
-                {/* Category & Condition */}
+                {/* Category & Subcategory */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
@@ -268,7 +276,10 @@ export default function AddItem() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Kategori *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={(value) => {
+                          field.onChange(value);
+                          setSelectedCategory(value);
+                        }} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger data-testid="select-category">
                               <SelectValue placeholder="Kategori" />
@@ -287,22 +298,78 @@ export default function AddItem() {
                     )}
                   />
 
+                  {selectedCategory === 'tasinmazlar' && (
+                    <FormField
+                      control={form.control}
+                      name="subcategory"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Alt Kategori *</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-subcategory">
+                                <SelectValue placeholder="Alt Kategori" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(TASINMAZLAR_SUBCATEGORIES).map(([key, label]) => (
+                                <SelectItem key={key} value={key}>
+                                  {label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+
+                {/* Condition */}
+                <FormField
+                  control={form.control}
+                  name="condition"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Durum *</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-condition">
+                            <SelectValue placeholder="Durum" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.entries(CONDITION_LABELS).map(([key, label]) => (
+                            <SelectItem key={key} value={key}>
+                              {label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Location */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <FormField
                     control={form.control}
-                    name="condition"
+                    name="city"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Durum *</FormLabel>
+                        <FormLabel>İl *</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
-                            <SelectTrigger data-testid="select-condition">
-                              <SelectValue placeholder="Durum" />
+                            <SelectTrigger data-testid="select-city">
+                              <SelectValue placeholder="İl seçin" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {Object.entries(CONDITION_LABELS).map(([key, label]) => (
-                              <SelectItem key={key} value={key}>
-                                {label}
+                            {TURKISH_CITIES.map((city) => (
+                              <SelectItem key={city} value={city}>
+                                {city}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -311,26 +378,43 @@ export default function AddItem() {
                       </FormItem>
                     )}
                   />
-                </div>
 
-                {/* Location */}
-                <FormField
-                  control={form.control}
-                  name="location"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Konum *</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Şehir/İlçe (örn: İstanbul/Kadıköy)" 
-                          {...field}
-                          data-testid="input-location"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="district"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>İlçe *</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="İlçe girin"
+                            {...field}
+                            data-testid="input-district"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="neighborhood"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Mahalle *</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Mahalle girin"
+                            {...field}
+                            data-testid="input-neighborhood"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 {/* Submit */}
                 <div className="flex gap-4">
