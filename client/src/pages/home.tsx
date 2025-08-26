@@ -118,7 +118,7 @@ export default function Home() {
             <img 
               src={logoImage} 
               alt="Takas Çemberi Logo" 
-              className="h-32 w-auto mx-auto drop-shadow-2xl"
+              className="h-40 w-auto mx-auto drop-shadow-2xl"
               style={{
                 filter: 'hue-rotate(45deg) saturate(0.8) brightness(1.2) contrast(1.1)',
                 backgroundColor: '#16a34a',
