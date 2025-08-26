@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { LiveChat } from "@/components/live-chat";
 import Home from "@/pages/home";
 import Items from "@/pages/items";
 import Profile from "@/pages/profile";
@@ -40,6 +41,7 @@ function App() {
             </main>
             <Footer />
           </div>
+          <LiveChat />
           <Toaster />
         </TooltipProvider>
       </AuthProvider>
