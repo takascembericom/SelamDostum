@@ -83,19 +83,6 @@ export function Header() {
                     </Button>
                   </Link>
                   
-                  {profile?.isAdmin && (
-                    <Link href="/admin">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="hidden sm:flex items-center gap-2"
-                        data-testid="button-admin-panel"
-                      >
-                        <Shield className="h-4 w-4" />
-                        Admin
-                      </Button>
-                    </Link>
-                  )}
                   
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

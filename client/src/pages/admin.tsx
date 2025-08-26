@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { collection, query, where, orderBy, getDocs, doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -10,18 +9,24 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, X, Eye, MessageCircle } from "lucide-react";
+import { Check, X, Eye, MessageCircle, LogOut, Shield } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CATEGORY_LABELS, CONDITION_LABELS } from "@shared/schema";
 import type { Item } from "@shared/schema";
 
 export default function AdminPanel() {
-  const { user, profile, loading } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  
+  // Check admin authentication
+  const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+  
+  if (!isAdminLoggedIn) {
+    return <Redirect to="/admin" />;
+  }
 
   // Fetch pending items
   const { data: pendingItems = [], isLoading: pendingLoading } = useQuery({
@@ -45,7 +50,7 @@ export default function AdminPanel() {
         } as Item;
       });
     },
-    enabled: !!user && !!profile?.isAdmin,
+    enabled: true,
   });
 
   // Fetch approved items
@@ -70,7 +75,7 @@ export default function AdminPanel() {
         } as Item;
       });
     },
-    enabled: !!user && !!profile?.isAdmin,
+    enabled: true,
   });
 
   // Fetch rejected items
@@ -95,12 +100,10 @@ export default function AdminPanel() {
         } as Item;
       });
     },
-    enabled: !!user && !!profile?.isAdmin,
+    enabled: true,
   });
 
   const handleApprove = async (itemId: string, notes: string = "") => {
-    if (!user) return;
-    
     try {
       setActionLoading(itemId);
       const itemRef = doc(db, 'items', itemId);
@@ -108,7 +111,7 @@ export default function AdminPanel() {
         status: 'aktif',
         adminNotes: notes,
         approvedAt: serverTimestamp(),
-        approvedBy: user.uid,
+        approvedBy: 'admin',
         updatedAt: serverTimestamp()
       });
 
@@ -134,8 +137,6 @@ export default function AdminPanel() {
   };
 
   const handleReject = async (itemId: string, notes: string = "") => {
-    if (!user) return;
-    
     try {
       setActionLoading(itemId);
       const itemRef = doc(db, 'items', itemId);
@@ -143,7 +144,7 @@ export default function AdminPanel() {
         status: 'reddedildi',
         adminNotes: notes,
         approvedAt: serverTimestamp(),
-        approvedBy: user.uid,
+        approvedBy: 'admin',
         updatedAt: serverTimestamp()
       });
 
@@ -168,20 +169,11 @@ export default function AdminPanel() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Yükleniyor...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user || !profile?.isAdmin) {
-    return <Redirect to="/" />;
-  }
+  // Admin logout function
+  const handleLogout = () => {
+    localStorage.removeItem('adminLoggedIn');
+    window.location.href = '/admin';
+  };
 
   const ItemCard = ({ item, showActions = false }: { item: Item; showActions?: boolean }) => (
     <Card className="mb-4">
@@ -300,10 +292,31 @@ export default function AdminPanel() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50">
+      {/* Admin Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-2">
+              <Shield className="h-6 w-6 text-blue-600" />
+              <h1 className="text-xl font-bold text-gray-900">Admin Paneli</h1>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+              data-testid="button-admin-logout"
+            >
+              <LogOut className="h-4 w-4" />
+              Çıkış Yap
+            </Button>
+          </div>
+        </div>
+      </header>
+      
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Admin Paneli</h1>
           <p className="text-gray-600 mt-2">İlanları yönetin ve onaylayın</p>
         </div>
 

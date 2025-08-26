@@ -11,6 +11,7 @@ import Items from "@/pages/items";
 import Profile from "@/pages/profile";
 import AddItem from "@/pages/add-item";
 import AdminPanel from "@/pages/admin";
+import AdminLogin from "@/pages/admin-login";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -20,7 +21,8 @@ function Router() {
       <Route path="/items" component={Items} />
       <Route path="/profile" component={Profile} />
       <Route path="/add-item" component={AddItem} />
-      <Route path="/admin" component={AdminPanel} />
+      <Route path="/admin" component={AdminLogin} />
+      <Route path="/admin-panel" component={AdminPanel} />
       <Route component={NotFound} />
     </Switch>
   );
