@@ -42,14 +42,14 @@ export function Header() {
     <>
       <header className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-20">
             <div className="flex items-center">
               <Link href="/" data-testid="link-home">
                 <div className="flex-shrink-0 flex items-center">
                   <img 
                     src={logoImage} 
                     alt="Takas Çemberi Logo" 
-                    className="h-14 w-auto mr-3"
+                    className="h-16 w-auto mr-4"
                   />
                   <span className="text-2xl font-bold text-gray-900 hidden sm:inline">Takas Çemberi</span>
                 </div>
