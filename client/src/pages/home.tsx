@@ -113,21 +113,6 @@ export default function Home() {
         <div className="absolute inset-0 bg-black bg-opacity-20"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Logo */}
-          <div className="mb-8">
-            <img 
-              src={logoImage} 
-              alt="Takas Çemberi Logo" 
-              className="h-40 w-auto mx-auto drop-shadow-2xl"
-              style={{
-                filter: 'hue-rotate(320deg) saturate(6) sepia(0.9) contrast(1.5) brightness(1.2)',
-                backgroundColor: '#ff0000',
-                borderRadius: '50%',
-                padding: '12px'
-              }}
-              data-testid="logo-hero"
-            />
-          </div>
           
           <h1 className="text-4xl md:text-6xl font-bold mb-6" data-testid="title-hero">
             Eşyalarınızı <br />
