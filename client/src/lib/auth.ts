@@ -37,6 +37,9 @@ export const registerUser = async (userData: InsertUser & { password: string }) 
     // Send email verification
     await sendEmailVerification(firebaseUser);
     
+    // Sign out user immediately after registration so they must verify email
+    await signOut(auth);
+    
     return userDoc;
   } catch (error: any) {
     throw new Error(error.message || "Kayıt işlemi başarısız oldu");
@@ -46,7 +49,14 @@ export const registerUser = async (userData: InsertUser & { password: string }) 
 export const loginUser = async (email: string, password: string) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    const user = userCredential.user;
+    
+    if (!user.emailVerified) {
+      await signOut(auth);
+      throw new Error("E-posta adresinizi doğrulamanız gerekiyor. Lütfen e-postanızı kontrol edin.");
+    }
+    
+    return user;
   } catch (error: any) {
     throw new Error(error.message || "Giriş işlemi başarısız oldu");
   }
