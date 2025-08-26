@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { LiveChat } from "@/components/live-chat";
 import Home from "@/pages/home";
 import Items from "@/pages/items";
+import ItemDetail from "@/pages/item-detail";
 import Profile from "@/pages/profile";
 import AddItem from "@/pages/add-item";
 import AdminPanel from "@/pages/admin";
@@ -20,6 +21,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/items" component={Items} />
+      <Route path="/item/:id" component={ItemDetail} />
       <Route path="/profile" component={Profile} />
       <Route path="/add-item" component={AddItem} />
       <Route path="/admin" component={AdminLogin} />

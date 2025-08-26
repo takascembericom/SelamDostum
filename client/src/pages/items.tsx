@@ -84,8 +84,7 @@ export default function Items() {
 
   const handleViewDetails = (item: Item) => {
     setSelectedItem(item);
-    // In a real app, this would navigate to item detail page
-    console.log("View item details:", item);
+    window.location.href = `/item/${item.id}`;
   };
 
   if (error) {

@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { collection, query, where, orderBy, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db, storage } from "@/lib/firebase";
 import { Item } from "@shared/schema";
@@ -7,7 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ItemGrid } from "@/components/items/item-grid";
-import { User, Package, Star, MapPin, Plus, Camera, Settings, Lock } from "lucide-react";
+import { TradeOffersList } from "@/components/trade/trade-offers-list";
+import { updateTradeOfferStatus, completeTrade } from "@/lib/tradeOffers";
+import { User, Package, Star, MapPin, Plus, Camera, Settings, Lock, ArrowRightLeft } from "lucide-react";
 import { Link, Redirect } from "wouter";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -19,7 +21,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function Profile() {
   const { user, profile, loading } = useAuth();
-  const [selectedTab, setSelectedTab] = useState<'pending-items' | 'active-items' | 'rejected-items' | 'expired-items' | 'offers'>('pending-items');
+  const [selectedTab, setSelectedTab] = useState<'pending-items' | 'active-items' | 'rejected-items' | 'expired-items' | 'trade-offers'>('pending-items');
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -27,6 +29,7 @@ export default function Profile() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data: userItems = [], isLoading: itemsLoading } = useQuery({
     queryKey: ['user-items', user?.uid],
@@ -181,6 +184,68 @@ export default function Profile() {
       setUploading(false);
     }
   };
+
+  // Trade offer action handlers
+  const handleAcceptOffer = useMutation({
+    mutationFn: async (tradeOfferId: string) => {
+      await completeTrade(tradeOfferId);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Takas Kabul Edildi!",
+        description: "Takas tamamlandı. İlanlarınız 'takas edildi' olarak işaretlendi.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["trade-offers"] });
+      queryClient.invalidateQueries({ queryKey: ["user-items"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Hata",
+        description: error.message || "Takas kabul edilemedi",
+        variant: "destructive",
+      });
+    },
+  }).mutateAsync;
+
+  const handleRejectOffer = useMutation({
+    mutationFn: async (tradeOfferId: string) => {
+      await updateTradeOfferStatus(tradeOfferId, "reddedildi");
+    },
+    onSuccess: () => {
+      toast({
+        title: "Teklif Reddedildi",
+        description: "Takas teklifi reddedildi.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["trade-offers"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Hata",
+        description: error.message || "Teklif reddedilemedi",
+        variant: "destructive",
+      });
+    },
+  }).mutateAsync;
+
+  const handleCancelOffer = useMutation({
+    mutationFn: async (tradeOfferId: string) => {
+      await updateTradeOfferStatus(tradeOfferId, "iptal_edildi");
+    },
+    onSuccess: () => {
+      toast({
+        title: "Teklif İptal Edildi",
+        description: "Takas teklifiniz iptal edildi.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["trade-offers"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Hata",
+        description: error.message || "Teklif iptal edilemedi",
+        variant: "destructive",
+      });
+    },
+  }).mutateAsync;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -396,6 +461,18 @@ export default function Profile() {
                 Aktif İlanlarım ({activeItems.length})
               </button>
               <button
+                onClick={() => setSelectedTab('trade-offers')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  selectedTab === 'trade-offers'
+                    ? 'border-green-500 text-green-500'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+                data-testid="tab-trade-offers"
+              >
+                <ArrowRightLeft className="h-4 w-4 inline mr-1" />
+                Takas Teklifleri
+              </button>
+              <button
                 onClick={() => setSelectedTab('rejected-items')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   selectedTab === 'rejected-items'
@@ -416,17 +493,6 @@ export default function Profile() {
                 data-testid="tab-expired-items"
               >
                 Süresi Dolan İlanlarım ({expiredItems.length})
-              </button>
-              <button
-                onClick={() => setSelectedTab('offers')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  selectedTab === 'offers'
-                    ? 'border-primary text-primary'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-                data-testid="tab-offers"
-              >
-                Tekliflerim
               </button>
             </nav>
           </div>
@@ -563,13 +629,13 @@ export default function Profile() {
           </div>
         )}
 
-        {selectedTab === 'offers' && (
-          <div className="text-center py-16" data-testid="content-offers">
-            <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-              <span className="text-gray-400 text-2xl">🤝</span>
-            </div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">Henüz teklif yok</h3>
-            <p className="text-gray-500">Diğer kullanıcıların ilanlarına teklif verin!</p>
+        {selectedTab === 'trade-offers' && (
+          <div data-testid="content-trade-offers">
+            <TradeOffersList
+              onAccept={handleAcceptOffer}
+              onReject={handleRejectOffer}
+              onCancel={handleCancelOffer}
+            />
           </div>
         )}
       </div>
