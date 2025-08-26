@@ -122,3 +122,13 @@ export const TURKISH_CITIES = [
   'Nevşehir', 'Niğde', 'Ordu', 'Osmaniye', 'Rize', 'Sakarya', 'Samsun', 'Siirt', 'Sinop', 'Sivas',
   'Şanlıurfa', 'Şırnak', 'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Uşak', 'Van', 'Yalova', 'Yozgat', 'Zonguldak'
 ] as const;
+
+// Car brands
+export const CAR_BRANDS = [
+  'Audi', 'BMW', 'Mercedes-Benz', 'Volkswagen', 'Ford', 'Opel', 'Renault', 'Peugeot', 'Citroën', 'Fiat',
+  'Toyota', 'Honda', 'Nissan', 'Hyundai', 'Kia', 'Mazda', 'Mitsubishi', 'Subaru', 'Suzuki', 'Dacia',
+  'Skoda', 'SEAT', 'Volvo', 'Saab', 'Alfa Romeo', 'Lancia', 'Jaguar', 'Land Rover', 'Mini', 'Smart',
+  'Porsche', 'Aston Martin', 'Bentley', 'Rolls-Royce', 'Ferrari', 'Lamborghini', 'Maserati', 'McLaren',
+  'Tofaş', 'Karsan', 'Otokar', 'BMC', 'Temsa', 'Isuzu', 'Iveco', 'MAN', 'Scania', 'Volvo Trucks',
+  'Diğer'
+] as const;

@@ -28,13 +28,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Upload, X, Camera } from "lucide-react";
-import { ITEM_CATEGORIES, CATEGORY_LABELS, CONDITION_LABELS, TASINMAZLAR_SUBCATEGORIES, TURKISH_CITIES } from "@shared/schema";
+import { ITEM_CATEGORIES, CATEGORY_LABELS, CONDITION_LABELS, TASINMAZLAR_SUBCATEGORIES, TURKISH_CITIES, CAR_BRANDS } from "@shared/schema";
 
 const addItemSchema = z.object({
   title: z.string().min(3, "En az 3 karakter").max(100, "En fazla 100 karakter"),
   description: z.string().min(10, "En az 10 karakter").max(1000, "En fazla 1000 karakter"),
   category: z.enum(ITEM_CATEGORIES, { required_error: "Kategori seçin" }),
   subcategory: z.string().optional(),
+  carBrand: z.string().optional(),
+  carModel: z.string().optional(),
+  carKm: z.string().optional(),
   condition: z.enum(['yeni', 'cok_iyi', 'iyi', 'orta', 'kullanilmis'], { required_error: "Durum seçin" }),
   city: z.string().min(1, "İl seçin"),
   district: z.string().min(1, "İlçe seçin"),
@@ -59,6 +62,9 @@ export default function AddItem() {
       description: "",
       category: undefined,
       subcategory: "",
+      carBrand: "",
+      carModel: "",
+      carKm: "",
       condition: undefined,
       city: "",
       district: "",
@@ -325,6 +331,73 @@ export default function AddItem() {
                     />
                   )}
                 </div>
+
+                {/* Car Details */}
+                {selectedCategory === 'araba' && (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="carBrand"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Marka *</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-car-brand">
+                                <SelectValue placeholder="Marka seçin" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {CAR_BRANDS.map((brand) => (
+                                <SelectItem key={brand} value={brand}>
+                                  {brand}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="carModel"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Model *</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Model girin"
+                              {...field}
+                              data-testid="input-car-model"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="carKm"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>KM *</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Kilometre"
+                              type="number"
+                              {...field}
+                              data-testid="input-car-km"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
 
                 {/* Condition */}
                 <FormField
