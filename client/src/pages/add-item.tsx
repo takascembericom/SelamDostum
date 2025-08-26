@@ -54,32 +54,7 @@ export default function AddItem() {
   const [imageURLs, setImageURLs] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [userListingCount, setUserListingCount] = useState<number>(0);
-  const [loadingListingCount, setLoadingListingCount] = useState(true);
-  const [needsPayment, setNeedsPayment] = useState(false);
-
-  // Check user's current listing count
-  useEffect(() => {
-    const checkUserListings = async () => {
-      if (!user) return;
-      
-      try {
-        setLoadingListingCount(true);
-        const q = query(collection(db, 'items'), where('ownerId', '==', user.uid));
-        const querySnapshot = await getDocs(q);
-        const count = querySnapshot.size;
-        
-        setUserListingCount(count);
-        setNeedsPayment(count >= 1); // Second listing needs payment
-      } catch (error) {
-        console.error('Error checking user listings:', error);
-      } finally {
-        setLoadingListingCount(false);
-      }
-    };
-
-    checkUserListings();
-  }, [user]);
+  // All listings now require payment
 
   const form = useForm<AddItemFormData>({
     resolver: zodResolver(addItemSchema),
@@ -143,13 +118,8 @@ export default function AddItem() {
   };
 
   const handlePayment = async () => {
-    if (!needsPayment) {
-      // Free listing, proceed directly
-      return await submitItem(false);
-    }
-
     try {
-      // For demo purposes, simulate payment
+      // Show payment process
       toast({
         title: "Ödeme başarılı",
         description: "İlanınız ücretli olarak ekleniyor (10 TL)",
@@ -200,7 +170,7 @@ export default function AddItem() {
 
       toast({
         title: "İlan başarıyla eklendi",
-        description: isPaid ? "Ücretli ilanınız aktif" : "Ücretsiz ilanınız aktif",
+        description: "İlanınız aktif",
       });
 
       // Redirect to profile
@@ -246,33 +216,6 @@ export default function AddItem() {
               Takas etmek istediğiniz ilanınızın bilgilerini ekleyin
             </p>
             
-            {/* Payment Status */}
-            {!loadingListingCount && (
-              <div className={`p-4 rounded-lg border ${needsPayment ? 'bg-orange-50 border-orange-200' : 'bg-green-50 border-green-200'}`}>
-                <div className="flex items-center gap-2">
-                  {needsPayment ? (
-                    <>
-                      <CreditCard className="h-5 w-5 text-orange-600" />
-                      <span className="font-medium text-orange-800">
-                        Bu ilanınız ücretli (10 TL) - Toplam ilan sayısı: {userListingCount}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <div className="h-5 w-5 bg-green-600 rounded-full flex items-center justify-center">
-                        <span className="text-white text-xs">✓</span>
-                      </div>
-                      <span className="font-medium text-green-800">
-                        Bu ilanınız ücretsiz - İlk ilan hakkınız
-                      </span>
-                    </>
-                  )}
-                </div>
-                <p className="text-sm text-gray-600 mt-1">
-                  {needsPayment ? 'İkinci ve sonraki ilanlar ücretlidir' : 'İlk ilanınız her zaman ücretsizdir'}
-                </p>
-              </div>
-            )}
           </CardHeader>
           
           <CardContent>
@@ -585,7 +528,7 @@ export default function AddItem() {
                   <Button 
                     type="submit" 
                     className="flex-1" 
-                    disabled={uploading || loadingListingCount}
+                    disabled={uploading}
                     data-testid="button-submit-add-item"
                   >
                     {uploading ? (
@@ -593,15 +536,11 @@ export default function AddItem() {
                         <Upload className="h-4 w-4 mr-2 animate-spin" />
                         Yükleniyor...
                       </>
-                    ) : loadingListingCount ? (
-                      "Kontrol ediliyor..."
-                    ) : needsPayment ? (
+                    ) : (
                       <>
                         <CreditCard className="h-4 w-4 mr-2" />
                         İlanı Ekle (10 TL)
                       </>
-                    ) : (
-                      "İlanı Ekle (Ücretsiz)"
                     )}
                   </Button>
                   <Button 
