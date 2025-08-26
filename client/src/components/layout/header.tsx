@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { useMessageNotifications } from "@/hooks/useMessageNotifications";
+import { LanguageSelector } from "@/components/ui/language-selector";
+import { useTranslation } from "react-i18next";
 import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
 
 export function Header() {
@@ -23,13 +25,14 @@ export function Header() {
   const { unreadCount } = useMessageNotifications();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const { t } = useTranslation();
 
   const handleLogout = async () => {
     try {
       await logoutUser();
       toast({
-        title: "Çıkış yapıldı",
-        description: "İyi günler!",
+        title: t('auth.loginSuccess'),
+        description: t('common.success'),
       });
     } catch (error: any) {
       toast({
@@ -60,6 +63,8 @@ export function Header() {
             </div>
 
             <div className="flex items-center space-x-4">
+              <LanguageSelector />
+              
               {user ? (
                 <>
                   <Link href="/">
@@ -70,7 +75,7 @@ export function Header() {
                       data-testid="button-home"
                     >
                       <Home className="h-4 w-4" />
-                      <span className="hidden sm:inline">Ana Sayfaya Dön</span>
+                      <span className="hidden sm:inline">{t('nav.home')}</span>
                     </Button>
                   </Link>
                   
@@ -82,7 +87,7 @@ export function Header() {
                       data-testid="button-add-item"
                     >
                       <Plus className="h-4 w-4" />
-                      İlan Ekle
+                      {t('nav.addItem')}
                     </Button>
                   </Link>
                   
@@ -94,7 +99,7 @@ export function Header() {
                       data-testid="button-messages"
                     >
                       <MessageCircle className="h-4 w-4" />
-                      <span className="hidden sm:inline">Mesajlar</span>
+                      <span className="hidden sm:inline">{t('profile.messages')}</span>
                       {unreadCount > 0 && (
                         <Badge 
                           variant="destructive" 
@@ -124,12 +129,12 @@ export function Header() {
                       <DropdownMenuItem asChild>
                         <Link href="/profile" data-testid="link-profile">
                           <User className="h-4 w-4 mr-2" />
-                          Profil
+                          {t('nav.profile')}
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleLogout} data-testid="button-logout">
                         <LogOut className="h-4 w-4 mr-2" />
-                        Çıkış Yap
+                        {t('nav.logout')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -141,13 +146,13 @@ export function Header() {
                     onClick={() => setShowLoginModal(true)}
                     data-testid="button-login"
                   >
-                    Giriş Yap
+                    {t('nav.login')}
                   </Button>
                   <Button 
                     onClick={() => setShowRegisterModal(true)}
                     data-testid="button-register"
                   >
-                    Kayıt Ol
+                    {t('nav.register')}
                   </Button>
                 </>
               )}
