@@ -227,50 +227,51 @@ export function LiveChat() {
                 </div>
 
                 {/* Message Input */}
-                <div className="p-4 border-t bg-gray-50">
-                  {showImageUpload ? (
+                <div className="p-4 border-t bg-gray-50 space-y-3">
+                  {/* Normal mesaj yazma alanı */}
+                  <div className="flex gap-2">
+                    <Textarea
+                      placeholder="Mesajınızı yazın..."
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      className="flex-1 min-h-[40px] max-h-[100px] resize-none"
+                      rows={1}
+                      data-testid="input-chat-message"
+                    />
+                    <div className="flex flex-col gap-1">
+                      <Button
+                        onClick={handleSendMessage}
+                        disabled={!message.trim() || loading}
+                        size="sm"
+                        data-testid="button-send-message"
+                      >
+                        <Send className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        onClick={() => setShowImageUpload(!showImageUpload)}
+                        variant="outline"
+                        size="sm"
+                        disabled={loading}
+                        data-testid="button-upload-image"
+                      >
+                        <Camera className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Resim yükleme alanı */}
+                  {showImageUpload && (
                     <ImageUpload
                       onImageUpload={handleImageUpload}
                       onCancel={() => setShowImageUpload(false)}
                       buttonText="Resim Gönder"
                     />
-                  ) : (
-                    <div className="space-y-3">
-                      <div className="flex gap-2">
-                        <Textarea
-                          placeholder="Mesajınızı yazın..."
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                          onKeyPress={handleKeyPress}
-                          className="flex-1 min-h-[40px] max-h-[100px] resize-none"
-                          rows={1}
-                          data-testid="input-chat-message"
-                        />
-                        <div className="flex flex-col gap-1">
-                          <Button
-                            onClick={handleSendMessage}
-                            disabled={!message.trim() || loading}
-                            size="sm"
-                            data-testid="button-send-message"
-                          >
-                            <Send className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            onClick={() => setShowImageUpload(true)}
-                            variant="outline"
-                            size="sm"
-                            disabled={loading}
-                            data-testid="button-upload-image"
-                          >
-                            <Camera className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                      <p className="text-xs text-gray-500">
-                        Genellikle birkaç dakika içinde yanıtlıyoruz
-                      </p>
-                    </div>
                   )}
+                  
+                  <p className="text-xs text-gray-500">
+                    Genellikle birkaç dakika içinde yanıtlıyoruz
+                  </p>
                 </div>
               </CardContent>
             )}
