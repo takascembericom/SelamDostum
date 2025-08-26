@@ -186,47 +186,23 @@ export default function Profile() {
         {/* Profile Header */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-            <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center overflow-hidden">
-              {profile?.avatar ? (
-                <img 
-                  src={profile.avatar} 
-                  alt="Profile" 
-                  className="w-full h-full object-cover"
-                  data-testid="img-user-avatar"
-                />
-              ) : (
-                <User className="h-12 w-12 text-primary" data-testid="avatar-user" />
-              )}
-            </div>
-            
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2" data-testid="text-user-name">
-                {profile?.firstName} {profile?.lastName}
-              </h1>
-              <p className="text-gray-600 mb-2" data-testid="text-user-username">@{profile?.username}</p>
-              <p className="text-gray-600 mb-4" data-testid="text-user-email">{user.email}</p>
-              
-              <div className="flex items-center gap-4 text-sm text-gray-500">
-                <div className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4" />
-                  <span data-testid="text-user-location">Türkiye</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Package className="h-4 w-4" />
-                  <span data-testid="text-user-items-count">{activeItems.length} aktif ilan</span>
-                </div>
-                {!user.emailVerified && (
-                  <Badge variant="outline" className="text-yellow-600 border-yellow-300">
-                    E-posta doğrulanmamış
-                  </Badge>
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center overflow-hidden">
+                {profile?.avatar ? (
+                  <img 
+                    src={profile.avatar} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                    data-testid="img-user-avatar"
+                  />
+                ) : (
+                  <User className="h-12 w-12 text-primary" data-testid="avatar-user" />
                 )}
               </div>
-            </div>
-            
-            <div className="flex gap-2">
+              
               <Dialog open={showPhotoDialog} onOpenChange={setShowPhotoDialog}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" data-testid="button-change-photo">
+                  <Button variant="outline" size="sm" data-testid="button-change-photo">
                     <Camera className="h-4 w-4 mr-2" />
                     Fotoğraf Değiştir
                   </Button>
@@ -255,7 +231,33 @@ export default function Profile() {
                   </div>
                 </DialogContent>
               </Dialog>
+            </div>
+            
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold text-gray-900 mb-2" data-testid="text-user-name">
+                {profile?.firstName} {profile?.lastName}
+              </h1>
+              <p className="text-gray-600 mb-2" data-testid="text-user-username">@{profile?.username}</p>
+              <p className="text-gray-600 mb-4" data-testid="text-user-email">{user.email}</p>
               
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-1">
+                  <MapPin className="h-4 w-4" />
+                  <span data-testid="text-user-location">Türkiye</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Package className="h-4 w-4" />
+                  <span data-testid="text-user-items-count">{activeItems.length} aktif ilan</span>
+                </div>
+                {!user.emailVerified && (
+                  <Badge variant="outline" className="text-yellow-600 border-yellow-300">
+                    E-posta doğrulanmamış
+                  </Badge>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex gap-2">
               <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
                 <DialogTrigger asChild>
                   <Button variant="outline" data-testid="button-change-password">
