@@ -49,18 +49,28 @@ export default function Home() {
 
   const features = [
     {
-      icon: "💻",
-      title: "Teknoloji Ürünleri",
+      icon: "📱",
+      title: "Teknolojik Ürünler",
       description: "Eski telefonunuzu tablet ile, laptopunuzu kamerayla takas edin"
     },
     {
-      icon: "📚",
-      title: "Kitap & Dergi",
-      description: "Okuduğunuz kitapları yeni kitaplarla değiştirin"
+      icon: "🏠",
+      title: "Beyaz Eşya",
+      description: "Kullanmadığınız beyaz eşyalarınızı ihtiyacınız olan eşyalarla değiştirin"
     },
     {
-      icon: "🎮",
-      title: "Oyuncak & Oyun",
+      icon: "🪑",
+      title: "Mobilya",
+      description: "Evinizdeki mobilyaları farklı tarzda mobilyalarla takas edin"
+    },
+    {
+      icon: "🚗",
+      title: "Araba & Yedek Parça",
+      description: "Araç yedek parçalarınızı ve araba aksesuarlarınızı takas edin"
+    },
+    {
+      icon: "🧸",
+      title: "Oyuncak",
       description: "Çocuğunuzun büyüdüğü oyuncakları yeni yaş grubuna uygun olanlarla değiştirin"
     }
   ];
