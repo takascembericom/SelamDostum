@@ -156,7 +156,7 @@ export function LiveChat() {
       {/* Chat Window */}
       {isOpen && (
         <div className="fixed bottom-6 right-6 z-50 w-80 max-w-[calc(100vw-2rem)]">
-          <Card className="h-96 flex flex-col shadow-2xl">
+          <Card className="flex flex-col shadow-2xl max-h-[500px]">
             <CardHeader className="flex-row items-center justify-between space-y-0 pb-2 bg-blue-600 text-white rounded-t-lg">
               <div className="flex items-center gap-2">
                 <MessageCircle className="h-5 w-5" />
@@ -188,9 +188,9 @@ export function LiveChat() {
             </CardHeader>
 
             {!isMinimized && (
-              <CardContent className="flex-1 flex flex-col p-0">
+              <CardContent className="flex flex-col h-80 p-0">
                 {/* Messages Area */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-64">
+                <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
                   {messages.map((msg) => (
                     <div
                       key={msg.id}
@@ -226,8 +226,8 @@ export function LiveChat() {
                   <div ref={messagesEndRef} />
                 </div>
 
-                {/* Message Input */}
-                <div className="p-4 border-t bg-gray-50 space-y-3">
+                {/* Message Input - Always at bottom */}
+                <div className="flex-shrink-0 p-4 border-t bg-gray-50 space-y-3">
                   {/* Normal mesaj yazma alanı */}
                   <div className="flex gap-2">
                     <Textarea
@@ -235,7 +235,7 @@ export function LiveChat() {
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      className="flex-1 min-h-[40px] max-h-[100px] resize-none"
+                      className="flex-1 min-h-[40px] max-h-[60px] resize-none"
                       rows={1}
                       data-testid="input-chat-message"
                     />
