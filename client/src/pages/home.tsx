@@ -6,6 +6,7 @@ import { Search, UserPlus, Plus, ArrowRight, Star } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
+import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
 
 export default function Home() {
   const { user } = useAuth();
@@ -112,6 +113,16 @@ export default function Home() {
         <div className="absolute inset-0 bg-black bg-opacity-20"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Logo */}
+          <div className="mb-8">
+            <img 
+              src={logoImage} 
+              alt="Takas Çemberi Logo" 
+              className="h-32 w-auto mx-auto"
+              data-testid="logo-hero"
+            />
+          </div>
+          
           <h1 className="text-4xl md:text-6xl font-bold mb-6" data-testid="title-hero">
             Eşyalarınızı <br />
             <span className="text-accent">Takas Edin</span>
