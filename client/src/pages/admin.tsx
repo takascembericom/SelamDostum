@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, X, Eye, MessageCircle, LogOut, Shield } from "lucide-react";
+import { LiveChat } from "@/components/live-chat";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CATEGORY_LABELS, CONDITION_LABELS } from "@shared/schema";
 import type { Item } from "@shared/schema";
@@ -292,105 +293,108 @@ export default function AdminPanel() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Admin Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2">
-              <Shield className="h-6 w-6 text-blue-600" />
-              <h1 className="text-xl font-bold text-gray-900">Admin Paneli</h1>
+    <>
+      <div className="min-h-screen bg-gray-50">
+        {/* Admin Header */}
+        <header className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <div className="flex items-center gap-2">
+                <Shield className="h-6 w-6 text-blue-600" />
+                <h1 className="text-xl font-bold text-gray-900">Admin Paneli</h1>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleLogout}
+                className="flex items-center gap-2"
+                data-testid="button-admin-logout"
+              >
+                <LogOut className="h-4 w-4" />
+                Çıkış Yap
+              </Button>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleLogout}
-              className="flex items-center gap-2"
-              data-testid="button-admin-logout"
-            >
-              <LogOut className="h-4 w-4" />
-              Çıkış Yap
-            </Button>
           </div>
+        </header>
+        
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <p className="text-gray-600 mt-2">İlanları yönetin ve onaylayın</p>
+          </div>
+
+          <Tabs defaultValue="pending" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="pending" className="flex items-center gap-2">
+                <MessageCircle className="h-4 w-4" />
+                Bekleyen İlanlar ({pendingItems.length})
+              </TabsTrigger>
+              <TabsTrigger value="approved" className="flex items-center gap-2">
+                <Check className="h-4 w-4" />
+                Onaylanan İlanlar ({approvedItems.length})
+              </TabsTrigger>
+              <TabsTrigger value="rejected" className="flex items-center gap-2">
+                <X className="h-4 w-4" />
+                Reddedilen İlanlar ({rejectedItems.length})
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="pending" className="space-y-4">
+              {pendingLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                  <p className="text-gray-600">Bekleyen ilanlar yükleniyor...</p>
+                </div>
+              ) : pendingItems.length === 0 ? (
+                <div className="text-center py-8">
+                  <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600">Bekleyen ilan bulunmuyor</p>
+                </div>
+              ) : (
+                pendingItems.map(item => (
+                  <ItemCard key={item.id} item={item} showActions={true} />
+                ))
+              )}
+            </TabsContent>
+
+            <TabsContent value="approved" className="space-y-4">
+              {approvedLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                  <p className="text-gray-600">Onaylanan ilanlar yükleniyor...</p>
+                </div>
+              ) : approvedItems.length === 0 ? (
+                <div className="text-center py-8">
+                  <Check className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600">Onaylanan ilan bulunmuyor</p>
+                </div>
+              ) : (
+                approvedItems.map(item => (
+                  <ItemCard key={item.id} item={item} />
+                ))
+              )}
+            </TabsContent>
+
+            <TabsContent value="rejected" className="space-y-4">
+              {rejectedLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                  <p className="text-gray-600">Reddedilen ilanlar yükleniyor...</p>
+                </div>
+              ) : rejectedItems.length === 0 ? (
+                <div className="text-center py-8">
+                  <X className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600">Reddedilen ilan bulunmuyor</p>
+                </div>
+              ) : (
+                rejectedItems.map(item => (
+                  <ItemCard key={item.id} item={item} />
+                ))
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
-      </header>
-      
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <p className="text-gray-600 mt-2">İlanları yönetin ve onaylayın</p>
-        </div>
-
-        <Tabs defaultValue="pending" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="pending" className="flex items-center gap-2">
-              <MessageCircle className="h-4 w-4" />
-              Bekleyen İlanlar ({pendingItems.length})
-            </TabsTrigger>
-            <TabsTrigger value="approved" className="flex items-center gap-2">
-              <Check className="h-4 w-4" />
-              Onaylanan İlanlar ({approvedItems.length})
-            </TabsTrigger>
-            <TabsTrigger value="rejected" className="flex items-center gap-2">
-              <X className="h-4 w-4" />
-              Reddedilen İlanlar ({rejectedItems.length})
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="pending" className="space-y-4">
-            {pendingLoading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                <p className="text-gray-600">Bekleyen ilanlar yükleniyor...</p>
-              </div>
-            ) : pendingItems.length === 0 ? (
-              <div className="text-center py-8">
-                <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Bekleyen ilan bulunmuyor</p>
-              </div>
-            ) : (
-              pendingItems.map(item => (
-                <ItemCard key={item.id} item={item} showActions={true} />
-              ))
-            )}
-          </TabsContent>
-
-          <TabsContent value="approved" className="space-y-4">
-            {approvedLoading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                <p className="text-gray-600">Onaylanan ilanlar yükleniyor...</p>
-              </div>
-            ) : approvedItems.length === 0 ? (
-              <div className="text-center py-8">
-                <Check className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Onaylanan ilan bulunmuyor</p>
-              </div>
-            ) : (
-              approvedItems.map(item => (
-                <ItemCard key={item.id} item={item} />
-              ))
-            )}
-          </TabsContent>
-
-          <TabsContent value="rejected" className="space-y-4">
-            {rejectedLoading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                <p className="text-gray-600">Reddedilen ilanlar yükleniyor...</p>
-              </div>
-            ) : rejectedItems.length === 0 ? (
-              <div className="text-center py-8">
-                <X className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Reddedilen ilan bulunmuyor</p>
-              </div>
-            ) : (
-              rejectedItems.map(item => (
-                <ItemCard key={item.id} item={item} />
-              ))
-            )}
-          </TabsContent>
-        </Tabs>
       </div>
-    </div>
+      <LiveChat />
+    </>
   );
 }

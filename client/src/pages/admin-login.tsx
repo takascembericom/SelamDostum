@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Shield, Eye, EyeOff } from "lucide-react";
 import { useLocation } from "wouter";
+import { LiveChat } from "@/components/live-chat";
 
 // Admin credentials - in production this should be in environment variables
 const ADMIN_CREDENTIALS = {
@@ -61,6 +62,7 @@ export default function AdminLogin() {
   };
 
   return (
+    <>
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
@@ -141,5 +143,7 @@ export default function AdminLogin() {
         </CardContent>
       </Card>
     </div>
+    <LiveChat />
+    </>
   );
 }
