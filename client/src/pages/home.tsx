@@ -120,9 +120,11 @@ export default function Home() {
               alt="Takas Çemberi Logo" 
               className="h-32 w-auto mx-auto drop-shadow-lg"
               style={{
-                backgroundColor: 'transparent',
+                filter: 'hue-rotate(70deg) saturate(1.2)',
+                mixBlendMode: 'multiply',
+                backgroundColor: '#16a34a',
                 borderRadius: '50%',
-                background: 'linear-gradient(to bottom right, #f97316, #16a34a)'
+                padding: '8px'
               }}
               data-testid="logo-hero"
             />
