@@ -269,45 +269,6 @@ export default function AddItem() {
                   </p>
                 </div>
 
-                {/* Title */}
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Başlık *</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Başlık ekleyin" 
-                          {...field}
-                          data-testid="input-title"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Description */}
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Açıklama *</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Açıklama ekleyin"
-                          rows={4}
-                          {...field}
-                          data-testid="textarea-description"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 {/* Category & Subcategory */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
@@ -522,6 +483,45 @@ export default function AddItem() {
                     )}
                   />
                 </div>
+
+                {/* Title */}
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Başlık *</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Başlık ekleyin" 
+                          {...field}
+                          data-testid="input-title"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Description */}
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Açıklama *</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Açıklama ekleyin"
+                          rows={4}
+                          {...field}
+                          data-testid="textarea-description"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 {/* Submit */}
                 <div className="flex gap-4">
