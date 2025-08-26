@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { updatePassword } from "firebase/auth";
+import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function Profile() {
@@ -22,6 +22,7 @@ export default function Profile() {
   const [selectedTab, setSelectedTab] = useState<'active-items' | 'expired-items' | 'offers'>('active-items');
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -81,10 +82,19 @@ export default function Profile() {
   const tradedItems = userItems.filter(item => item.status === 'takas_edildi');
 
   const handlePasswordChange = async () => {
+    if (!currentPassword) {
+      toast({
+        title: "Hata",
+        description: "Mevcut şifrenizi girin",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!newPassword || newPassword !== confirmPassword) {
       toast({
         title: "Hata",
-        description: "Şifreler eşleşmiyor",
+        description: "Yeni şifreler eşleşmiyor",
         variant: "destructive",
       });
       return;
@@ -93,27 +103,43 @@ export default function Profile() {
     if (newPassword.length < 6) {
       toast({
         title: "Hata", 
-        description: "Şifre en az 6 karakter olmalı",
+        description: "Yeni şifre en az 6 karakter olmalı",
         variant: "destructive",
       });
       return;
     }
 
     try {
-      if (user) {
+      if (user && user.email) {
+        // First verify current password
+        const credential = EmailAuthProvider.credential(user.email, currentPassword);
+        await reauthenticateWithCredential(user, credential);
+        
+        // If verification successful, update password
         await updatePassword(user, newPassword);
+        
         toast({
           title: "Başarılı",
           description: "Şifreniz güncellendi",
         });
+        
         setShowPasswordDialog(false);
+        setCurrentPassword('');
         setNewPassword('');
         setConfirmPassword('');
       }
     } catch (error: any) {
+      let errorMessage = "Şifre güncellenemedi";
+      
+      if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+        errorMessage = "Mevcut şifreniz yanlış";
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = "Yeni şifre çok zayıf";
+      }
+      
       toast({
         title: "Hata",
-        description: error.message || "Şifre güncellenemedi",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -241,6 +267,17 @@ export default function Profile() {
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
+                      <Label htmlFor="currentPassword">Mevcut Şifre</Label>
+                      <Input
+                        id="currentPassword"
+                        type="password"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        placeholder="Mevcut şifrenizi girin"
+                        data-testid="input-current-password"
+                      />
+                    </div>
+                    <div>
                       <Label htmlFor="newPassword">Yeni Şifre</Label>
                       <Input
                         id="newPassword"
@@ -252,13 +289,13 @@ export default function Profile() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="confirmPassword">Şifre Tekrar</Label>
+                      <Label htmlFor="confirmPassword">Yeni Şifre Tekrar</Label>
                       <Input
                         id="confirmPassword"
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder="Şifrenizi tekrar girin"
+                        placeholder="Yeni şifrenizi tekrar girin"
                         data-testid="input-confirm-password"
                       />
                     </div>
