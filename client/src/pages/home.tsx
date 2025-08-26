@@ -109,36 +109,17 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary to-green-600 text-white py-20">
+      <section className="relative bg-gradient-to-br from-primary to-green-600 text-white py-12">
         <div className="absolute inset-0 bg-black bg-opacity-20"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           
-          <h1 className="text-4xl md:text-6xl font-bold mb-6" data-testid="title-hero">
-            Eşyalarınızı <br />
-            <span className="text-accent">Takas Edin</span>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4" data-testid="title-hero">
+            Eşyalarınızı <span className="text-accent">Takas Edin</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90" data-testid="description-hero">
-            Kullanmadığınız eşyalarınızı güvenli şekilde başka eşyalarla değiştirin. 
-            Binlerce kişi arasından istediğinizi bulun.
+          <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto opacity-90" data-testid="description-hero">
+            Eşyalarınızı güvenle takas edin
           </p>
-          
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold" data-testid="stat-users">15.000+</div>
-              <div className="opacity-80">Kullanıcı</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold" data-testid="stat-trades">50.000+</div>
-              <div className="opacity-80">Takas</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold" data-testid="stat-items">100.000+</div>
-              <div className="opacity-80">İlan</div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -167,22 +148,18 @@ export default function Home() {
           </div>
 
           {/* Features */}
-          <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6" data-testid="title-features">Takas Örnekleri</h3>
-              <div className="space-y-6">
-                {features.map((feature, index) => (
-                  <div key={index} className="flex items-start space-x-4" data-testid={`feature-${index}`}>
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 text-2xl">
-                      {feature.icon}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{feature.title}</h4>
-                      <p className="text-gray-600">{feature.description}</p>
-                    </div>
+          <div className="mt-20">
+            <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center" data-testid="title-features">Takas Örnekleri</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+              {features.map((feature, index) => (
+                <div key={index} className="text-center" data-testid={`feature-${index}`}>
+                  <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3 text-3xl">
+                    {feature.icon}
                   </div>
-                ))}
-              </div>
+                  <h4 className="font-semibold text-gray-900 text-sm mb-1">{feature.title}</h4>
+                  <p className="text-gray-600 text-xs">{feature.description}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
