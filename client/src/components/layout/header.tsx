@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
-import { Plus, User, LogOut } from "lucide-react";
+import { Plus, User, LogOut, Home } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -59,6 +59,18 @@ export function Header() {
             <div className="flex items-center space-x-4">
               {user ? (
                 <>
+                  <Link href="/">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="flex items-center gap-2"
+                      data-testid="button-home"
+                    >
+                      <Home className="h-4 w-4" />
+                      <span className="hidden sm:inline">Ana Sayfaya Dön</span>
+                    </Button>
+                  </Link>
+                  
                   <Link href="/add-item">
                     <Button 
                       variant="outline" 
