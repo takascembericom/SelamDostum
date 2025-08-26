@@ -2,10 +2,11 @@ import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { logoutUser } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
-import { Plus, User, LogOut, Home, Shield } from "lucide-react";
+import { Plus, User, LogOut, Home, Shield, MessageCircle } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -13,11 +14,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import { useMessageNotifications } from "@/hooks/useMessageNotifications";
 import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
 
 export function Header() {
   const { user, profile } = useAuth();
   const { toast } = useToast();
+  const { unreadCount } = useMessageNotifications();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
 
@@ -83,6 +86,25 @@ export function Header() {
                     </Button>
                   </Link>
                   
+                  <Link href="/messages">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="flex items-center gap-2 relative"
+                      data-testid="button-messages"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      <span className="hidden sm:inline">Mesajlar</span>
+                      {unreadCount > 0 && (
+                        <Badge 
+                          variant="destructive" 
+                          className="absolute -top-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-xs p-0 min-w-0"
+                        >
+                          {unreadCount > 99 ? '99+' : unreadCount}
+                        </Badge>
+                      )}
+                    </Button>
+                  </Link>
                   
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

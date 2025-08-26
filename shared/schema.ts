@@ -111,6 +111,59 @@ export const insertChatMessageSchema = baseChatMessageSchema.omit({
 export type ChatMessage = z.infer<typeof chatMessageSchema>;
 export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
 
+// User-to-user messaging schema
+const baseUserMessageSchema = z.object({
+  id: z.string(),
+  fromUserId: z.string(),
+  toUserId: z.string(),
+  text: z.string().optional(),
+  imageUrl: z.string().optional(),
+  messageType: z.enum(['text', 'image']).default('text'),
+  conversationId: z.string(),
+  isRead: z.boolean().default(false),
+  timestamp: z.any(),
+  createdAt: z.date(),
+});
+
+export const userMessageSchema = baseUserMessageSchema.refine(
+  (data) => data.text || data.imageUrl,
+  "Message must have either text or image"
+);
+
+export const insertUserMessageSchema = baseUserMessageSchema.omit({
+  id: true,
+  createdAt: true,
+}).refine(
+  (data) => data.text || data.imageUrl,
+  "Message must have either text or image"
+);
+
+export type UserMessage = z.infer<typeof userMessageSchema>;
+export type InsertUserMessage = z.infer<typeof insertUserMessageSchema>;
+
+// Conversation schema
+const baseConversationSchema = z.object({
+  id: z.string(),
+  participants: z.array(z.string()).length(2),
+  lastMessage: z.string(),
+  lastMessageTime: z.date(),
+  unreadCount: z.record(z.string(), z.number()),
+  tradeOfferId: z.string().optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const conversationSchema = baseConversationSchema;
+
+export const insertConversationSchema = baseConversationSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type Conversation = z.infer<typeof conversationSchema>;
+export type InsertConversation = z.infer<typeof insertConversationSchema>;
+
 // Categories for items
 export const ITEM_CATEGORIES = [
   'beyaz_esya',

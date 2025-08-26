@@ -12,6 +12,7 @@ import Items from "@/pages/items";
 import ItemDetail from "@/pages/item-detail";
 import Profile from "@/pages/profile";
 import AddItem from "@/pages/add-item";
+import Messages from "@/pages/messages";
 import AdminPanel from "@/pages/admin";
 import AdminLogin from "@/pages/admin-login";
 import NotFound from "@/pages/not-found";
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/item/:id" component={ItemDetail} />
       <Route path="/profile" component={Profile} />
       <Route path="/add-item" component={AddItem} />
+      <Route path="/messages" component={Messages} />
       <Route path="/admin" component={AdminLogin} />
       <Route path="/admin-panel" component={AdminPanel} />
       <Route component={NotFound} />

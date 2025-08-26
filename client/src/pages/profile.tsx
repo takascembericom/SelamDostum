@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { ItemGrid } from "@/components/items/item-grid";
 import { TradeOffersList } from "@/components/trade/trade-offers-list";
 import { updateTradeOfferStatus, completeTrade } from "@/lib/tradeOffers";
-import { User, Package, Star, MapPin, Plus, Camera, Settings, Lock, ArrowRightLeft } from "lucide-react";
+import { User, Package, Star, MapPin, Plus, Camera, Settings, Lock, ArrowRightLeft, MessageCircle } from "lucide-react";
 import { Link, Redirect } from "wouter";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -18,16 +18,22 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ConversationsList } from "@/components/user-chat/conversations-list";
+import { UserChat } from "@/components/user-chat/user-chat";
+import { Conversation } from "@shared/schema";
 
 export default function Profile() {
   const { user, profile, loading } = useAuth();
-  const [selectedTab, setSelectedTab] = useState<'pending-items' | 'active-items' | 'rejected-items' | 'expired-items' | 'trade-offers'>('pending-items');
+  const [selectedTab, setSelectedTab] = useState<'pending-items' | 'active-items' | 'rejected-items' | 'expired-items' | 'trade-offers' | 'messages'>('pending-items');
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [selectedConversation, setSelectedConversation] = useState<
+    (Conversation & { otherUserName: string; otherUserId: string }) | null
+  >(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -473,6 +479,18 @@ export default function Profile() {
                 Takas Teklifleri
               </button>
               <button
+                onClick={() => setSelectedTab('messages')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  selectedTab === 'messages'
+                    ? 'border-blue-500 text-blue-500'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+                data-testid="tab-messages"
+              >
+                <MessageCircle className="h-4 w-4 inline mr-1" />
+                Mesajlarım
+              </button>
+              <button
                 onClick={() => setSelectedTab('rejected-items')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   selectedTab === 'rejected-items'
@@ -636,6 +654,47 @@ export default function Profile() {
               onReject={handleRejectOffer}
               onCancel={handleCancelOffer}
             />
+          </div>
+        )}
+
+        {selectedTab === 'messages' && (
+          <div data-testid="content-messages">
+            <Card className="h-[600px] overflow-hidden">
+              <div className="flex h-full">
+                {/* Conversations List */}
+                <div className="w-1/3 border-r">
+                  <ConversationsList
+                    onSelectConversation={setSelectedConversation}
+                    selectedConversationId={selectedConversation?.id}
+                  />
+                </div>
+
+                {/* Chat View */}
+                <div className="w-2/3">
+                  {selectedConversation ? (
+                    <UserChat
+                      otherUserId={selectedConversation.otherUserId}
+                      otherUserName={selectedConversation.otherUserName}
+                      conversationId={selectedConversation.id}
+                      tradeOfferId={selectedConversation.tradeOfferId}
+                    />
+                  ) : (
+                    /* Empty State */
+                    <div className="h-full flex items-center justify-center bg-gray-50">
+                      <div className="text-center">
+                        <MessageCircle className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                          Konuşma Seçin
+                        </h3>
+                        <p className="text-gray-600">
+                          Mesajlaşmaya başlamak için sol taraftan bir konuşma seçin
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Card>
           </div>
         )}
       </div>

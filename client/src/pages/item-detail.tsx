@@ -12,12 +12,16 @@ import { ArrowLeft, MapPin, Star, Calendar, User, MessageCircle } from "lucide-r
 import { useAuth } from "@/hooks/useAuth";
 import { Link } from "wouter";
 import { TradeOfferModal } from "@/components/trade/trade-offer-modal";
+import { createOrGetConversation } from "@/lib/userMessages";
+import { useLocation } from "wouter";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ItemDetail() {
   const { id } = useParams<{ id: string }>();
   const { profile } = useAuth();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
+  const [, setLocation] = useLocation();
 
   const { data: item, isLoading, error } = useQuery({
     queryKey: ["item", id],
@@ -81,6 +85,22 @@ export default function ItemDetail() {
   };
 
   const isOwner = profile?.id === item.ownerId;
+  const { toast } = useToast();
+
+  const handleSendMessage = async () => {
+    if (!profile?.id || !item) return;
+
+    try {
+      const conversationId = await createOrGetConversation(profile.id, item.ownerId);
+      setLocation(`/messages?conversation=${conversationId}`);
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "Sohbet başlatılamadı",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -204,8 +224,13 @@ export default function ItemDetail() {
                     <p className="text-sm text-gray-500">İlan Sahibi</p>
                   </div>
                 </div>
-                {!isOwner && (
-                  <Button variant="outline" size="sm">
+                {!isOwner && profile && (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={handleSendMessage}
+                    data-testid="button-send-message"
+                  >
                     <MessageCircle className="h-4 w-4 mr-2" />
                     Mesaj Gönder
                   </Button>
