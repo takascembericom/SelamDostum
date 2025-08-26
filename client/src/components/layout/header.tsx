@@ -49,7 +49,7 @@ export function Header() {
                   <img 
                     src={logoImage} 
                     alt="Takas Çemberi Logo" 
-                    className="h-12 w-auto mr-3"
+                    className="h-14 w-auto mr-3"
                   />
                   <span className="text-2xl font-bold text-gray-900 hidden sm:inline">Takas Çemberi</span>
                 </div>
