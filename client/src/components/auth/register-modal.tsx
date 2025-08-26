@@ -21,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Eye, EyeOff } from "lucide-react";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "Ad en az 2 karakter olmalıdır"),
@@ -42,6 +43,7 @@ interface RegisterModalProps {
 
 export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalProps) {
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<RegisterFormData>({
@@ -167,7 +169,23 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
                 <FormItem>
                   <FormLabel>Şifre</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="••••••••" {...field} data-testid="input-password" />
+                    <div className="relative">
+                      <Input 
+                        type={showPassword ? "text" : "password"} 
+                        placeholder="••••••••" 
+                        {...field} 
+                        data-testid="input-password"
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        data-testid="button-toggle-password"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
