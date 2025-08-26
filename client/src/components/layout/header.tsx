@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
 
 export function Header() {
   const { user, profile } = useAuth();
@@ -45,10 +46,12 @@ export function Header() {
             <div className="flex items-center">
               <Link href="/" data-testid="link-home">
                 <div className="flex-shrink-0 flex items-center">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center mr-2">
-                    <span className="text-white font-bold text-lg">T</span>
-                  </div>
-                  <span className="text-2xl font-bold text-gray-900">Takas Çemberi</span>
+                  <img 
+                    src={logoImage} 
+                    alt="Takas Çemberi Logo" 
+                    className="h-10 w-auto mr-3"
+                  />
+                  <span className="text-2xl font-bold text-gray-900 hidden sm:inline">Takas Çemberi</span>
                 </div>
               </Link>
             </div>
