@@ -54,7 +54,32 @@ export default function AddItem() {
   const [imageURLs, setImageURLs] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  // All listings now require payment
+  const [userListingCount, setUserListingCount] = useState<number>(0);
+  const [loadingListingCount, setLoadingListingCount] = useState(true);
+  const [needsPayment, setNeedsPayment] = useState(false);
+
+  // Check user's current listing count
+  useEffect(() => {
+    const checkUserListings = async () => {
+      if (!user) return;
+      
+      try {
+        setLoadingListingCount(true);
+        const q = query(collection(db, 'items'), where('ownerId', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+        const count = querySnapshot.size;
+        
+        setUserListingCount(count);
+        setNeedsPayment(count >= 1); // Second listing needs payment
+      } catch (error) {
+        console.error('Error checking user listings:', error);
+      } finally {
+        setLoadingListingCount(false);
+      }
+    };
+
+    checkUserListings();
+  }, [user]);
 
   const form = useForm<AddItemFormData>({
     resolver: zodResolver(addItemSchema),
@@ -118,6 +143,11 @@ export default function AddItem() {
   };
 
   const handlePayment = async () => {
+    if (!needsPayment) {
+      // Free listing, proceed directly
+      return await submitItem(false);
+    }
+
     try {
       // Show payment process
       toast({
@@ -170,7 +200,7 @@ export default function AddItem() {
 
       toast({
         title: "İlan başarıyla eklendi",
-        description: "İlanınız aktif",
+        description: isPaid ? "Ücretli ilanınız aktif" : "Ücretsiz ilanınız aktif",
       });
 
       // Redirect to profile
@@ -528,7 +558,7 @@ export default function AddItem() {
                   <Button 
                     type="submit" 
                     className="flex-1" 
-                    disabled={uploading}
+                    disabled={uploading || loadingListingCount}
                     data-testid="button-submit-add-item"
                   >
                     {uploading ? (
@@ -536,11 +566,15 @@ export default function AddItem() {
                         <Upload className="h-4 w-4 mr-2 animate-spin" />
                         Yükleniyor...
                       </>
-                    ) : (
+                    ) : loadingListingCount ? (
+                      "Kontrol ediliyor..."
+                    ) : needsPayment ? (
                       <>
                         <CreditCard className="h-4 w-4 mr-2" />
                         İlanı Ekle (10 TL)
                       </>
+                    ) : (
+                      "İlanı Ekle (Ücretsiz)"
                     )}
                   </Button>
                   <Button 
