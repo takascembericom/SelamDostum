@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { collection, query, where, orderBy, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db, storage } from "@/lib/firebase";
 import { Item } from "@shared/schema";
+import { republishItem, deleteItem } from "@/lib/itemUtils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +11,7 @@ import { ItemGrid } from "@/components/items/item-grid";
 import { TradeOffersList } from "@/components/trade/trade-offers-list";
 import { updateTradeOfferStatus, completeTrade } from "@/lib/tradeOffers";
 import { User, Package, Star, MapPin, Plus, Camera, Settings, Lock, ArrowRightLeft, MessageCircle } from "lucide-react";
+import { ExpiredItemCard } from "@/components/items/expired-item-card";
 import { Link, Redirect } from "wouter";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -56,6 +58,7 @@ export default function Profile() {
           id: doc.id,
           createdAt: data.createdAt.toDate(),
           updatedAt: data.updatedAt.toDate(),
+          expireAt: data.expireAt ? data.expireAt.toDate() : null,
         } as Item;
       });
     },
@@ -64,6 +67,46 @@ export default function Profile() {
 
   const handleViewDetails = (item: Item) => {
     console.log("View item details:", item);
+  };
+
+  const handleRepublishItem = async (itemId: string) => {
+    try {
+      await republishItem(itemId);
+      
+      // Refresh user items
+      await queryClient.invalidateQueries({ queryKey: ['user-items'] });
+      
+      toast({
+        title: "İlan Yeniden Yayına Alındı",
+        description: "İlanınız admin onayından sonra tekrar yayınlanacak",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "İlan yeniden yayına alınamadı",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteItem = async (itemId: string) => {
+    try {
+      await deleteItem(itemId);
+      
+      // Refresh user items
+      await queryClient.invalidateQueries({ queryKey: ['user-items'] });
+      
+      toast({
+        title: "İlan Silindi",
+        description: "İlanınız kalıcı olarak silindi",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Hata", 
+        description: error.message || "İlan silinemedi",
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading) {
@@ -85,7 +128,15 @@ export default function Profile() {
   const activeItems = userItems.filter(item => item.status === 'aktif');
   const rejectedItems = userItems.filter(item => item.status === 'reddedildi');
   const expiredItems = userItems.filter(item => {
-    // Check if item is older than 30 days
+    // Check if item has expired or has status süresi_biten
+    if (item.status === 'süresi_biten') return true;
+    
+    // Check if expireAt date has passed (for items with expireAt field)
+    if (item.expireAt) {
+      return new Date() > new Date(item.expireAt);
+    }
+    
+    // Fallback: Check if item is older than 30 days (for older items without expireAt)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     return item.createdAt < thirtyDaysAgo;
@@ -631,10 +682,28 @@ export default function Profile() {
                 <p className="text-gray-600">Süresi dolan ilanlar yükleniyor...</p>
               </div>
             ) : expiredItems.length > 0 ? (
-              <ItemGrid
-                items={expiredItems}
-                onViewDetails={handleViewDetails}
-              />
+              <div className="space-y-4">
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-orange-600 text-sm">⏰</span>
+                    <span className="text-orange-800 font-medium">Bu ilanların süresi dolmuş</span>
+                  </div>
+                  <p className="text-orange-700 text-sm mt-1">
+                    İlanlarınızı tekrar yayına almak için ödeme yapabilir veya silebilirsiniz.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {expiredItems.map((item) => (
+                    <ExpiredItemCard
+                      key={item.id}
+                      item={item}
+                      onRepublish={handleRepublishItem}
+                      onDelete={handleDeleteItem}
+                      onViewDetails={handleViewDetails}
+                    />
+                  ))}
+                </div>
+              </div>
             ) : (
               <div className="text-center py-16">
                 <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">

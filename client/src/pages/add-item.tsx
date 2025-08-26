@@ -63,9 +63,7 @@ export default function AddItem() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [userListingCount, setUserListingCount] = useState<number>(0);
   const [loadingListingCount, setLoadingListingCount] = useState(true);
-  const [needsPayment, setNeedsPayment] = useState(false);
-
-  // Check user's current listing count
+  // Check user's current listing count for display purposes only
   useEffect(() => {
     const checkUserListings = async () => {
       if (!user) return;
@@ -77,7 +75,6 @@ export default function AddItem() {
         const count = querySnapshot.size;
         
         setUserListingCount(count);
-        setNeedsPayment(count >= 1); // Second listing needs payment
       } catch (error) {
         console.error('Error checking user listings:', error);
       } finally {
@@ -149,36 +146,22 @@ export default function AddItem() {
     return await Promise.all(uploadPromises);
   };
 
-  const handlePayment = async () => {
-    if (!needsPayment) {
-      // Free listing, proceed directly
-      return await submitItem(false);
-    }
-
-    try {
-      // Show payment process
-      toast({
-        title: "Ödeme başarılı",
-        description: "İlanınız ücretli olarak ekleniyor (10 TL)",
-      });
-      
-      return await submitItem(true, `payment_${Date.now()}`);
-    } catch (error: any) {
-      toast({
-        title: "Ödeme hatası",
-        description: error.message || "Ödeme işlemi başarısız",
-        variant: "destructive",
-      });
-    }
+  const handleSubmit = async () => {
+    // Tüm ilanlar 30 gün süreli olacak, ödeme sistemi basitleştirildi
+    return await submitItem();
   };
 
-  const submitItem = async (isPaid: boolean = false, paymentId?: string) => {
+  const submitItem = async () => {
     if (!user || !profile) return;
 
     setUploading(true);
     try {
       // Upload images first
       const imageUrls = await uploadImages();
+
+      // Calculate expiry date (30 days from now)
+      const expireDate = new Date();
+      expireDate.setDate(expireDate.getDate() + 30);
 
       // Create item document
       const itemData = {
@@ -189,8 +172,7 @@ export default function AddItem() {
         ownerName: `${profile.firstName} ${profile.lastName}`,
         ownerAvatar: profile.avatar || "",
         status: 'pending',
-        isPaid,
-        paymentId: paymentId || undefined,
+        expireAt: expireDate,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       };
@@ -225,7 +207,7 @@ export default function AddItem() {
   };
 
   const onSubmit = async (data: AddItemFormData) => {
-    await handlePayment();
+    await handleSubmit();
   };
 
   if (loading) {
@@ -575,13 +557,8 @@ export default function AddItem() {
                       </>
                     ) : loadingListingCount ? (
                       "Kontrol ediliyor..."
-                    ) : needsPayment ? (
-                      <>
-                        <CreditCard className="h-4 w-4 mr-2" />
-                        İlanı Ekle (10 TL)
-                      </>
                     ) : (
-                      "İlanı Ekle (Ücretsiz)"
+                      "İlanı Ekle (30 gün süreli)"
                     )}
                   </Button>
                   <Button 
