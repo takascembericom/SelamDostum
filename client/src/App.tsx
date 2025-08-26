@@ -33,18 +33,30 @@ function App() {
   const [location] = useLocation();
   const isAdminPage = location === '/admin' || location === '/admin-panel';
 
+  if (isAdminPage) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <div className="min-h-screen">
+            <Router />
+          </div>
+          <Toaster />
+        </TooltipProvider>
+      </QueryClientProvider>
+    );
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
           <div className="min-h-screen flex flex-col">
-            {!isAdminPage && <Header />}
+            <Header />
             <main className="flex-1">
               <Router />
             </main>
-            {!isAdminPage && <Footer />}
+            <Footer />
           </div>
-          {!isAdminPage && <LiveChat />}
           <Toaster />
         </TooltipProvider>
       </AuthProvider>
