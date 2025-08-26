@@ -6,7 +6,7 @@ import { Search, UserPlus, Plus, ArrowRight, Star } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
-import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
+import logoImage from "@assets/generated_images/Green_background_matching_logo_f5f5805d.png";
 
 export default function Home() {
   const { user } = useAuth();
