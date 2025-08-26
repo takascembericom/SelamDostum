@@ -244,7 +244,7 @@ export default function AddItem() {
                       <FormLabel>Başlık *</FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="Eşyanızın adını yazın" 
+                          placeholder="Başlık ekleyin" 
                           {...field}
                           data-testid="input-title"
                         />
@@ -263,7 +263,7 @@ export default function AddItem() {
                       <FormLabel>Açıklama *</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Eşyanızın detaylarını yazın"
+                          placeholder="Açıklama ekleyin"
                           rows={4}
                           {...field}
                           data-testid="textarea-description"
