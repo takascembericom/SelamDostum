@@ -35,9 +35,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      // If user exists but email is not verified, sign them out immediately
+      if (firebaseUser && !firebaseUser.emailVerified) {
+        await auth.signOut();
+        setUser(null);
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
+      
       setUser(firebaseUser);
       
-      if (firebaseUser) {
+      if (firebaseUser && firebaseUser.emailVerified) {
         const userProfile = await getUserProfile(firebaseUser.uid);
         setProfile(userProfile);
       } else {
