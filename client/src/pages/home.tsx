@@ -120,8 +120,8 @@ export default function Home() {
               alt="Takas Çemberi Logo" 
               className="h-40 w-auto mx-auto drop-shadow-2xl"
               style={{
-                filter: 'hue-rotate(240deg) saturate(5) sepia(0.8) contrast(1.8) brightness(1)',
-                backgroundColor: '#ff4500',
+                filter: 'invert(1) hue-rotate(0deg) saturate(10) sepia(1) contrast(2) brightness(0.5)',
+                backgroundColor: '#ff2d2d',
                 borderRadius: '50%',
                 padding: '12px'
               }}
