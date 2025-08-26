@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, where, getDocs, doc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/lib/firebase";
 import { Redirect, useLocation } from "wouter";
@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Upload, X, Camera } from "lucide-react";
+import { Upload, X, Camera, CreditCard } from "lucide-react";
 import { ITEM_CATEGORIES, CATEGORY_LABELS, CONDITION_LABELS, TASINMAZLAR_SUBCATEGORIES, TURKISH_CITIES, CAR_BRANDS } from "@shared/schema";
 
 const addItemSchema = z.object({
@@ -54,6 +54,32 @@ export default function AddItem() {
   const [imageURLs, setImageURLs] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [userListingCount, setUserListingCount] = useState<number>(0);
+  const [loadingListingCount, setLoadingListingCount] = useState(true);
+  const [needsPayment, setNeedsPayment] = useState(false);
+
+  // Check user's current listing count
+  useEffect(() => {
+    const checkUserListings = async () => {
+      if (!user) return;
+      
+      try {
+        setLoadingListingCount(true);
+        const q = query(collection(db, 'items'), where('ownerId', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+        const count = querySnapshot.size;
+        
+        setUserListingCount(count);
+        setNeedsPayment(count >= 1); // Second listing needs payment
+      } catch (error) {
+        console.error('Error checking user listings:', error);
+      } finally {
+        setLoadingListingCount(false);
+      }
+    };
+
+    checkUserListings();
+  }, [user]);
 
   const form = useForm<AddItemFormData>({
     resolver: zodResolver(addItemSchema),
@@ -116,7 +142,30 @@ export default function AddItem() {
     return await Promise.all(uploadPromises);
   };
 
-  const onSubmit = async (data: AddItemFormData) => {
+  const handlePayment = async () => {
+    if (!needsPayment) {
+      // Free listing, proceed directly
+      return await submitItem(false);
+    }
+
+    try {
+      // For demo purposes, simulate payment
+      toast({
+        title: "Ödeme başarılı",
+        description: "İlanınız ücretli olarak ekleniyor (10 TL)",
+      });
+      
+      return await submitItem(true, `payment_${Date.now()}`);
+    } catch (error: any) {
+      toast({
+        title: "Ödeme hatası",
+        description: error.message || "Ödeme işlemi başarısız",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const submitItem = async (isPaid: boolean = false, paymentId?: string) => {
     if (!user || !profile) return;
 
     setUploading(true);
@@ -126,22 +175,32 @@ export default function AddItem() {
 
       // Create item document
       const itemData = {
-        ...data,
-        location: `${data.city}, ${data.district}, ${data.neighborhood}`,
+        ...form.getValues(),
+        location: `${form.getValues().city}, ${form.getValues().district}, ${form.getValues().neighborhood}`,
         images: imageUrls,
         ownerId: user.uid,
         ownerName: `${profile.firstName} ${profile.lastName}`,
         ownerAvatar: profile.avatar || "",
         status: 'aktif',
+        isPaid,
+        paymentId: paymentId || undefined,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       };
 
       await addDoc(collection(db, 'items'), itemData);
 
+      // Update user's listing count in profile
+      if (profile.totalListings !== undefined) {
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, {
+          totalListings: (profile.totalListings || 0) + 1
+        });
+      }
+
       toast({
-        title: "Eşya başarıyla eklendi",
-        description: "Eşyanız onaylandıktan sonra diğer kullanıcılar tarafından görülebilir",
+        title: "İlan başarıyla eklendi",
+        description: isPaid ? "Ücretli ilanınız aktif" : "Ücretsiz ilanınız aktif",
       });
 
       // Redirect to profile
@@ -150,12 +209,16 @@ export default function AddItem() {
       console.error('Add item error:', error);
       toast({
         title: "Hata",
-        description: error.message || "Eşya eklenirken bir hata oluştu",
+        description: error.message || "İlan eklenirken bir hata oluştu",
         variant: "destructive",
       });
     } finally {
       setUploading(false);
     }
+  };
+
+  const onSubmit = async (data: AddItemFormData) => {
+    await handlePayment();
   };
 
   if (loading) {
@@ -182,6 +245,34 @@ export default function AddItem() {
             <p className="text-gray-600">
               Takas etmek istediğiniz eşyanızın bilgilerini ekleyin
             </p>
+            
+            {/* Payment Status */}
+            {!loadingListingCount && (
+              <div className={`p-4 rounded-lg border ${needsPayment ? 'bg-orange-50 border-orange-200' : 'bg-green-50 border-green-200'}`}>
+                <div className="flex items-center gap-2">
+                  {needsPayment ? (
+                    <>
+                      <CreditCard className="h-5 w-5 text-orange-600" />
+                      <span className="font-medium text-orange-800">
+                        Bu ilanınız ücretli (10 TL) - Toplam ilan sayısı: {userListingCount}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="h-5 w-5 bg-green-600 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs">✓</span>
+                      </div>
+                      <span className="font-medium text-green-800">
+                        Bu ilanınız ücretsiz - İlk ilan hakkınız
+                      </span>
+                    </>
+                  )}
+                </div>
+                <p className="text-sm text-gray-600 mt-1">
+                  {needsPayment ? 'İkinci ve sonraki ilanlar ücretlidir' : 'İlk ilanınız her zaman ücretsizdir'}
+                </p>
+              </div>
+            )}
           </CardHeader>
           
           <CardContent>
@@ -494,7 +585,7 @@ export default function AddItem() {
                   <Button 
                     type="submit" 
                     className="flex-1" 
-                    disabled={uploading}
+                    disabled={uploading || loadingListingCount}
                     data-testid="button-submit-add-item"
                   >
                     {uploading ? (
@@ -502,8 +593,15 @@ export default function AddItem() {
                         <Upload className="h-4 w-4 mr-2 animate-spin" />
                         Yükleniyor...
                       </>
+                    ) : loadingListingCount ? (
+                      "Kontrol ediliyor..."
+                    ) : needsPayment ? (
+                      <>
+                        <CreditCard className="h-4 w-4 mr-2" />
+                        İlanı Ekle (10 TL)
+                      </>
                     ) : (
-                      "Eşyayı Ekle"
+                      "İlanı Ekle (Ücretsiz)"
                     )}
                   </Button>
                   <Button 

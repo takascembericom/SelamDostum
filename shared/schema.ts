@@ -9,6 +9,7 @@ export const userSchema = z.object({
   lastName: z.string().min(2),
   phone: z.string().min(10),
   avatar: z.string().optional(),
+  totalListings: z.number().default(0),
   createdAt: z.date(),
   emailVerified: z.boolean().default(false),
 });
@@ -17,6 +18,7 @@ export const insertUserSchema = userSchema.omit({
   id: true,
   createdAt: true,
   emailVerified: true,
+  totalListings: true,
 });
 
 // Item schema for Firestore
@@ -32,6 +34,8 @@ export const itemSchema = z.object({
   ownerAvatar: z.string().optional(),
   location: z.string(),
   status: z.enum(['aktif', 'takas_edildi', 'pasif']).default('aktif'),
+  isPaid: z.boolean().default(false),
+  paymentId: z.string().optional(),
   rating: z.number().min(0).max(5).optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
@@ -43,6 +47,8 @@ export const insertItemSchema = itemSchema.omit({
   updatedAt: true,
   ownerName: true,
   ownerAvatar: true,
+  isPaid: true,
+  paymentId: true,
 });
 
 // Trade offer schema
