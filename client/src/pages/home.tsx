@@ -112,28 +112,28 @@ export default function Home() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6" data-testid="title-hero">
-            Kullanmadığın Eşyalarını <br />
-            <span className="text-accent">Değerli Eşyalarla</span> Takas Et
+            Eşyalarınızı <br />
+            <span className="text-accent">Takas Edin</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90" data-testid="description-hero">
-            Güvenli, kolay ve çevreci bir şekilde eşyalarınızı başkalarıyla değiştirin. 
-            Binlerce kullanıcı arasından istediğiniz eşyayı bulun.
+            Kullanmadığınız eşyalarınızı güvenli şekilde başka eşyalarla değiştirin. 
+            Binlerce kişi arasından istediğinizi bulun.
           </p>
           
 
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-3xl font-bold" data-testid="stat-users">15,000+</div>
-              <div className="opacity-80">Aktif Kullanıcı</div>
+              <div className="text-3xl font-bold" data-testid="stat-users">15.000+</div>
+              <div className="opacity-80">Kullanıcı</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold" data-testid="stat-trades">50,000+</div>
-              <div className="opacity-80">Başarılı Takas</div>
+              <div className="text-3xl font-bold" data-testid="stat-trades">50.000+</div>
+              <div className="opacity-80">Takas</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold" data-testid="stat-items">100,000+</div>
-              <div className="opacity-80">Eşya İlanı</div>
+              <div className="text-3xl font-bold" data-testid="stat-items">100.000+</div>
+              <div className="opacity-80">İlan</div>
             </div>
           </div>
         </div>
