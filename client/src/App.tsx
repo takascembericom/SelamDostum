@@ -16,6 +16,7 @@ import Messages from "@/pages/messages";
 import AdminPanel from "@/pages/admin";
 import AdminLogin from "@/pages/admin-login";
 import NotFound from "@/pages/not-found";
+import { NotificationPermissionBanner } from "@/components/notifications/notification-permission-banner";
 
 function Router() {
   return (
@@ -56,6 +57,7 @@ function App() {
         <TooltipProvider>
           <div className="min-h-screen flex flex-col">
             <Header />
+            <NotificationPermissionBanner />
             <main className="flex-1">
               <Router />
             </main>

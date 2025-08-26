@@ -12,6 +12,13 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { TradeOffer, InsertTradeOffer } from "@shared/schema";
+import { 
+  sendNewTradeOfferNotification, 
+  sendTradeAcceptedNotification, 
+  sendTradeRejectedNotification, 
+  sendTradeCompletedNotification 
+} from "./notifications";
+import { getUserById, getItemById } from "./userUtils";
 
 export interface TradeOfferWithItems extends TradeOffer {
   fromItem?: {
@@ -41,6 +48,26 @@ export const createTradeOffer = async (tradeOfferData: InsertTradeOffer): Promis
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });
+
+    // Send notification to the offer recipient
+    try {
+      const [fromUser, toItem] = await Promise.all([
+        getUserById(tradeOfferData.fromUserId),
+        getItemById(tradeOfferData.toItemId)
+      ]);
+
+      if (fromUser && toItem) {
+        const fromUserName = fromUser.firstName ? 
+          `${fromUser.firstName} ${fromUser.lastName || ''}`.trim() : 
+          fromUser.email || 'Bir kullanıcı';
+        
+        await sendNewTradeOfferNotification(fromUserName, toItem.title);
+      }
+    } catch (notificationError) {
+      console.error("Takas teklifi bildirimi gönderilemedi:", notificationError);
+      // Don't throw error for notification failure
+    }
+
     return docRef.id;
   } catch (error: any) {
     throw new Error(error.message || "Takas teklifi oluşturulamadı");
@@ -117,10 +144,44 @@ export const updateTradeOfferStatus = async (
   status: 'beklemede' | 'kabul_edildi' | 'reddedildi' | 'iptal_edildi'
 ): Promise<void> => {
   try {
+    // Get trade offer details before updating for notification
+    const tradeOfferDoc = await getDoc(doc(db, "tradeOffers", tradeOfferId));
+    let tradeOfferData = null;
+    
+    if (tradeOfferDoc.exists()) {
+      tradeOfferData = tradeOfferDoc.data();
+    }
+
+    // Update the status
     await updateDoc(doc(db, "tradeOffers", tradeOfferId), {
       status,
       updatedAt: Timestamp.now(),
     });
+
+    // Send notification based on status change
+    if (tradeOfferData && (status === 'reddedildi' || status === 'kabul_edildi')) {
+      try {
+        const [toUser, toItem] = await Promise.all([
+          getUserById(tradeOfferData.toUserId),
+          getItemById(tradeOfferData.toItemId)
+        ]);
+
+        if (toUser && toItem) {
+          const toUserName = toUser.firstName ? 
+            `${toUser.firstName} ${toUser.lastName || ''}`.trim() : 
+            toUser.email || 'Bir kullanıcı';
+
+          if (status === 'reddedildi') {
+            await sendTradeRejectedNotification(toUserName, toItem.title);
+          } else if (status === 'kabul_edildi') {
+            await sendTradeAcceptedNotification(toUserName, toItem.title);
+          }
+        }
+      } catch (notificationError) {
+        console.error("Takas durumu bildirimi gönderilemedi:", notificationError);
+        // Don't throw error for notification failure
+      }
+    }
   } catch (error: any) {
     throw new Error(error.message || "Takas teklifi durumu güncellenemedi");
   }
@@ -194,8 +255,29 @@ export const completeTrade = async (tradeOfferId: string): Promise<void> => {
       updatedAt: Timestamp.now(),
     });
 
-    // Update trade offer status
+    // Update trade offer status (this will trigger the notification in updateTradeOfferStatus)
     await updateTradeOfferStatus(tradeOfferId, "kabul_edildi");
+
+    // Send trade completion notification to both users
+    try {
+      const [fromUser, toUser, fromItem, toItem] = await Promise.all([
+        getUserById(tradeOfferData.fromUserId),
+        getUserById(tradeOfferData.toUserId),
+        getItemById(tradeOfferData.fromItemId),
+        getItemById(tradeOfferData.toItemId)
+      ]);
+
+      // Send completion notification to both parties
+      if (fromItem) {
+        await sendTradeCompletedNotification(fromItem.title);
+      }
+      if (toItem) {
+        await sendTradeCompletedNotification(toItem.title);
+      }
+    } catch (notificationError) {
+      console.error("Takas tamamlama bildirimi gönderilemedi:", notificationError);
+      // Don't throw error for notification failure
+    }
 
   } catch (error: any) {
     throw new Error(error.message || "Takas tamamlanamadı");
