@@ -4,15 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, X, Send, Minimize2 } from "lucide-react";
+import { MessageCircle, X, Send, Minimize2, Camera, Image } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
+import { ImageUpload } from "@/components/image-upload";
 
 interface ChatMessage {
   id: string;
-  text: string;
+  text?: string;
+  imageUrl?: string;
+  messageType: 'text' | 'image';
   sender: 'user' | 'admin';
   senderName?: string;
   createdAt: Date;
@@ -26,6 +29,7 @@ export function LiveChat() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showImageUpload, setShowImageUpload] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -52,6 +56,8 @@ export function LiveChat() {
         userMessages.push({
           id: doc.id,
           text: data.text,
+          imageUrl: data.imageUrl,
+          messageType: data.messageType || 'text',
           sender: data.sender,
           senderName: data.senderName,
           createdAt: data.timestamp?.toDate() || new Date(),
@@ -71,6 +77,7 @@ export function LiveChat() {
     try {
       await addDoc(collection(db, 'chatMessages'), {
         text: message,
+        messageType: 'text',
         sender: 'user',
         senderName: profile?.firstName ? `${profile.firstName} ${profile.lastName}` : user.email,
         userId: user.uid,
@@ -93,6 +100,32 @@ export function LiveChat() {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
+    }
+  };
+
+  const handleImageUpload = async (imageUrl: string) => {
+    if (!user?.uid || loading) return;
+
+    setLoading(true);
+    try {
+      await addDoc(collection(db, 'chatMessages'), {
+        imageUrl,
+        messageType: 'image',
+        sender: 'user',
+        senderName: profile?.firstName ? `${profile.firstName} ${profile.lastName}` : user.email,
+        userId: user.uid,
+        timestamp: serverTimestamp(),
+      });
+
+      setShowImageUpload(false);
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: "Resim gönderilemedi",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -170,7 +203,18 @@ export function LiveChat() {
                             : 'bg-gray-100 text-gray-900'
                         }`}
                       >
-                        <p>{msg.text}</p>
+                        {msg.messageType === 'image' && msg.imageUrl ? (
+                          <div className="space-y-2">
+                            <img
+                              src={msg.imageUrl}
+                              alt="Gönderilen resim"
+                              className="max-w-full max-h-48 rounded object-cover"
+                            />
+                            {msg.text && <p>{msg.text}</p>}
+                          </div>
+                        ) : (
+                          <p>{msg.text}</p>
+                        )}
                         <p className={`text-xs mt-1 ${
                           msg.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
                         }`}>
@@ -184,29 +228,49 @@ export function LiveChat() {
 
                 {/* Message Input */}
                 <div className="p-4 border-t bg-gray-50">
-                  <div className="flex gap-2">
-                    <Textarea
-                      placeholder="Mesajınızı yazın..."
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      className="flex-1 min-h-[40px] max-h-[100px] resize-none"
-                      rows={1}
-                      data-testid="input-chat-message"
+                  {showImageUpload ? (
+                    <ImageUpload
+                      onImageUpload={handleImageUpload}
+                      onCancel={() => setShowImageUpload(false)}
+                      buttonText="Resim Gönder"
                     />
-                    <Button
-                      onClick={handleSendMessage}
-                      disabled={!message.trim()}
-                      size="sm"
-                      className="self-end"
-                      data-testid="button-send-message"
-                    >
-                      <Send className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-2">
-                    Genellikle birkaç dakika içinde yanıtlıyoruz
-                  </p>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="flex gap-2">
+                        <Textarea
+                          placeholder="Mesajınızı yazın..."
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
+                          onKeyPress={handleKeyPress}
+                          className="flex-1 min-h-[40px] max-h-[100px] resize-none"
+                          rows={1}
+                          data-testid="input-chat-message"
+                        />
+                        <div className="flex flex-col gap-1">
+                          <Button
+                            onClick={handleSendMessage}
+                            disabled={!message.trim() || loading}
+                            size="sm"
+                            data-testid="button-send-message"
+                          >
+                            <Send className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            onClick={() => setShowImageUpload(true)}
+                            variant="outline"
+                            size="sm"
+                            disabled={loading}
+                            data-testid="button-upload-image"
+                          >
+                            <Camera className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        Genellikle birkaç dakika içinde yanıtlıyoruz
+                      </p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             )}

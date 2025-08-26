@@ -82,6 +82,35 @@ export type InsertItem = z.infer<typeof insertItemSchema>;
 export type TradeOffer = z.infer<typeof tradeOfferSchema>;
 export type InsertTradeOffer = z.infer<typeof insertTradeOfferSchema>;
 
+// Chat message schema for Firestore
+const baseChatMessageSchema = z.object({
+  id: z.string(),
+  text: z.string().optional(),
+  imageUrl: z.string().optional(),
+  messageType: z.enum(['text', 'image']).default('text'),
+  sender: z.enum(['user', 'admin']),
+  senderName: z.string().optional(),
+  userId: z.string(),
+  timestamp: z.any(),
+  createdAt: z.date(),
+});
+
+export const chatMessageSchema = baseChatMessageSchema.refine(
+  (data) => data.text || data.imageUrl,
+  "Message must have either text or image"
+);
+
+export const insertChatMessageSchema = baseChatMessageSchema.omit({
+  id: true,
+  createdAt: true,
+}).refine(
+  (data) => data.text || data.imageUrl,
+  "Message must have either text or image"
+);
+
+export type ChatMessage = z.infer<typeof chatMessageSchema>;
+export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
+
 // Categories for items
 export const ITEM_CATEGORIES = [
   'beyaz_esya',

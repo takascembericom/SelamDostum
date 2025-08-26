@@ -5,12 +5,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { MessageCircle, Send, User } from "lucide-react";
+import { MessageCircle, Send, User, Camera } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { ImageUpload } from "@/components/image-upload";
 
 interface ChatMessage {
   id: string;
-  text: string;
+  text?: string;
+  imageUrl?: string;
+  messageType: 'text' | 'image';
   sender: 'user' | 'admin';
   senderName?: string;
   userId?: string;
@@ -32,6 +35,7 @@ export function AdminChat() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [replyMessage, setReplyMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showImageUpload, setShowImageUpload] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -47,6 +51,8 @@ export function AdminChat() {
         messages.push({
           id: doc.id,
           text: data.text,
+          imageUrl: data.imageUrl,
+          messageType: data.messageType || 'text',
           sender: data.sender,
           senderName: data.senderName,
           userId: data.userId,
@@ -65,7 +71,7 @@ export function AdminChat() {
           conversationsMap.set(message.userId, {
             userId: message.userId,
             userName: message.senderName || 'Kullanıcı',
-            lastMessage: message.text,
+            lastMessage: message.messageType === 'image' ? '📷 Resim gönderildi' : message.text || '',
             lastMessageTime: message.createdAt,
             unreadCount: message.sender === 'user' ? 1 : 0,
             messages: [],
@@ -77,7 +83,7 @@ export function AdminChat() {
         
         // Update last message if this is newer
         if (message.createdAt > conversation.lastMessageTime) {
-          conversation.lastMessage = message.text;
+          conversation.lastMessage = message.messageType === 'image' ? '📷 Resim gönderildi' : message.text || '';
           conversation.lastMessageTime = message.createdAt;
         }
       });
@@ -103,6 +109,7 @@ export function AdminChat() {
     try {
       await addDoc(collection(db, 'chatMessages'), {
         text: replyMessage,
+        messageType: 'text',
         sender: 'admin',
         senderName: 'Destek Ekibi',
         userId: selectedUserId,
@@ -113,6 +120,36 @@ export function AdminChat() {
       toast({
         title: "Mesaj gönderildi",
         description: "Kullanıcıya yanıtınız iletildi",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (imageUrl: string) => {
+    if (!selectedUserId || loading) return;
+
+    setLoading(true);
+    try {
+      await addDoc(collection(db, 'chatMessages'), {
+        imageUrl,
+        messageType: 'image',
+        sender: 'admin',
+        senderName: 'Destek Ekibi',
+        userId: selectedUserId,
+        timestamp: serverTimestamp(),
+      });
+
+      setShowImageUpload(false);
+      toast({
+        title: "Resim gönderildi",
+        description: "Kullanıcıya resim iletildi",
       });
     } catch (error: any) {
       toast({
@@ -205,7 +242,18 @@ export function AdminChat() {
                           : 'bg-gray-100 text-gray-900'
                       }`}
                     >
-                      <p className="text-sm">{message.text}</p>
+                      {message.messageType === 'image' && message.imageUrl ? (
+                        <div className="space-y-2">
+                          <img
+                            src={message.imageUrl}
+                            alt="Gönderilen resim"
+                            className="max-w-full max-h-48 rounded object-cover"
+                          />
+                          {message.text && <p className="text-sm">{message.text}</p>}
+                        </div>
+                      ) : (
+                        <p className="text-sm">{message.text}</p>
+                      )}
                       <p className={`text-xs mt-1 ${
                         message.sender === 'admin' ? 'text-blue-100' : 'text-gray-500'
                       }`}>
@@ -218,29 +266,46 @@ export function AdminChat() {
 
               {/* Reply Input */}
               <div className="p-4 border-t bg-gray-50">
-                <div className="flex gap-2">
-                  <Textarea
-                    placeholder="Kullanıcıya yanıt yazın..."
-                    value={replyMessage}
-                    onChange={(e) => setReplyMessage(e.target.value)}
-                    className="flex-1 min-h-[40px] max-h-[100px] resize-none"
-                    rows={2}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSendReply();
-                      }
-                    }}
+                {showImageUpload ? (
+                  <ImageUpload
+                    onImageUpload={handleImageUpload}
+                    onCancel={() => setShowImageUpload(false)}
+                    buttonText="Admin Resim Gönder"
                   />
-                  <Button
-                    onClick={handleSendReply}
-                    disabled={!replyMessage.trim() || loading}
-                    size="sm"
-                    className="self-end"
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
-                </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <Textarea
+                      placeholder="Kullanıcıya yanıt yazın..."
+                      value={replyMessage}
+                      onChange={(e) => setReplyMessage(e.target.value)}
+                      className="flex-1 min-h-[40px] max-h-[100px] resize-none"
+                      rows={2}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendReply();
+                        }
+                      }}
+                    />
+                    <div className="flex flex-col gap-1">
+                      <Button
+                        onClick={handleSendReply}
+                        disabled={!replyMessage.trim() || loading}
+                        size="sm"
+                      >
+                        <Send className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        onClick={() => setShowImageUpload(true)}
+                        variant="outline"
+                        size="sm"
+                        disabled={loading}
+                      >
+                        <Camera className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </>
           ) : (
