@@ -186,7 +186,7 @@ export default function Profile() {
         {/* Profile Header */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-            <div className="relative w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center overflow-hidden group">
+            <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center overflow-hidden">
               {profile?.avatar ? (
                 <img 
                   src={profile.avatar} 
@@ -197,36 +197,6 @@ export default function Profile() {
               ) : (
                 <User className="h-12 w-12 text-primary" data-testid="avatar-user" />
               )}
-              <Dialog open={showPhotoDialog} onOpenChange={setShowPhotoDialog}>
-                <DialogTrigger asChild>
-                  <button className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Camera className="h-6 w-6 text-white" />
-                  </button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Profil Fotoğrafı Değiştir</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="photo">Yeni Fotoğraf Seçin</Label>
-                      <Input
-                        id="photo"
-                        type="file"
-                        accept="image/*"
-                        onChange={handlePhotoUpload}
-                        data-testid="input-photo-upload"
-                      />
-                    </div>
-                    {uploading && (
-                      <div className="flex items-center gap-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-                        <span>Yükleniyor...</span>
-                      </div>
-                    )}
-                  </div>
-                </DialogContent>
-              </Dialog>
             </div>
             
             <div className="flex-1">
@@ -254,6 +224,38 @@ export default function Profile() {
             </div>
             
             <div className="flex gap-2">
+              <Dialog open={showPhotoDialog} onOpenChange={setShowPhotoDialog}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" data-testid="button-change-photo">
+                    <Camera className="h-4 w-4 mr-2" />
+                    Fotoğraf Değiştir
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Profil Fotoğrafı Değiştir</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="photo">Yeni Fotoğraf Seçin</Label>
+                      <Input
+                        id="photo"
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        data-testid="input-photo-upload"
+                      />
+                    </div>
+                    {uploading && (
+                      <div className="flex items-center gap-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                        <span>Yükleniyor...</span>
+                      </div>
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
+              
               <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
                 <DialogTrigger asChild>
                   <Button variant="outline" data-testid="button-change-password">
