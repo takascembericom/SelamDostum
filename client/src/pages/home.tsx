@@ -105,29 +105,6 @@ export default function Home() {
             Binlerce kullanıcı arasından istediğiniz eşyayı bulun.
           </p>
           
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto mb-8">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1">
-                <Input
-                  type="text"
-                  placeholder="Ne arıyorsun? (örn: laptop, kitap, oyuncak)"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-6 py-4 rounded-lg text-gray-900 text-lg"
-                  data-testid="input-search"
-                />
-              </div>
-              <Button 
-                type="submit"
-                className="bg-accent hover:bg-accent/90 text-white px-8 py-4 rounded-lg font-semibold text-lg"
-                data-testid="button-search"
-              >
-                <Search className="h-5 w-5 mr-2" />
-                Ara
-              </Button>
-            </div>
-          </form>
 
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
