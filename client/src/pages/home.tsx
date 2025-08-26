@@ -72,6 +72,11 @@ export default function Home() {
       icon: "🧸",
       title: "Oyuncak",
       description: "Çocuğunuzun büyüdüğü oyuncakları yeni yaş grubuna uygun olanlarla değiştirin"
+    },
+    {
+      icon: "🏡",
+      title: "Taşınmazlar",
+      description: "Ev, arsa, tarla, bağ, bahçe gibi emlak varlıklarınızı takas edin"
     }
   ];
 

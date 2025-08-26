@@ -79,7 +79,8 @@ export const ITEM_CATEGORIES = [
   'araba',
   'teknolojik_urunler',
   'ev_beyaz_esya',
-  'oyuncak'
+  'oyuncak',
+  'tasinmazlar'
 ] as const;
 
 // Condition labels in Turkish
@@ -99,5 +100,6 @@ export const CATEGORY_LABELS = {
   'araba': 'Araba',
   'teknolojik_urunler': 'Teknolojik Ürünler',
   'ev_beyaz_esya': 'Ev Beyaz Eşya',
-  'oyuncak': 'Oyuncak'
+  'oyuncak': 'Oyuncak',
+  'tasinmazlar': 'Taşınmazlar'
 } as const;
