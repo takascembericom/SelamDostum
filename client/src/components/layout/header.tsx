@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import logoImage from "@assets/generated_images/Large_readable_Takas_Çemberi_logo_e0ba0a60.png";
+import logoImage from "@assets/generated_images/Improved_readable_original_logo_96cdafaa.png";
 
 export function Header() {
   const { user, profile } = useAuth();
