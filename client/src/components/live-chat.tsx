@@ -5,19 +5,27 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, X, Send, Minimize2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { useToast } from "@/hooks/use-toast";
+
+interface ChatMessage {
+  id: string;
+  text: string;
+  sender: 'user' | 'admin';
+  senderName?: string;
+  createdAt: Date;
+}
 
 export function LiveChat() {
+  const { user, profile } = useAuth();
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      text: "Merhaba! Size nasıl yardımcı olabilirim?",
-      sender: "support",
-      time: "Şimdi"
-    }
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -28,29 +36,57 @@ export function LiveChat() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = () => {
-    if (!message.trim()) return;
+  // Listen to messages for this user
+  useEffect(() => {
+    if (!user?.uid) return;
 
-    const newMessage = {
-      id: messages.length + 1,
-      text: message,
-      sender: "user",
-      time: "Şimdi"
-    };
+    const q = query(
+      collection(db, 'chatMessages'),
+      where('userId', '==', user.uid)
+    );
 
-    setMessages([...messages, newMessage]);
-    setMessage("");
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const userMessages: ChatMessage[] = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        userMessages.push({
+          id: doc.id,
+          text: data.text,
+          sender: data.sender,
+          senderName: data.senderName,
+          createdAt: data.timestamp?.toDate() || new Date(),
+        });
+      });
+      userMessages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+      setMessages(userMessages);
+    });
 
-    // Simulate support response
-    setTimeout(() => {
-      const supportResponse = {
-        id: messages.length + 2,
-        text: "Mesajınız alındı. En kısa sürede size dönüş yapacağız.",
-        sender: "support",
-        time: "Şimdi"
-      };
-      setMessages(prev => [...prev, supportResponse]);
-    }, 1000);
+    return () => unsubscribe();
+  }, [user?.uid]);
+
+  const handleSendMessage = async () => {
+    if (!message.trim() || !user?.uid || loading) return;
+
+    setLoading(true);
+    try {
+      await addDoc(collection(db, 'chatMessages'), {
+        text: message,
+        sender: 'user',
+        senderName: profile?.firstName ? `${profile.firstName} ${profile.lastName}` : user.email,
+        userId: user.uid,
+        timestamp: serverTimestamp(),
+      });
+
+      setMessage("");
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: "Mesaj gönderilemedi",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -138,7 +174,7 @@ export function LiveChat() {
                         <p className={`text-xs mt-1 ${
                           msg.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
                         }`}>
-                          {msg.time}
+                          {msg.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
                     </div>

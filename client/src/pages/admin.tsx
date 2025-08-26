@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AdminChat } from "@/components/admin-chat";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, X, Eye, MessageCircle, LogOut, Shield } from "lucide-react";
 import { LiveChat } from "@/components/live-chat";
@@ -323,7 +324,7 @@ export default function AdminPanel() {
           </div>
 
           <Tabs defaultValue="pending" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="pending" className="flex items-center gap-2">
                 <MessageCircle className="h-4 w-4" />
                 Bekleyen İlanlar ({pendingItems.length})
@@ -335,6 +336,10 @@ export default function AdminPanel() {
               <TabsTrigger value="rejected" className="flex items-center gap-2">
                 <X className="h-4 w-4" />
                 Reddedilen İlanlar ({rejectedItems.length})
+              </TabsTrigger>
+              <TabsTrigger value="chat" className="flex items-center gap-2">
+                <MessageCircle className="h-4 w-4" />
+                Canlı Destek
               </TabsTrigger>
             </TabsList>
 
@@ -391,10 +396,13 @@ export default function AdminPanel() {
                 ))
               )}
             </TabsContent>
+
+            <TabsContent value="chat">
+              <AdminChat />
+            </TabsContent>
           </Tabs>
         </div>
       </div>
-      <LiveChat />
     </>
   );
 }
