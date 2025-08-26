@@ -118,13 +118,13 @@ export default function Home() {
             <img 
               src={logoImage} 
               alt="Takas Çemberi Logo" 
-              className="h-32 w-auto mx-auto drop-shadow-lg"
+              className="h-32 w-auto mx-auto drop-shadow-2xl"
               style={{
-                filter: 'hue-rotate(70deg) saturate(1.2)',
-                mixBlendMode: 'multiply',
-                backgroundColor: '#16a34a',
+                filter: 'brightness(1.1) contrast(1.1)',
+                backgroundColor: 'rgba(255,255,255,0.15)',
                 borderRadius: '50%',
-                padding: '8px'
+                padding: '12px',
+                border: '3px solid rgba(255,255,255,0.3)'
               }}
               data-testid="logo-hero"
             />
