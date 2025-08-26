@@ -23,8 +23,8 @@ import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 
 const loginSchema = z.object({
-  email: z.string().email("Geçerli bir e-posta adresi giriniz"),
-  password: z.string().min(6, "Şifre en az 6 karakter olmalıdır"),
+  email: z.string().email("Geçerli e-posta giriniz"),
+  password: z.string().min(6, "En az 6 karakter"),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -53,8 +53,8 @@ export function LoginModal({ open, onClose, onSwitchToRegister }: LoginModalProp
     try {
       await loginUser(data.email, data.password);
       toast({
-        title: "Başarıyla giriş yaptınız",
-        description: "Hoş geldiniz!",
+        title: "Giriş başarılı",
+        description: "Hoş geldin!",
       });
       onClose();
       form.reset();

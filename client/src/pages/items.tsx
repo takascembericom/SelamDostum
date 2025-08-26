@@ -92,8 +92,8 @@ export default function Items() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center" data-testid="error-state">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Bir hata oluştu</h2>
-          <p className="text-gray-600">Eşyalar yüklenirken bir sorun yaşandı.</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Hata</h2>
+          <p className="text-gray-600">Yükleme hatası.</p>
         </div>
       </div>
     );
@@ -108,7 +108,7 @@ export default function Items() {
             Eşyalar
           </h1>
           <p className="text-gray-600">
-            Binlerce eşya arasından istediğinizi bulun ve takas edin
+            Eşya bulun ve takas edin
           </p>
         </div>
 
@@ -120,7 +120,7 @@ export default function Items() {
               <div className="flex-1">
                 <Input
                   type="text"
-                  placeholder="Eşya ara... (örn: laptop, kitap, oyuncak)"
+                  placeholder="Eşya ara..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full"
@@ -138,10 +138,10 @@ export default function Items() {
               <div className="flex-1">
                 <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                   <SelectTrigger data-testid="select-category">
-                    <SelectValue placeholder="Kategori seçin" />
+                    <SelectValue placeholder="Kategori" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Tüm Kategoriler</SelectItem>
+                    <SelectItem value="all">Tümü</SelectItem>
                     {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
                       <SelectItem key={key} value={key}>{label}</SelectItem>
                     ))}

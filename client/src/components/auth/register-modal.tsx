@@ -24,13 +24,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff } from "lucide-react";
 
 const registerSchema = z.object({
-  firstName: z.string().min(2, "Ad en az 2 karakter olmalıdır"),
-  lastName: z.string().min(2, "Soyad en az 2 karakter olmalıdır"),
-  username: z.string().min(3, "Kullanıcı adı en az 3 karakter olmalıdır").max(20, "Kullanıcı adı en fazla 20 karakter olabilir"),
-  email: z.string().email("Geçerli bir e-posta adresi giriniz"),
-  phone: z.string().min(10, "Telefon numarası en az 10 karakter olmalıdır"),
-  password: z.string().min(6, "Şifre en az 6 karakter olmalıdır"),
-  acceptTerms: z.boolean().refine(val => val, "Kullanım şartlarını kabul etmelisiniz"),
+  firstName: z.string().min(2, "En az 2 karakter"),
+  lastName: z.string().min(2, "En az 2 karakter"),
+  username: z.string().min(3, "En az 3 karakter").max(20, "En fazla 20 karakter"),
+  email: z.string().email("Geçerli e-posta giriniz"),
+  phone: z.string().min(10, "En az 10 rakam"),
+  password: z.string().min(6, "En az 6 karakter"),
+  acceptTerms: z.boolean().refine(val => val, "Şartları kabul edin"),
 });
 
 type RegisterFormData = z.infer<typeof registerSchema>;

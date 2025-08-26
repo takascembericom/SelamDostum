@@ -24,25 +24,25 @@ export default function Home() {
     {
       icon: <UserPlus className="h-8 w-8" />,
       title: "1. Hesap Oluştur",
-      description: "Ücretsiz hesabınızı oluşturun ve profilinizi tamamlayın",
+      description: "Ücretsiz kayıt olun",
       color: "bg-primary/10 text-primary"
     },
     {
       icon: <Plus className="h-8 w-8" />,
       title: "2. Eşya Ekle",
-      description: "Takas etmek istediğiniz eşyalarınızın fotoğraflarını yükleyin",
+      description: "Eşyanızın fotoğrafını ekleyin",
       color: "bg-secondary/10 text-secondary"
     },
     {
       icon: <Search className="h-8 w-8" />,
       title: "3. Eşya Bul",
-      description: "İstediğiniz eşyayı arayın ve uygun olanları bulun",
+      description: "İstediğiniz eşyayı arayın",
       color: "bg-accent/10 text-accent"
     },
     {
       icon: <div className="text-2xl">🤝</div>,
       title: "4. Takas Yap",
-      description: "Teklif gönderin, anlaşın ve güvenli şekilde takas yapın",
+      description: "Teklif gönderin ve takas yapın",
       color: "bg-green-500/10 text-green-500"
     }
   ];
@@ -51,32 +51,33 @@ export default function Home() {
     {
       icon: "📱",
       title: "Teknolojik Ürünler",
-      description: "Eski telefonunuzu tablet ile, laptopunuzu kamerayla takas edin"
+      description: "Telefon, laptop, kamera takas edin"
     },
     {
       icon: "🏠",
       title: "Beyaz Eşya",
-      description: "Kullanmadığınız beyaz eşyalarınızı ihtiyacınız olan eşyalarla değiştirin"
+
+      description: "Beyaz eşya değiştirin"
     },
     {
       icon: "🪑",
       title: "Mobilya",
-      description: "Evinizdeki mobilyaları farklı tarzda mobilyalarla takas edin"
+      description: "Mobilya değiştirin"
     },
     {
       icon: "🚗",
       title: "Araba & Yedek Parça",
-      description: "Araç yedek parçalarınızı ve araba aksesuarlarınızı takas edin"
+      description: "Araç parçaları takas edin"
     },
     {
       icon: "🧸",
       title: "Oyuncak",
-      description: "Çocuğunuzun büyüdüğü oyuncakları yeni yaş grubuna uygun olanlarla değiştirin"
+      description: "Oyuncak değiştirin"
     },
     {
       icon: "🏡",
       title: "Taşınmazlar",
-      description: "Ev, arsa, tarla, bağ, bahçe gibi emlak varlıklarınızı takas edin"
+      description: "Ev, arsa, tarla takas edin"
     }
   ];
 
@@ -86,21 +87,21 @@ export default function Home() {
       location: "İstanbul",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       rating: 5,
-      text: "Kullanmadığım laptop ile istediğim kamerayı takas ettim. Hem para biriktirdim hem de çevreye katkıda bulundum. Sistem çok güvenli ve kolay."
+      text: "Laptopumu kamerayla takas ettim. Çok güvenli ve kolay."
     },
     {
       name: "Ayşe Demir",
       location: "Ankara", 
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face",
       rating: 5,
-      text: "Çocuğumun büyüdüğü oyuncakları yaşına uygun olanlarla değiştirmek harika bir fikir. Takas platformu sayesinde hem tasarruf ettik hem de yeni oyuncaklar aldık."
+      text: "Oyuncakları değiştirmek harika. Hem tasarruf ettik hem yeni oyuncaklar aldık."
     },
     {
       name: "Zeynep Özkan",
       location: "İzmir",
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b494?w=40&h=40&fit=crop&crop=face",
       rating: 5,
-      text: "Kitap tutkunu olarak okuduğum kitapları yeni kitaplarla değiştirmek mükemmel. Hem kütüphanem yenileniyor hem de başkaları da faydalanıyor."
+      text: "Kitaplarımı yeni kitaplarla değiştiriyorum. Çok pratik."
     }
   ];
 
@@ -147,7 +148,7 @@ export default function Home() {
               Nasıl Çalışır?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Sadece 4 basit adımda eşyalarınızı takas edebilirsiniz
+              4 adımda takas yapın
             </p>
           </div>
 
@@ -166,7 +167,7 @@ export default function Home() {
           {/* Features */}
           <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6" data-testid="title-features">Platform Kullanım Örnekleri</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6" data-testid="title-features">Takas Örnekleri</h3>
               <div className="space-y-6">
                 {features.map((feature, index) => (
                   <div key={index} className="flex items-start space-x-4" data-testid={`feature-${index}`}>
@@ -190,9 +191,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="title-testimonials">
-              Kullanıcılarımız Ne Diyor?
+              Kullanıcı Yorumları
             </h2>
-            <p className="text-xl text-gray-600">Binlerce mutlu kullanıcımızdan bazı yorumlar</p>
+            <p className="text-xl text-gray-600">Mutlu kullanıcılarımızdan yorumlar</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -228,11 +229,11 @@ export default function Home() {
       <section className="py-20 bg-gradient-to-r from-primary to-green-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6" data-testid="title-cta">
-            Hemen Başla, İlk Takasını Yap!
+            Hemen Başla!
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Ücretsiz hesap oluştur ve binlerce eşya arasından istediğini bul. 
-            İlk takasın için özel %20 komisyon indirimi!
+            Ücretsiz kayıt ol ve binlerce eşya arasından seç. 
+            İlk takas özel indirimli!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {!user ? (

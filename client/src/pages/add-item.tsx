@@ -31,11 +31,11 @@ import { Upload, X, Camera } from "lucide-react";
 import { ITEM_CATEGORIES, CATEGORY_LABELS, CONDITION_LABELS } from "@shared/schema";
 
 const addItemSchema = z.object({
-  title: z.string().min(3, "Başlık en az 3 karakter olmalıdır").max(100, "Başlık en fazla 100 karakter olabilir"),
-  description: z.string().min(10, "Açıklama en az 10 karakter olmalıdır").max(1000, "Açıklama en fazla 1000 karakter olabilir"),
-  category: z.enum(ITEM_CATEGORIES, { required_error: "Kategori seçiniz" }),
-  condition: z.enum(['yeni', 'cok_iyi', 'iyi', 'orta', 'kullanilmis'], { required_error: "Durum seçiniz" }),
-  location: z.string().min(2, "Konum en az 2 karakter olmalıdır"),
+  title: z.string().min(3, "En az 3 karakter").max(100, "En fazla 100 karakter"),
+  description: z.string().min(10, "En az 10 karakter").max(1000, "En fazla 1000 karakter"),
+  category: z.enum(ITEM_CATEGORIES, { required_error: "Kategori seçin" }),
+  condition: z.enum(['yeni', 'cok_iyi', 'iyi', 'orta', 'kullanilmis'], { required_error: "Durum seçin" }),
+  location: z.string().min(2, "En az 2 karakter"),
 });
 
 type AddItemFormData = z.infer<typeof addItemSchema>;
@@ -64,7 +64,7 @@ export default function AddItem() {
     if (files.length + selectedImages.length > 5) {
       toast({
         title: "Çok fazla fotoğraf",
-        description: "En fazla 5 fotoğraf yükleyebilirsiniz",
+        description: "En fazla 5 fotoğraf",
         variant: "destructive",
       });
       return;
@@ -89,7 +89,7 @@ export default function AddItem() {
 
   const uploadImages = async (): Promise<string[]> => {
     if (selectedImages.length === 0) {
-      throw new Error("En az 1 fotoğraf eklemelisiniz");
+      throw new Error("En az 1 fotoğraf ekleyin");
     }
 
     const uploadPromises = selectedImages.map(async (file, index) => {
@@ -217,7 +217,7 @@ export default function AddItem() {
                   </div>
                   
                   <p className="text-xs text-gray-500">
-                    En fazla 5 fotoğraf yükleyebilirsiniz. İlk fotoğraf kapak fotoğrafı olacaktır.
+                    En fazla 5 fotoğraf. İlk fotoğraf kapak olur.
                   </p>
                 </div>
 
@@ -230,7 +230,7 @@ export default function AddItem() {
                       <FormLabel>Başlık *</FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="Eşyanızın adını yazın (örn: iPhone 13, Lego Set)" 
+                          placeholder="Eşyanızın adını yazın" 
                           {...field}
                           data-testid="input-title"
                         />
@@ -249,7 +249,7 @@ export default function AddItem() {
                       <FormLabel>Açıklama *</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Eşyanızın detaylarını yazın (durumu, özellikler, kullanım geçmişi vs.)"
+                          placeholder="Eşyanızın detaylarını yazın"
                           rows={4}
                           {...field}
                           data-testid="textarea-description"
@@ -271,7 +271,7 @@ export default function AddItem() {
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger data-testid="select-category">
-                              <SelectValue placeholder="Kategori seçin" />
+                              <SelectValue placeholder="Kategori" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -296,7 +296,7 @@ export default function AddItem() {
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger data-testid="select-condition">
-                              <SelectValue placeholder="Durum seçin" />
+                              <SelectValue placeholder="Durum" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>

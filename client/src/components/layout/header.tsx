@@ -24,8 +24,8 @@ export function Header() {
     try {
       await logoutUser();
       toast({
-        title: "Başarıyla çıkış yaptınız",
-        description: "İyi günler dileriz!",
+        title: "Çıkış yapıldı",
+        description: "İyi günler!",
       });
     } catch (error: any) {
       toast({
