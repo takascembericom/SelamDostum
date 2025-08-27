@@ -3,9 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, where } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, where, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { MessageCircle, Send, User, Camera } from "lucide-react";
+import { MessageCircle, Send, User, Camera, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ImageUpload } from "@/components/image-upload";
 
@@ -36,6 +36,7 @@ export function AdminChat() {
   const [replyMessage, setReplyMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [deletingMessageId, setDeletingMessageId] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -101,6 +102,28 @@ export function AdminChat() {
 
     return () => unsubscribe();
   }, []);
+
+  const handleDeleteMessage = async (messageId: string) => {
+    if (!messageId || deletingMessageId) return;
+
+    setDeletingMessageId(messageId);
+    try {
+      await deleteDoc(doc(db, 'chatMessages', messageId));
+      
+      toast({
+        title: "Mesaj silindi",
+        description: "Mesaj başarıyla silindi",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "Mesaj silinirken hata oluştu",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingMessageId(null);
+    }
+  };
 
   const handleSendReply = async () => {
     if (!replyMessage.trim() || !selectedUserId || loading) return;
@@ -233,32 +256,46 @@ export function AdminChat() {
                 {selectedConversation.messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`flex ${message.sender === 'admin' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex ${message.sender === 'admin' ? 'justify-end' : 'justify-start'} group`}
                   >
-                    <div
-                      className={`max-w-[70%] rounded-lg px-3 py-2 ${
-                        message.sender === 'admin'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-900'
-                      }`}
-                    >
-                      {message.messageType === 'image' && message.imageUrl ? (
-                        <div className="space-y-2">
-                          <img
-                            src={message.imageUrl}
-                            alt="Gönderilen resim"
-                            className="max-w-full max-h-48 rounded object-cover"
-                          />
-                          {message.text && <p className="text-sm">{message.text}</p>}
-                        </div>
-                      ) : (
-                        <p className="text-sm">{message.text}</p>
-                      )}
-                      <p className={`text-xs mt-1 ${
-                        message.sender === 'admin' ? 'text-blue-100' : 'text-gray-500'
-                      }`}>
-                        {message.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </p>
+                    <div className="flex items-start gap-2 max-w-[70%]">
+                      <div
+                        className={`rounded-lg px-3 py-2 ${
+                          message.sender === 'admin'
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-100 text-gray-900'
+                        }`}
+                      >
+                        {message.messageType === 'image' && message.imageUrl ? (
+                          <div className="space-y-2">
+                            <img
+                              src={message.imageUrl}
+                              alt="Gönderilen resim"
+                              className="max-w-full max-h-48 rounded object-cover"
+                            />
+                            {message.text && <p className="text-sm">{message.text}</p>}
+                          </div>
+                        ) : (
+                          <p className="text-sm">{message.text}</p>
+                        )}
+                        <p className={`text-xs mt-1 ${
+                          message.sender === 'admin' ? 'text-blue-100' : 'text-gray-500'
+                        }`}>
+                          {message.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                      
+                      {/* Delete button - shown on hover */}
+                      <Button
+                        variant="ghost"
+                        size="sm" 
+                        onClick={() => handleDeleteMessage(message.id)}
+                        disabled={deletingMessageId === message.id}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-auto w-auto text-red-500 hover:text-red-700 hover:bg-red-50"
+                        data-testid={`button-delete-message-${message.id}`}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
                     </div>
                   </div>
                 ))}

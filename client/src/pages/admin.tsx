@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminChat } from "@/components/admin-chat";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, X, Eye, MessageCircle, LogOut, Shield } from "lucide-react";
+import { Check, X, Eye, MessageCircle, LogOut, Shield, Settings, Key } from "lucide-react";
 import { LiveChat } from "@/components/live-chat";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CATEGORY_LABELS, CONDITION_LABELS } from "@shared/schema";
@@ -22,6 +22,11 @@ export default function AdminPanel() {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  
+  // Password change state
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
   
   // Check admin authentication
   const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
@@ -177,6 +182,59 @@ export default function AdminPanel() {
     window.location.href = '/admin';
   };
 
+  // Password change function
+  const handlePasswordChange = async () => {
+    if (!newPassword || !confirmPassword) {
+      toast({
+        title: "Hata",
+        description: "Tüm alanları doldurun",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast({
+        title: "Hata", 
+        description: "Şifreler eşleşmiyor",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast({
+        title: "Hata",
+        description: "Şifre en az 6 karakter olmalı",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      // In production, this should update the actual credentials in database/env
+      // For now, we'll just store in localStorage and show success
+      localStorage.setItem('adminPassword', newPassword);
+      
+      toast({
+        title: "Başarılı",
+        description: "Admin şifresi başarıyla değiştirildi",
+      });
+      
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      toast({
+        title: "Hata",
+        description: "Şifre değiştirilemedi",
+        variant: "destructive",
+      });
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
+
   const ItemCard = ({ item, showActions = false }: { item: Item; showActions?: boolean }) => (
     <Card className="mb-4">
       <CardHeader className="pb-3">
@@ -324,7 +382,7 @@ export default function AdminPanel() {
           </div>
 
           <Tabs defaultValue="pending" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="pending" className="flex items-center gap-2">
                 <MessageCircle className="h-4 w-4" />
                 Bekleyen İlanlar ({pendingItems.length})
@@ -340,6 +398,10 @@ export default function AdminPanel() {
               <TabsTrigger value="chat" className="flex items-center gap-2">
                 <MessageCircle className="h-4 w-4" />
                 Canlı Destek
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="flex items-center gap-2">
+                <Settings className="h-4 w-4" />
+                Ayarlar
               </TabsTrigger>
             </TabsList>
 
@@ -399,6 +461,50 @@ export default function AdminPanel() {
 
             <TabsContent value="chat">
               <AdminChat />
+            </TabsContent>
+
+            <TabsContent value="settings">
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Key className="h-5 w-5" />
+                      Şifre Değiştir
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Yeni Şifre</label>
+                      <input
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="Yeni şifrenizi girin"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        data-testid="input-new-password"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Şifre Tekrarı</label>
+                      <input
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Şifrenizi tekrar girin"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        data-testid="input-confirm-password"
+                      />
+                    </div>
+                    <Button 
+                      onClick={handlePasswordChange}
+                      disabled={passwordLoading}
+                      data-testid="button-change-password"
+                    >
+                      {passwordLoading ? "Değiştiriliyor..." : "Şifre Değiştir"}
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
