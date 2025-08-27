@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendEmailVerification,
+  sendPasswordResetEmail,
   User as FirebaseUser,
   updateProfile
 } from "firebase/auth";
@@ -29,6 +30,10 @@ export const registerUser = async (userData: InsertUser & { password: string }) 
       email: firebaseUser.email!,
       emailVerified: firebaseUser.emailVerified,
       createdAt: new Date(),
+      totalListings: 0,
+      averageRating: 0,
+      totalRatings: 0,
+      isAdmin: false,
       ...profileData
     };
     
@@ -67,6 +72,17 @@ export const logoutUser = async () => {
     await signOut(auth);
   } catch (error: any) {
     throw new Error(error.message || "Çıkış işlemi başarısız oldu");
+  }
+};
+
+export const sendPasswordReset = async (email: string) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (error: any) {
+    if (error.code === 'auth/user-not-found') {
+      throw new Error("Bu e-posta adresi ile kayıtlı bir kullanıcı bulunamadı.");
+    }
+    throw new Error(error.message || "Şifre sıfırlama e-postası gönderilemedi");
   }
 };
 
