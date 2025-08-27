@@ -189,10 +189,10 @@ export default function Items() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4" data-testid="title-items">
-            Eşyalar
+            İlanlar
           </h1>
           <p className="text-gray-600">
-            Eşya bulun ve takas edin
+            İlan bulun ve takas edin
           </p>
         </div>
 
@@ -204,7 +204,7 @@ export default function Items() {
               <div className="flex-1">
                 <Input
                   type="text"
-                  placeholder="Eşya ara..."
+                  placeholder="İlan ara..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full"
