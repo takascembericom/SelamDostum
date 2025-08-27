@@ -39,23 +39,31 @@ export default function AdminPanel() {
   const { data: pendingItems = [], isLoading: pendingLoading } = useQuery({
     queryKey: ['admin-pending-items'],
     queryFn: async (): Promise<Item[]> => {
-      const q = query(
-        collection(db, 'items'),
-        where('status', '==', 'pending'),
-        orderBy('createdAt', 'desc')
-      );
+      try {
+        const q = query(
+          collection(db, 'items'),
+          where('status', '==', 'pending')
+          // Remove orderBy to avoid index issues
+        );
 
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          createdAt: data.createdAt.toDate(),
-          updatedAt: data.updatedAt.toDate(),
-          approvedAt: data.approvedAt ? data.approvedAt.toDate() : undefined,
-        } as Item;
-      });
+        const querySnapshot = await getDocs(q);
+        const items = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            ...data,
+            id: doc.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
+            approvedAt: data.approvedAt?.toDate ? data.approvedAt.toDate() : undefined,
+          } as Item;
+        });
+        
+        // Sort by createdAt manually
+        return items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      } catch (error) {
+        console.error('Error fetching pending items:', error);
+        throw error;
+      }
     },
     enabled: true,
   });
@@ -64,23 +72,29 @@ export default function AdminPanel() {
   const { data: approvedItems = [], isLoading: approvedLoading } = useQuery({
     queryKey: ['admin-approved-items'],
     queryFn: async (): Promise<Item[]> => {
-      const q = query(
-        collection(db, 'items'),
-        where('status', '==', 'aktif'),
-        orderBy('createdAt', 'desc')
-      );
+      try {
+        const q = query(
+          collection(db, 'items'),
+          where('status', '==', 'aktif')
+        );
 
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          createdAt: data.createdAt.toDate(),
-          updatedAt: data.updatedAt.toDate(),
-          approvedAt: data.approvedAt ? data.approvedAt.toDate() : undefined,
-        } as Item;
-      });
+        const querySnapshot = await getDocs(q);
+        const items = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            ...data,
+            id: doc.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
+            approvedAt: data.approvedAt?.toDate ? data.approvedAt.toDate() : undefined,
+          } as Item;
+        });
+        
+        return items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      } catch (error) {
+        console.error('Error fetching approved items:', error);
+        throw error;
+      }
     },
     enabled: true,
   });
@@ -89,23 +103,29 @@ export default function AdminPanel() {
   const { data: rejectedItems = [], isLoading: rejectedLoading } = useQuery({
     queryKey: ['admin-rejected-items'],
     queryFn: async (): Promise<Item[]> => {
-      const q = query(
-        collection(db, 'items'),
-        where('status', '==', 'reddedildi'),
-        orderBy('createdAt', 'desc')
-      );
+      try {
+        const q = query(
+          collection(db, 'items'),
+          where('status', '==', 'reddedildi')
+        );
 
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          createdAt: data.createdAt.toDate(),
-          updatedAt: data.updatedAt.toDate(),
-          approvedAt: data.approvedAt ? data.approvedAt.toDate() : undefined,
-        } as Item;
-      });
+        const querySnapshot = await getDocs(q);
+        const items = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            ...data,
+            id: doc.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
+            approvedAt: data.approvedAt?.toDate ? data.approvedAt.toDate() : undefined,
+          } as Item;
+        });
+        
+        return items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      } catch (error) {
+        console.error('Error fetching rejected items:', error);
+        throw error;
+      }
     },
     enabled: true,
   });
