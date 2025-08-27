@@ -61,6 +61,9 @@ export const createTradeOffer = async (tradeOfferData: InsertTradeOffer): Promis
           `${fromUser.firstName} ${fromUser.lastName || ''}`.trim() : 
           fromUser.email || 'Bir kullanıcı';
         
+        // Request notification permission first, then send notification
+        const { requestNotificationPermission } = await import('@/lib/notifications');
+        await requestNotificationPermission();
         await sendNewTradeOfferNotification(fromUserName, toItem.title);
       }
     } catch (notificationError) {

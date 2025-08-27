@@ -58,9 +58,13 @@ class NotificationManager {
       return;
     }
 
+    // Auto-request permission if not granted
     if (this.permission !== 'granted') {
-      console.warn('Bildirim izni verilmemiş');
-      return;
+      const permission = await this.requestPermission();
+      if (permission !== 'granted') {
+        console.warn('Bildirim izni verilmemiş');
+        return;
+      }
     }
 
     // Check if user is already on the page (don't spam with notifications)
