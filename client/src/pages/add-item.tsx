@@ -205,8 +205,8 @@ export default function AddItem() {
       }
 
       toast({
-        title: "İlan başarıyla eklendi",
-        description: "İlanınız admin onayından sonra yayınlanacak",
+        title: "İlanınız onay sürecindedir",
+        description: "Onaylandıktan sonra yayınlanacaktır. Admin panelinde beklemede.",
       });
 
       // Redirect to profile
@@ -692,7 +692,7 @@ export default function AddItem() {
                         Yükleniyor...
                       </>
                     ) : loadingListingCount ? (
-                      "Kontrol ediliyor..."
+                      "İlan Ver"
                     ) : (
                       "İlanı Ekle (30 gün süreli)"
                     )}
