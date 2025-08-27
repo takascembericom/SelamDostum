@@ -11,7 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { 
   ArrowLeft, 
   MapPin, 
@@ -35,7 +34,6 @@ export default function UserProfile() {
   const [, setLocation] = useLocation();
   const [showRatingForm, setShowRatingForm] = useState(false);
   const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState("");
   const queryClient = useQueryClient();
 
   // Fetch user data
@@ -129,7 +127,6 @@ export default function UserProfile() {
       queryClient.invalidateQueries({ queryKey: ["user-ratings", userId] });
       queryClient.invalidateQueries({ queryKey: ["user", userId] });
       setShowRatingForm(false);
-      setComment("");
       setRating(5);
       toast({
         title: "Değerlendirme Eklendi",
@@ -209,20 +206,11 @@ export default function UserProfile() {
       return;
     }
 
-    if (!comment.trim() && rating === 5) {
-      toast({
-        title: "Uyarı",
-        description: "5 yıldız veriyorsanız lütfen bir yorum da ekleyin.",
-        variant: "destructive",
-      });
-      return;
-    }
 
     addRatingMutation.mutate({
       raterUserId: profile.id,
       ratedUserId: userId,
       rating,
-      comment: comment.trim() || undefined,
     });
   };
 
@@ -384,16 +372,6 @@ export default function UserProfile() {
                         </div>
                       </div>
                       
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Yorum (İsteğe bağlı)</label>
-                        <Textarea
-                          value={comment}
-                          onChange={(e) => setComment(e.target.value)}
-                          placeholder="Deneyiminizi paylaşın..."
-                          className="resize-none"
-                          rows={3}
-                        />
-                      </div>
                       
                       <div className="flex space-x-2">
                         <Button 
@@ -515,9 +493,6 @@ export default function UserProfile() {
                               </span>
                             </div>
                           </div>
-                          {rating.comment && (
-                            <p className="text-gray-700">{rating.comment}</p>
-                          )}
                         </div>
                       </div>
                     </CardContent>
