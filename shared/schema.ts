@@ -220,7 +220,8 @@ export const ITEM_CATEGORIES = [
   'teknolojik_urunler',
   'ev_beyaz_esya',
   'oyuncak',
-  'tasinmazlar'
+  'tasinmazlar',
+  'kitap'
 ] as const;
 
 // Condition labels in Turkish
@@ -241,7 +242,8 @@ export const CATEGORY_LABELS = {
   'teknolojik_urunler': 'Teknolojik Ürünler',
   'ev_beyaz_esya': 'Ev Beyaz Eşya',
   'oyuncak': 'Oyuncak',
-  'tasinmazlar': 'Taşınmazlar'
+  'tasinmazlar': 'Taşınmazlar',
+  'kitap': 'Kitap'
 } as const;
 
 // Sub-categories for Taşınmazlar
