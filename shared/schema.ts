@@ -10,6 +10,8 @@ export const userSchema = z.object({
   phone: z.string().min(10),
   avatar: z.string().optional(),
   totalListings: z.number().default(0),
+  averageRating: z.number().min(0).max(5).default(0),
+  totalRatings: z.number().default(0),
   createdAt: z.date(),
   emailVerified: z.boolean().default(false),
   isAdmin: z.boolean().default(false),
@@ -20,6 +22,8 @@ export const insertUserSchema = userSchema.omit({
   createdAt: true,
   emailVerified: true,
   totalListings: true,
+  averageRating: true,
+  totalRatings: true,
   isAdmin: true,
 });
 
@@ -142,6 +146,47 @@ export const insertUserMessageSchema = baseUserMessageSchema.omit({
 
 export type UserMessage = z.infer<typeof userMessageSchema>;
 export type InsertUserMessage = z.infer<typeof insertUserMessageSchema>;
+
+// User Rating schema
+export const userRatingSchema = z.object({
+  id: z.string(),
+  fromUserId: z.string(),
+  toUserId: z.string(),
+  rating: z.number().min(1).max(5),
+  comment: z.string().optional(),
+  tradeOfferId: z.string().optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const insertUserRatingSchema = userRatingSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type UserRating = z.infer<typeof userRatingSchema>;
+export type InsertUserRating = z.infer<typeof insertUserRatingSchema>;
+
+// Notification schema
+export const notificationSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  type: z.enum(['new_rating', 'trade_offer', 'trade_accepted', 'trade_rejected', 'trade_completed', 'admin_message']),
+  title: z.string(),
+  message: z.string(),
+  data: z.record(z.any()).optional(),
+  isRead: z.boolean().default(false),
+  createdAt: z.date(),
+});
+
+export const insertNotificationSchema = notificationSchema.omit({
+  id: true,
+  createdAt: true,
+});
+
+export type Notification = z.infer<typeof notificationSchema>;
+export type InsertNotification = z.infer<typeof insertNotificationSchema>;
 
 // Conversation schema
 const baseConversationSchema = z.object({

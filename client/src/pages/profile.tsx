@@ -482,10 +482,14 @@ export default function Profile() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-2xl font-bold text-blue-600" data-testid="stat-rating">4.8</p>
-                  <p className="text-gray-600">Ortalama Puan</p>
+                  <p className="text-2xl font-bold text-blue-600" data-testid="stat-rating">
+                    {profile?.averageRating?.toFixed(1) || "0.0"}
+                  </p>
+                  <p className="text-gray-600">
+                    Ortalama Puan ({profile?.totalRatings || 0} değerlendirme)
+                  </p>
                 </div>
-                <Star className="h-8 w-8 text-blue-600" />
+                <Star className="h-8 w-8 text-yellow-500 fill-current" />
               </div>
             </CardContent>
           </Card>

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
-import { Plus, User, LogOut, Home, Shield, MessageCircle } from "lucide-react";
+import { Plus, User, LogOut, Home, Shield, MessageCircle, Bell } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -118,6 +118,71 @@ export function Header() {
                       )}
                     </Button>
                   </Link>
+                  
+                  {/* Notifications */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex items-center gap-2 relative"
+                        data-testid="button-notifications"
+                      >
+                        <Bell className="h-4 w-4" />
+                        <span className="hidden sm:inline">Bildirimler</span>
+                        {/* TODO: Add notification count */}
+                        <Badge 
+                          variant="destructive" 
+                          className="absolute -top-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-xs p-0 min-w-0"
+                        >
+                          3
+                        </Badge>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-80">
+                      <div className="p-3 border-b">
+                        <h3 className="font-semibold">Bildirimler</h3>
+                      </div>
+                      <div className="max-h-64 overflow-y-auto">
+                        {/* Sample notifications */}
+                        <div className="p-3 border-b hover:bg-gray-50 cursor-pointer">
+                          <div className="flex items-start gap-3">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium">Yeni yıldız aldınız!</p>
+                              <p className="text-xs text-gray-600">Ahmet Kaya size 5 yıldız verdi</p>
+                              <p className="text-xs text-gray-400 mt-1">2 saat önce</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-3 border-b hover:bg-gray-50 cursor-pointer">
+                          <div className="flex items-start gap-3">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium">Takas teklifi kabul edildi</p>
+                              <p className="text-xs text-gray-600">Laptopunuz için teklif kabul edildi</p>
+                              <p className="text-xs text-gray-400 mt-1">1 gün önce</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-3 hover:bg-gray-50 cursor-pointer">
+                          <div className="flex items-start gap-3">
+                            <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium">Yeni takas teklifi</p>
+                              <p className="text-xs text-gray-600">Telefonunuz için yeni teklif geldi</p>
+                              <p className="text-xs text-gray-400 mt-1">3 gün önce</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-3 border-t text-center">
+                        <Button variant="ghost" size="sm" className="text-xs">
+                          Tümünü Gör
+                        </Button>
+                      </div>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
