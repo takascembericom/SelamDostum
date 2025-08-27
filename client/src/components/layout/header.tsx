@@ -49,11 +49,7 @@ export function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-24">
             <div className="flex items-center">
-              <Link href="/" data-testid="link-home">
-                <div className="flex-shrink-0 flex items-center">
-                  <span className="text-3xl font-bold text-gray-900">Takas Çemberi</span>
-                </div>
-              </Link>
+              {/* Header left side empty as requested */}
             </div>
 
             <div className="flex items-center space-x-4">
