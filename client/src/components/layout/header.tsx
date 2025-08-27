@@ -92,11 +92,12 @@ export function Header() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="hidden sm:flex items-center gap-2"
+                      className="flex items-center gap-2"
                       data-testid="button-add-item"
                     >
                       <Plus className="h-4 w-4" />
-                      İlan Ekle
+                      <span className="hidden sm:inline">İlan Ekle</span>
+                      <span className="sm:hidden">İlan Ver</span>
                     </Button>
                   </Link>
                   
@@ -158,7 +159,7 @@ export function Header() {
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="flex items-center gap-2"
+                        className="hidden sm:flex items-center gap-2"
                         data-testid="button-user-menu"
                       >
                         <User className="h-4 w-4" />
@@ -203,6 +204,31 @@ export function Header() {
 
         </div>
       </header>
+
+      {/* Mobile Bottom Left Floating Buttons */}
+      {user && (
+        <div className="fixed bottom-4 left-4 z-50 sm:hidden flex flex-col gap-2">
+          <Link href="/profile">
+            <Button
+              variant="default"
+              size="sm"
+              className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg"
+              data-testid="button-profile-mobile"
+            >
+              <User className="h-5 w-5" />
+            </Button>
+          </Link>
+          <Button
+            variant="default"
+            size="sm"
+            className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg"
+            onClick={handleLogout}
+            data-testid="button-logout-mobile"
+          >
+            <LogOut className="h-5 w-5" />
+          </Button>
+        </div>
+      )}
 
       <LoginModal 
         open={showLoginModal} 
