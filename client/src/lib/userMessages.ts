@@ -256,6 +256,12 @@ export const subscribeToUserConversations = (
     for (const docSnap of snapshot.docs) {
       const data = docSnap.data();
       
+      // Skip conversations that are deleted by this user (unreadCount = -1)
+      const userUnreadCount = data.unreadCount?.[userId];
+      if (userUnreadCount === -1) {
+        continue; // Skip this conversation as it was deleted by the user
+      }
+      
       // Get the other participant's name
       const otherUserId = data.participants.find((id: string) => id !== userId);
       const otherUserDoc = await getDoc(doc(db, "users", otherUserId));
