@@ -271,7 +271,16 @@ export default function AddItem() {
   };
 
   const handleSubmit = async () => {
-    // Tüm ilanlar 30 gün süreli olacak, ödeme sistemi basitleştirildi
+    // İkinci ilan için ödeme kontrolü
+    if (userListingCount >= 1) {
+      toast({
+        title: "İkinci İlan İçin Ödeme Gerekli",
+        description: "İkinci ilan ve sonrasında her ilan için 10 TL ödeme yapmanız gerekmektedir. Lütfen ödeme paketinizi satın alın.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     return await submitItem();
   };
 
@@ -419,6 +428,27 @@ export default function AddItem() {
             <p className="text-gray-600">
               Takas etmek istediğiniz ilanınızın bilgilerini ekleyin
             </p>
+            
+            {/* İlan sayısı ve ödeme uyarısı */}
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-sm font-medium text-blue-900">
+                    Mevcut İlan Sayınız: {loadingListingCount ? "..." : userListingCount}
+                  </p>
+                  {userListingCount >= 1 && (
+                    <p className="text-xs text-blue-700 mt-1">
+                      ⚠️ İkinci ilan ve sonrası için 10 TL ödeme gereklidir
+                    </p>
+                  )}
+                </div>
+                {userListingCount === 0 && (
+                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                    İlk ilanınız ücretsiz!
+                  </span>
+                )}
+              </div>
+            </div>
             
           </CardHeader>
           

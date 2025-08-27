@@ -85,38 +85,6 @@ export default function Home() {
     }
   ];
 
-  const features = [
-    {
-      icon: "📱",
-      title: "Teknolojik Ürünler",
-      description: "Telefon, laptop, kamera takas edin"
-    },
-    {
-      icon: "🏠",
-      title: "Beyaz Eşya",
-      description: "Beyaz eşyalar değiştirin"
-    },
-    {
-      icon: "🪑",
-      title: "Mobilya",
-      description: "Mobilya değiştirin"
-    },
-    {
-      icon: "🚗",
-      title: "Araba & Yedek Parça",
-      description: "Araç parçaları takas edin"
-    },
-    {
-      icon: "🧸",
-      title: "Oyuncak",
-      description: "Çocuk oyuncakları değiştirin"
-    },
-    {
-      icon: "🏡",
-      title: "Taşınmazlar",
-      description: "Ev, arsa, tarla takas edin"
-    }
-  ];
 
   const testimonials = [
     {
@@ -271,21 +239,6 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Features */}
-          <div className="mt-20">
-            <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center" data-testid="title-features">Takas Örnekleri</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-              {features.map((feature, index) => (
-                <div key={index} className="text-center" data-testid={`feature-${index}`}>
-                  <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3 text-3xl">
-                    {feature.icon}
-                  </div>
-                  <h4 className="font-semibold text-gray-900 text-sm mb-1">{feature.title}</h4>
-                  <p className="text-gray-600 text-xs">{feature.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 
