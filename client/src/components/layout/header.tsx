@@ -52,7 +52,7 @@ export function Header() {
               data-testid="button-add-item-mobile"
             >
               <Plus className="h-5 w-5" />
-              İlan Ver
+              İlanı Ekle (30 gün süreli)
             </Button>
           </Link>
         )}
