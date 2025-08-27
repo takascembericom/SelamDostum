@@ -296,23 +296,50 @@ export default function AddItem() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Kategori *</FormLabel>
-                        <Select onValueChange={(value) => {
-                          field.onChange(value);
-                          setSelectedCategory(value);
-                        }} defaultValue={field.value}>
+                        
+                        {/* Mobile: Native Select */}
+                        <div className="block sm:hidden">
                           <FormControl>
-                            <SelectTrigger data-testid="select-category" className="h-12 text-base sm:h-10 sm:text-sm">
-                              <SelectValue placeholder="Kategori seçin" />
-                            </SelectTrigger>
+                            <select 
+                              {...field}
+                              onChange={(e) => {
+                                field.onChange(e.target.value);
+                                setSelectedCategory(e.target.value);
+                              }}
+                              className="flex h-12 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                              data-testid="select-category-mobile"
+                            >
+                              <option value="">Kategori seçin</option>
+                              {ITEM_CATEGORIES.map((category) => (
+                                <option key={category} value={category}>
+                                  {CATEGORY_LABELS[category]}
+                                </option>
+                              ))}
+                            </select>
                           </FormControl>
-                          <SelectContent>
-                            {ITEM_CATEGORIES.map((category) => (
-                              <SelectItem key={category} value={category}>
-                                {CATEGORY_LABELS[category]}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        </div>
+
+                        {/* Desktop: Custom Select */}
+                        <div className="hidden sm:block">
+                          <Select onValueChange={(value) => {
+                            field.onChange(value);
+                            setSelectedCategory(value);
+                          }} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-category-desktop" className="h-10 text-sm">
+                                <SelectValue placeholder="Kategori seçin" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {ITEM_CATEGORIES.map((category) => (
+                                <SelectItem key={category} value={category}>
+                                  {CATEGORY_LABELS[category]}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
                         <FormMessage />
                       </FormItem>
                     )}
@@ -325,20 +352,43 @@ export default function AddItem() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Alt Kategori *</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          
+                          {/* Mobile: Native Select */}
+                          <div className="block sm:hidden">
                             <FormControl>
-                              <SelectTrigger data-testid="select-subcategory">
-                                <SelectValue placeholder="Alt Kategori" />
-                              </SelectTrigger>
+                              <select 
+                                {...field}
+                                className="flex h-12 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                data-testid="select-subcategory-mobile"
+                              >
+                                <option value="">Alt Kategori seçin</option>
+                                {Object.entries(TASINMAZLAR_SUBCATEGORIES).map(([key, label]) => (
+                                  <option key={key} value={key}>
+                                    {label}
+                                  </option>
+                                ))}
+                              </select>
                             </FormControl>
-                            <SelectContent>
-                              {Object.entries(TASINMAZLAR_SUBCATEGORIES).map(([key, label]) => (
-                                <SelectItem key={key} value={key}>
-                                  {label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          </div>
+
+                          {/* Desktop: Custom Select */}
+                          <div className="hidden sm:block">
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-subcategory-desktop">
+                                  <SelectValue placeholder="Alt Kategori" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {Object.entries(TASINMAZLAR_SUBCATEGORIES).map(([key, label]) => (
+                                  <SelectItem key={key} value={key}>
+                                    {label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          
                           <FormMessage />
                         </FormItem>
                       )}
@@ -355,20 +405,43 @@ export default function AddItem() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Marka *</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          
+                          {/* Mobile: Native Select */}
+                          <div className="block sm:hidden">
                             <FormControl>
-                              <SelectTrigger data-testid="select-car-brand">
-                                <SelectValue placeholder="Marka seçin" />
-                              </SelectTrigger>
+                              <select 
+                                {...field}
+                                className="flex h-12 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                data-testid="select-car-brand-mobile"
+                              >
+                                <option value="">Marka seçin</option>
+                                {CAR_BRANDS.map((brand) => (
+                                  <option key={brand} value={brand}>
+                                    {brand}
+                                  </option>
+                                ))}
+                              </select>
                             </FormControl>
-                            <SelectContent>
-                              {CAR_BRANDS.map((brand) => (
-                                <SelectItem key={brand} value={brand}>
-                                  {brand}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          </div>
+
+                          {/* Desktop: Custom Select */}
+                          <div className="hidden sm:block">
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-car-brand-desktop">
+                                  <SelectValue placeholder="Marka seçin" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {CAR_BRANDS.map((brand) => (
+                                  <SelectItem key={brand} value={brand}>
+                                    {brand}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          
                           <FormMessage />
                         </FormItem>
                       )}
@@ -420,20 +493,43 @@ export default function AddItem() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Durum *</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      
+                      {/* Mobile: Native Select */}
+                      <div className="block sm:hidden">
                         <FormControl>
-                          <SelectTrigger data-testid="select-condition">
-                            <SelectValue placeholder="Durum" />
-                          </SelectTrigger>
+                          <select 
+                            {...field}
+                            className="flex h-12 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            data-testid="select-condition-mobile"
+                          >
+                            <option value="">Durum seçin</option>
+                            {Object.entries(CONDITION_LABELS).map(([key, label]) => (
+                              <option key={key} value={key}>
+                                {label}
+                              </option>
+                            ))}
+                          </select>
                         </FormControl>
-                        <SelectContent>
-                          {Object.entries(CONDITION_LABELS).map(([key, label]) => (
-                            <SelectItem key={key} value={key}>
-                              {label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      </div>
+
+                      {/* Desktop: Custom Select */}
+                      <div className="hidden sm:block">
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger data-testid="select-condition-desktop">
+                              <SelectValue placeholder="Durum" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.entries(CONDITION_LABELS).map(([key, label]) => (
+                              <SelectItem key={key} value={key}>
+                                {label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
                       <FormMessage />
                     </FormItem>
                   )}
@@ -447,20 +543,43 @@ export default function AddItem() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>İl *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        
+                        {/* Mobile: Native Select */}
+                        <div className="block sm:hidden">
                           <FormControl>
-                            <SelectTrigger data-testid="select-city">
-                              <SelectValue placeholder="İl seçin" />
-                            </SelectTrigger>
+                            <select 
+                              {...field}
+                              className="flex h-12 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                              data-testid="select-city-mobile"
+                            >
+                              <option value="">İl seçin</option>
+                              {TURKISH_CITIES.map((city) => (
+                                <option key={city} value={city}>
+                                  {city}
+                                </option>
+                              ))}
+                            </select>
                           </FormControl>
-                          <SelectContent>
-                            {TURKISH_CITIES.map((city) => (
-                              <SelectItem key={city} value={city}>
-                                {city}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        </div>
+
+                        {/* Desktop: Custom Select */}
+                        <div className="hidden sm:block">
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-city-desktop">
+                                <SelectValue placeholder="İl seçin" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {TURKISH_CITIES.map((city) => (
+                                <SelectItem key={city} value={city}>
+                                  {city}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
                         <FormMessage />
                       </FormItem>
                     )}
