@@ -7,12 +7,14 @@ import { useAuth } from "@/hooks/useAuth";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
 import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const { t } = useTranslation();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,26 +26,26 @@ export default function Home() {
   const steps = [
     {
       icon: <UserPlus className="h-8 w-8" />,
-      title: "1. Hesap Oluştur",
-      description: "Ücretsiz kayıt olun",
+      title: t('home.step1Title'),
+      description: t('home.step1Desc'),
       color: "bg-primary/10 text-primary"
     },
     {
       icon: <Plus className="h-8 w-8" />,
-      title: "2. İlan Ekle",
-      description: "İlanınızın fotoğrafını ekleyin",
+      title: t('home.step2Title'),
+      description: t('home.step2Desc'),
       color: "bg-secondary/10 text-secondary"
     },
     {
       icon: <Search className="h-8 w-8" />,
-      title: "3. İlan Bul",
-      description: "İstediğiniz ilanı arayın",
+      title: t('home.step3Title'),
+      description: t('home.step3Desc'),
       color: "bg-accent/10 text-accent"
     },
     {
       icon: <div className="text-2xl">🤝</div>,
-      title: "4. Takas Yap",
-      description: "Teklif gönderin ve takas yapın",
+      title: t('home.step4Title'),
+      description: t('home.step4Desc'),
       color: "bg-green-500/10 text-green-500"
     }
   ];
@@ -51,29 +53,28 @@ export default function Home() {
   const features = [
     {
       icon: "📱",
-      title: "Teknolojik Ürünler",
-      description: "Telefon, laptop, kamera takas edin"
+      title: t('home.electronics'),
+      description: t('home.electronicsDesc')
     },
     {
       icon: "🏠",
-      title: "Beyaz Eşya",
-
-      description: "Beyaz eşyalar değiştirin"
+      title: t('home.appliances'),
+      description: t('home.appliancesDesc')
     },
     {
       icon: "🪑",
-      title: "Mobilya",
-      description: "Mobilya değiştirin"
+      title: t('home.furniture'),
+      description: t('home.furnitureDesc')
     },
     {
       icon: "🚗",
-      title: "Araba & Yedek Parça",
-      description: "Araç parçaları takas edin"
+      title: t('home.automotive'),
+      description: t('home.automotiveDesc')
     },
     {
       icon: "🧸",
-      title: "Oyuncak",
-      description: "Oyuncak değiştirin"
+      title: t('home.toys'),
+      description: t('home.toysDesc')
     },
     {
       icon: "🏡",
@@ -115,10 +116,10 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           
           <h1 className="text-3xl md:text-4xl font-bold mb-4" data-testid="title-hero">
-            Eşyalarınızı <span className="text-accent">Takas Edin</span>
+            {t('home.title')}
           </h1>
           <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto opacity-90" data-testid="description-hero">
-            Eşyalarınızı güvenle takas edin
+            {t('home.subtitle')}
           </p>
         </div>
       </section>
@@ -128,7 +129,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="title-how-it-works">
-              Nasıl Çalışır?
+              {t('home.howItWorks')}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               4 adımda takas yapın

@@ -23,6 +23,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { ConversationsList } from "@/components/user-chat/conversations-list";
 import { UserChat } from "@/components/user-chat/user-chat";
 import { Conversation } from "@shared/schema";
+import { useTranslation } from "react-i18next";
 
 export default function Profile() {
   const { user, profile, loading } = useAuth();
@@ -38,6 +39,7 @@ export default function Profile() {
   >(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   const { data: userItems = [], isLoading: itemsLoading } = useQuery({
     queryKey: ['user-items', user?.uid],
