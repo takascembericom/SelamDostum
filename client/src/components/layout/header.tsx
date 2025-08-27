@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
-import { Plus, User, LogOut, Home, Shield, MessageCircle, Bell } from "lucide-react";
+import { Plus, User, LogOut, Home, Shield, MessageCircle, Bell, Search } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -79,11 +79,23 @@ export function Header() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                       data-testid="button-home"
                     >
                       <Home className="h-4 w-4" />
                       <span className="hidden sm:inline">Ana Sayfa</span>
+                    </Button>
+                  </Link>
+                  
+                  <Link href="/items">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="flex items-center gap-2 text-green-600 hover:text-green-700 hover:bg-green-50"
+                      data-testid="button-browse"
+                    >
+                      <Search className="h-4 w-4" />
+                      <span className="hidden sm:inline">İlanlar</span>
                     </Button>
                   </Link>
                   
@@ -103,7 +115,7 @@ export function Header() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="flex items-center gap-2 relative"
+                      className="flex items-center gap-2 relative text-purple-600 hover:text-purple-700 hover:bg-purple-50"
                       data-testid="button-messages"
                     >
                       <MessageCircle className="h-4 w-4" />

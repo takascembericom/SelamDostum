@@ -30,6 +30,7 @@ export const insertUserSchema = userSchema.omit({
 // Item schema for Firestore
 export const itemSchema = z.object({
   id: z.string(),
+  itemNumber: z.number().min(500001, "İlan numarası 500001'den başlamalı"),
   title: z.string().min(3).max(100),
   description: z.string().min(10).max(1000),
   category: z.string(),

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { collection, addDoc, serverTimestamp, query, where, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, where, getDocs, doc, updateDoc, runTransaction } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/lib/firebase";
 import { Redirect, useLocation } from "wouter";
@@ -163,9 +163,26 @@ export default function AddItem() {
       const expireDate = new Date();
       expireDate.setDate(expireDate.getDate() + 30);
 
+      // Generate item number atomically using Firestore transaction
+      const itemNumber = await runTransaction(db, async (transaction) => {
+        const counterRef = doc(db, 'counters', 'itemNumbers');
+        const counterDoc = await transaction.get(counterRef);
+        
+        let nextNumber = 500001; // Start from 500001
+        if (counterDoc.exists()) {
+          nextNumber = (counterDoc.data().lastNumber || 500000) + 1;
+        }
+        
+        // Update counter
+        transaction.set(counterRef, { lastNumber: nextNumber }, { merge: true });
+        
+        return nextNumber;
+      });
+
       // Create item document
       const itemData = {
         ...form.getValues(),
+        itemNumber,
         location: `${form.getValues().city}, ${form.getValues().district}, ${form.getValues().neighborhood}`,
         images: imageUrls,
         ownerId: user.uid,

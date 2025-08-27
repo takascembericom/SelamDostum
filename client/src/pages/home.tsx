@@ -6,6 +6,7 @@ import { Search, UserPlus, Plus, ArrowRight, Star } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
+import { CategoryButtons } from "@/components/category-buttons";
 import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
 
 export default function Home() {
@@ -163,6 +164,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Category Buttons Section */}
+      <CategoryButtons />
 
       {/* Testimonials */}
       <section className="py-20 bg-white">

@@ -36,6 +36,14 @@ export function ItemCard({ item, onViewDetails }: ItemCardProps) {
       </div>
       
       <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs text-gray-500 font-mono" data-testid={`item-number-${item.id}`}>
+            #{item.itemNumber || '----'}
+          </span>
+          <Badge variant="outline" data-testid={`category-item-${item.id}`}>
+            {CATEGORY_LABELS[item.category as keyof typeof CATEGORY_LABELS] || item.category}
+          </Badge>
+        </div>
         <div className="flex items-start justify-between mb-2">
           <h3 className="font-semibold text-gray-900 line-clamp-2" data-testid={`title-item-${item.id}`}>
             {item.title}
@@ -64,9 +72,6 @@ export function ItemCard({ item, onViewDetails }: ItemCardProps) {
             <div className="w-6 h-6 bg-gray-300 rounded-full" data-testid={`avatar-item-${item.id}`}></div>
             <span className="text-sm text-gray-600" data-testid={`owner-item-${item.id}`}>{item.ownerName}</span>
           </div>
-          <Badge variant="outline" data-testid={`category-item-${item.id}`}>
-            {CATEGORY_LABELS[item.category as keyof typeof CATEGORY_LABELS] || item.category}
-          </Badge>
         </div>
         
         <div className="mt-4 flex items-center justify-between">

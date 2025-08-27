@@ -21,8 +21,22 @@ export default function Items() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const search = urlParams.get('search');
+    const category = urlParams.get('category');
+    
     if (search) {
       setSearchQuery(search);
+    }
+    
+    if (category) {
+      // Handle special group categories
+      if (category === 'araba_group') {
+        // Show both araba and araba_yedek_parca
+        setCategoryFilter('araba_group');
+      } else if (category === 'tasinmazlar_group') {
+        setCategoryFilter('tasinmazlar');
+      } else {
+        setCategoryFilter(category);
+      }
     }
   }, []);
 
@@ -37,13 +51,79 @@ export default function Items() {
       );
 
       if (categoryFilter !== 'all') {
-        q = query(
-          collection(db, 'items'),
-          where('status', '==', 'aktif'),
-          where('category', '==', categoryFilter),
-          orderBy('createdAt', 'desc'),
-          limit(50)
-        );
+        if (categoryFilter === 'araba_group') {
+          // For araba group, get both araba and araba_yedek_parca
+          const arabaQuery = query(
+            collection(db, 'items'),
+            where('status', '==', 'aktif'),
+            where('category', '==', 'araba'),
+            orderBy('createdAt', 'desc'),
+            limit(25)
+          );
+          
+          const yedekParcaQuery = query(
+            collection(db, 'items'),
+            where('status', '==', 'aktif'),
+            where('category', '==', 'araba_yedek_parca'),
+            orderBy('createdAt', 'desc'),
+            limit(25)
+          );
+          
+          const [arabaSnapshot, yedekParcaSnapshot] = await Promise.all([
+            getDocs(arabaQuery),
+            getDocs(yedekParcaQuery)
+          ]);
+          
+          const arabaItems = arabaSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+              ...data,
+              id: doc.id,
+              createdAt: data.createdAt.toDate(),
+              updatedAt: data.updatedAt.toDate(),
+            } as Item;
+          });
+          
+          const yedekParcaItems = yedekParcaSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+              ...data,
+              id: doc.id,
+              createdAt: data.createdAt.toDate(),
+              updatedAt: data.updatedAt.toDate(),
+            } as Item;
+          });
+          
+          const allArabaItems = [...arabaItems, ...yedekParcaItems].sort((a, b) => 
+            b.createdAt.getTime() - a.createdAt.getTime()
+          );
+          
+          // Client-side filtering for search and condition
+          let filteredItems = allArabaItems;
+
+          if (searchQuery.trim()) {
+            const query = searchQuery.toLowerCase();
+            filteredItems = filteredItems.filter(item =>
+              item.title.toLowerCase().includes(query) ||
+              item.description.toLowerCase().includes(query) ||
+              item.category.toLowerCase().includes(query)
+            );
+          }
+
+          if (conditionFilter !== 'all') {
+            filteredItems = filteredItems.filter(item => item.condition === conditionFilter);
+          }
+
+          return filteredItems;
+        } else {
+          q = query(
+            collection(db, 'items'),
+            where('status', '==', 'aktif'),
+            where('category', '==', categoryFilter),
+            orderBy('createdAt', 'desc'),
+            limit(50)
+          );
+        }
       }
 
       const querySnapshot = await getDocs(q);
@@ -141,7 +221,11 @@ export default function Items() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Tümü</SelectItem>
-                    {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                    <SelectItem value="araba_group">🚗 Araba & Yedek Parça</SelectItem>
+                    <SelectItem value="tasinmazlar">🏡 Taşınmazlar</SelectItem>
+                    {Object.entries(CATEGORY_LABELS).filter(([key]) => 
+                      !['araba', 'araba_yedek_parca', 'tasinmazlar'].includes(key)
+                    ).map(([key, label]) => (
                       <SelectItem key={key} value={key}>{label}</SelectItem>
                     ))}
                   </SelectContent>
