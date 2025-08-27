@@ -209,9 +209,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Category Buttons Section */}
-      <CategoryButtons />
-
       {/* Latest Items Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -291,6 +288,9 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Category Buttons Section */}
+      <CategoryButtons />
 
       {/* Testimonials */}
       <section className="py-20 bg-white">

@@ -92,6 +92,11 @@ export function UserChat({
       }
     });
 
+    // Also mark as read when conversation first opens
+    if (profile?.id) {
+      markMessagesAsRead(conversationId, profile.id).catch(console.error);
+    }
+
     return () => unsubscribe();
   }, [conversationId, profile?.id]);
 

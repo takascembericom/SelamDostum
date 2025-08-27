@@ -193,6 +193,27 @@ export const markMessagesAsRead = async (conversationId: string, userId: string)
   }
 };
 
+// Delete conversation for a user (hide it)
+export const deleteConversationForUser = async (conversationId: string, userId: string): Promise<void> => {
+  try {
+    const conversationRef = doc(db, "conversations", conversationId);
+    const conversationDoc = await getDoc(conversationRef);
+    
+    if (conversationDoc.exists()) {
+      const conversationData = conversationDoc.data();
+      const newUnreadCount = { ...conversationData.unreadCount };
+      newUnreadCount[userId] = -1; // Mark as deleted for this user
+
+      await updateDoc(conversationRef, {
+        unreadCount: newUnreadCount,
+        updatedAt: Timestamp.now(),
+      });
+    }
+  } catch (error: any) {
+    throw new Error(error.message || "Konuşma silinemedi");
+  }
+};
+
 // Listen to conversation messages (real-time)
 export const subscribeToConversationMessages = (
   conversationId: string,

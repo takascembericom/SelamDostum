@@ -7,12 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { deleteConversationForUser } from "@/lib/userMessages";
 import { 
   MessageCircle, 
   User, 
   Search,
   Clock,
-  ArrowRight
+  ArrowRight,
+  Trash2
 } from "lucide-react";
 
 interface ConversationsListProps {
@@ -22,10 +25,12 @@ interface ConversationsListProps {
 
 export function ConversationsList({ onSelectConversation, selectedConversationId }: ConversationsListProps) {
   const { profile } = useAuth();
+  const { toast } = useToast();
   const [location] = useLocation();
   const [conversations, setConversations] = useState<(Conversation & { otherUserName: string; otherUserId: string })[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!profile?.id) return;
@@ -53,6 +58,31 @@ export function ConversationsList({ onSelectConversation, selectedConversationId
   const filteredConversations = conversations.filter(conversation =>
     conversation.otherUserName.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleDeleteConversation = async (conversationId: string, otherUserName: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!profile?.id) return;
+    
+    setDeletingId(conversationId);
+    
+    try {
+      await deleteConversationForUser(conversationId, profile.id);
+      toast({
+        title: "Konuşma Silindi",
+        description: `${otherUserName} ile konuşmanız silindi.`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "Konuşma silinemedi",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const formatTime = (date: Date) => {
     const now = new Date();
@@ -178,7 +208,19 @@ export function ConversationsList({ onSelectConversation, selectedConversationId
                         }`}>
                           {conversation.lastMessage || 'Henüz mesaj yok'}
                         </p>
-                        <ArrowRight className="h-4 w-4 text-gray-400 flex-shrink-0 ml-2" />
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                            onClick={(e) => handleDeleteConversation(conversation.id, conversation.otherUserName, e)}
+                            disabled={deletingId === conversation.id}
+                            title="Konuşmayı Sil"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                          <ArrowRight className="h-4 w-4 text-gray-400" />
+                        </div>
                       </div>
 
                       {/* Trade offer indicator */}
