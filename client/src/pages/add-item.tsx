@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { collection, addDoc, serverTimestamp, query, where, getDocs, doc, updateDoc, runTransaction } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Redirect, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -299,6 +299,7 @@ export default function AddItem() {
       const itemNumber = Date.now() + Math.floor(Math.random() * 1000) + 500000;
 
       // Create item document
+      const currentTime = new Date();
       const itemData = {
         ...form.getValues(),
         itemNumber,
@@ -309,8 +310,8 @@ export default function AddItem() {
         ownerAvatar: profile.avatar || "",
         status: 'pending',
         expireAt: expireDate,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        createdAt: currentTime,
+        updatedAt: currentTime,
       };
 
       // Attempt to add document with retry and detailed logging
@@ -348,6 +349,22 @@ export default function AddItem() {
           totalListings: (profile.totalListings || 0) + 1
         }).catch(console.error); // Don't block on this
       }
+
+      // Verify the item was actually saved by fetching it
+      console.log('Verifying item was saved...');
+      const verifyQuery = query(
+        collection(db, 'items'),
+        where('itemNumber', '==', itemNumber),
+        where('ownerId', '==', user.uid)
+      );
+      
+      const verifySnapshot = await getDocs(verifyQuery);
+      
+      if (verifySnapshot.empty) {
+        throw new Error('İlan kaydedilemedi - veritabanında bulunamadı');
+      }
+      
+      console.log('Item verified in database:', verifySnapshot.docs[0].data());
 
       toast({
         title: "✅ İlanınız onay sürecindedir",
