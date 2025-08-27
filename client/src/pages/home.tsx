@@ -113,6 +113,14 @@ export default function Home() {
         <div className="absolute inset-0 bg-black bg-opacity-20"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Logo in Hero */}
+          <div className="mb-8">
+            <img 
+              src={logoImage} 
+              alt="Takas Çemberi Logo" 
+              className="h-24 md:h-32 w-auto mx-auto mb-6"
+            />
+          </div>
           
           <h1 className="text-3xl md:text-4xl font-bold mb-4" data-testid="title-hero">
             Güvenli Takas Platformu

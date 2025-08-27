@@ -51,13 +51,7 @@ export function Header() {
             <div className="flex items-center">
               <Link href="/" data-testid="link-home">
                 <div className="flex-shrink-0 flex items-center">
-                  {/* Desktop Logo */}
-                  <img 
-                    src={logoImage} 
-                    alt="Takas Çemberi Logo" 
-                    className="h-20 w-auto mr-5"
-                  />
-                  <span className="text-5xl font-bold text-gray-900 hidden sm:inline">Takas Çemberi</span>
+                  <span className="text-3xl font-bold text-gray-900">Takas Çemberi</span>
                 </div>
               </Link>
             </div>
