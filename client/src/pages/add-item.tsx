@@ -135,15 +135,69 @@ export default function AddItem() {
       throw new Error("En az 1 fotoğraf ekleyin");
     }
 
+    // Compress and upload images with timeout
     const uploadPromises = selectedImages.map(async (file, index) => {
+      // Compress image if too large (max 800KB)
+      let processedFile = file;
+      if (file.size > 800 * 1024) {
+        processedFile = await compressImage(file);
+      }
+      
       const fileName = `items/${user!.uid}/${Date.now()}-${index}-${file.name}`;
       const storageRef = ref(storage, fileName);
       
-      await uploadBytes(storageRef, file);
-      return await getDownloadURL(storageRef);
+      // Add timeout for upload (30 seconds max per image)
+      const uploadPromise = uploadBytes(storageRef, processedFile).then(() => getDownloadURL(storageRef));
+      const timeoutPromise = new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Resim yükleme zaman aşımı')), 30000)
+      );
+      
+      return Promise.race([uploadPromise, timeoutPromise]);
     });
 
     return await Promise.all(uploadPromises);
+  };
+
+  // Simple image compression function
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d')!;
+      const img = new Image();
+      
+      img.onload = () => {
+        // Calculate new dimensions (max 1200px width/height)
+        const maxSize = 1200;
+        let { width, height } = img;
+        
+        if (width > height) {
+          if (width > maxSize) {
+            height = (height * maxSize) / width;
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width = (width * maxSize) / height;
+            height = maxSize;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+          } else {
+            resolve(file);
+          }
+        }, 'image/jpeg', 0.8);
+      };
+      
+      img.src = URL.createObjectURL(file);
+    });
   };
 
   const handleSubmit = async () => {
@@ -156,28 +210,25 @@ export default function AddItem() {
 
     setUploading(true);
     try {
-      // Upload images first
+      // Upload images first with progress feedback
+      toast({
+        title: "Resimler yükleniyor...",
+        description: "Lütfen bekleyin, resimler Firebase'e yükleniyor.",
+      });
+      
       const imageUrls = await uploadImages();
+      
+      toast({
+        title: "İlan kaydediliyor...",
+        description: "Resimler yüklendi, ilan veritabanına kaydediliyor.",
+      });
 
       // Calculate expiry date (30 days from now)
       const expireDate = new Date();
       expireDate.setDate(expireDate.getDate() + 30);
 
-      // Generate item number atomically using Firestore transaction
-      const itemNumber = await runTransaction(db, async (transaction) => {
-        const counterRef = doc(db, 'counters', 'itemNumbers');
-        const counterDoc = await transaction.get(counterRef);
-        
-        let nextNumber = 500001; // Start from 500001
-        if (counterDoc.exists()) {
-          nextNumber = (counterDoc.data().lastNumber || 500000) + 1;
-        }
-        
-        // Update counter
-        transaction.set(counterRef, { lastNumber: nextNumber }, { merge: true });
-        
-        return nextNumber;
-      });
+      // Generate simple item number (faster than transaction)
+      const itemNumber = Date.now() + Math.floor(Math.random() * 1000) + 500000;
 
       // Create item document
       const itemData = {
@@ -196,16 +247,16 @@ export default function AddItem() {
 
       await addDoc(collection(db, 'items'), itemData);
 
-      // Update user's listing count in profile
+      // Update user's listing count in profile (non-blocking)
       if (profile.totalListings !== undefined) {
         const userRef = doc(db, 'users', user.uid);
-        await updateDoc(userRef, {
+        updateDoc(userRef, {
           totalListings: (profile.totalListings || 0) + 1
-        });
+        }).catch(console.error); // Don't block on this
       }
 
       toast({
-        title: "İlanınız onay sürecindedir",
+        title: "✅ İlanınız onay sürecindedir",
         description: "Onaylandıktan sonra yayınlanacaktır. Admin panelinde beklemede.",
       });
 
@@ -214,8 +265,8 @@ export default function AddItem() {
     } catch (error: any) {
       console.error('Add item error:', error);
       toast({
-        title: "Hata",
-        description: error.message || "İlan eklenirken bir hata oluştu",
+        title: "❌ Hata",
+        description: error.message || "İlan eklenirken bir hata oluştu. Tekrar deneyin.",
         variant: "destructive",
       });
     } finally {
