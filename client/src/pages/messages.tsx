@@ -68,7 +68,7 @@ export default function MessagesPage() {
                   <div className="w-full h-full">
                     <ConversationsList
                       onSelectConversation={handleSelectConversation}
-                      selectedConversationId={selectedConversation?.id}
+                      selectedConversationId={selectedConversation?.id || null}
                     />
                   </div>
                 ) : (
@@ -91,7 +91,7 @@ export default function MessagesPage() {
                 <div className="w-1/3 border-r">
                   <ConversationsList
                     onSelectConversation={handleSelectConversation}
-                    selectedConversationId={selectedConversation?.id}
+                    selectedConversationId={selectedConversation?.id || null}
                   />
                 </div>
 

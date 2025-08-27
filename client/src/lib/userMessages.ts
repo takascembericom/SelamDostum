@@ -3,6 +3,7 @@ import {
   doc, 
   addDoc, 
   updateDoc, 
+  setDoc,
   query, 
   where, 
   orderBy, 
@@ -49,7 +50,7 @@ export const createOrGetConversation = async (
       tradeOfferId,
     };
 
-    await updateDoc(doc(db, "conversations", conversationId), {
+    await setDoc(doc(db, "conversations", conversationId), {
       ...conversationData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),

@@ -17,7 +17,7 @@ import {
 
 interface ConversationsListProps {
   onSelectConversation: (conversation: Conversation & { otherUserName: string; otherUserId: string }) => void;
-  selectedConversationId?: string;
+  selectedConversationId?: string | null;
 }
 
 export function ConversationsList({ onSelectConversation, selectedConversationId }: ConversationsListProps) {
