@@ -313,18 +313,24 @@ export default function AddItem() {
         updatedAt: serverTimestamp(),
       };
 
-      // Attempt to add document with retry
+      // Attempt to add document with retry and detailed logging
+      console.log('About to save item to Firestore:', itemData);
       let addDocSuccess = false;
       let retryCount = 0;
       const maxRetries = 3;
       
       while (!addDocSuccess && retryCount < maxRetries) {
         try {
-          await addDoc(collection(db, 'items'), itemData);
+          console.log(`Save attempt ${retryCount + 1}...`);
+          const docRef = await addDoc(collection(db, 'items'), itemData);
+          console.log('Successfully saved item with ID:', docRef.id);
           addDocSuccess = true;
         } catch (docError: any) {
           retryCount++;
-          console.warn(`Add document attempt ${retryCount} failed:`, docError);
+          console.error(`Add document attempt ${retryCount} failed:`, docError);
+          console.error('Error code:', docError.code);
+          console.error('Error message:', docError.message);
+          console.error('Full error:', docError);
           
           if (retryCount >= maxRetries) {
             throw new Error(`Veritabanı hatası: ${docError.code || docError.message}`);
