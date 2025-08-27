@@ -93,14 +93,19 @@ export function TradeOfferModal({ isOpen, onClose, targetItem }: TradeOfferModal
     const selectedItem = userItems.find(item => item.id === selectedItemId);
     if (!selectedItem) return;
 
+    const trimmedMessage = message.trim();
     const tradeOfferData: InsertTradeOffer = {
       fromUserId: profile.id,
       toUserId: targetItem.ownerId,
       fromItemId: selectedItemId,
       toItemId: targetItem.id,
-      message: message.trim() || undefined,
       status: "beklemede",
     };
+
+    // Only add message if it's not empty
+    if (trimmedMessage) {
+      tradeOfferData.message = trimmedMessage;
+    }
 
     createTradeOfferMutation.mutate(tradeOfferData);
   };
