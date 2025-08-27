@@ -22,6 +22,7 @@ export default function ItemDetail() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
 
   const { data: item, isLoading, error } = useQuery({
     queryKey: ["item", id],
@@ -85,7 +86,6 @@ export default function ItemDetail() {
   };
 
   const isOwner = profile?.id === item.ownerId;
-  const { toast } = useToast();
 
   const handleSendMessage = async () => {
     if (!profile?.id || !item) return;

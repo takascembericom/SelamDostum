@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { collection, query, where, limit, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { Item } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, UserPlus, Plus, ArrowRight, Star } from "lucide-react";
@@ -7,6 +11,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
 import { CategoryButtons } from "@/components/category-buttons";
+import { ItemGrid } from "@/components/items/item-grid";
+import { Skeleton } from "@/components/ui/skeleton";
 import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
 
 export default function Home() {
@@ -14,6 +20,36 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+  // Fetch latest 20 items for homepage
+  const { data: latestItems = [], isLoading: itemsLoading } = useQuery({
+    queryKey: ['homepage-items'],
+    queryFn: async (): Promise<Item[]> => {
+      try {
+        const q = query(
+          collection(db, 'items'),
+          where('status', '==', 'aktif'),
+          limit(20)
+        );
+
+        const querySnapshot = await getDocs(q);
+        const itemsData = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            ...data,
+            id: doc.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
+          } as Item;
+        }).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+        return itemsData;
+      } catch (error) {
+        console.error('Error fetching homepage items:', error);
+        return [];
+      }
+    },
+  });
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -175,6 +211,86 @@ export default function Home() {
 
       {/* Category Buttons Section */}
       <CategoryButtons />
+
+      {/* Latest Items Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center mb-12">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="title-latest-items">
+                En Son İlanlar
+              </h2>
+              <p className="text-xl text-gray-600">
+                Yeni eklenen {latestItems.length} ilan
+              </p>
+            </div>
+            <Button 
+              asChild
+              variant="outline"
+              className="hidden sm:flex"
+              data-testid="button-view-all-items"
+            >
+              <Link href="/items">
+                Tümünü Gör
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Link>
+            </Button>
+          </div>
+
+          {/* Items Grid */}
+          {itemsLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-white rounded-lg overflow-hidden shadow-sm">
+                  <Skeleton className="w-full h-48" />
+                  <div className="p-4">
+                    <Skeleton className="h-4 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-1/2 mb-2" />
+                    <Skeleton className="h-3 w-full mb-2" />
+                    <Skeleton className="h-3 w-2/3" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : latestItems.length > 0 ? (
+            <>
+              <ItemGrid 
+                items={latestItems} 
+                onViewDetails={(item) => window.location.href = `/item/${item.id}`}
+              />
+              {/* Mobile View All Button */}
+              <div className="flex justify-center mt-8 sm:hidden">
+                <Button 
+                  asChild
+                  variant="outline"
+                  data-testid="button-view-all-mobile"
+                >
+                  <Link href="/items">
+                    Tümünü Gör
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-16">
+              <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <span className="text-gray-400 text-2xl">📦</span>
+              </div>
+              <h3 className="text-xl font-medium text-gray-900 mb-2">Henüz ilan yok</h3>
+              <p className="text-gray-500 mb-6">İlk ilanınızı ekleyerek başlayın!</p>
+              {user && (
+                <Button asChild>
+                  <Link href="/add-item">
+                    <Plus className="h-4 w-4 mr-2" />
+                    İlan Ekle
+                  </Link>
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Testimonials */}
       <section className="py-20 bg-white">
