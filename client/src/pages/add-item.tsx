@@ -5,8 +5,7 @@ import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { collection, addDoc, serverTimestamp, query, where, getDocs, doc, updateDoc, runTransaction } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import { Redirect, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -156,7 +155,7 @@ export default function AddItem() {
       throw new Error("En az 1 fotoğraf ekleyin");
     }
 
-    // Compress and upload images with timeout
+    // Upload to Replit Object Storage
     const uploadPromises = selectedImages.map(async (file, index) => {
       // Compress image if too large (max 800KB)
       let processedFile = file;
@@ -164,16 +163,36 @@ export default function AddItem() {
         processedFile = await compressImage(file);
       }
       
-      const fileName = `items/${user!.uid}/${Date.now()}-${index}-${file.name}`;
-      const storageRef = ref(storage, fileName);
+      // Get upload URL from backend
+      const uploadResponse = await fetch('/api/objects/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       
-      // Add timeout for upload (30 seconds max per image)
-      const uploadPromise = uploadBytes(storageRef, processedFile).then(() => getDownloadURL(storageRef));
-      const timeoutPromise = new Promise<never>((_, reject) => 
-        setTimeout(() => reject(new Error('Resim yükleme zaman aşımı')), 30000)
-      );
+      if (!uploadResponse.ok) {
+        throw new Error('Yükleme URL\'si alınamadı');
+      }
       
-      return Promise.race([uploadPromise, timeoutPromise]);
+      const { uploadURL } = await uploadResponse.json();
+      
+      // Upload file to object storage
+      const fileUploadResponse = await fetch(uploadURL, {
+        method: 'PUT',
+        body: processedFile,
+        headers: {
+          'Content-Type': processedFile.type,
+        },
+      });
+      
+      if (!fileUploadResponse.ok) {
+        throw new Error('Resim yükleme başarısız');
+      }
+      
+      // Return the object storage path
+      const objectPath = uploadURL.split('?')[0].split('/').slice(-2).join('/');
+      return `/objects/${objectPath}`;
     });
 
     return await Promise.all(uploadPromises);
