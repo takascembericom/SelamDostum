@@ -43,20 +43,24 @@ export function ConversationsList({ onSelectConversation, selectedConversationId
     return () => unsubscribe();
   }, [profile?.id]);
 
-  // Separate effect for URL parameter handling
+  // Separate effect for URL parameter handling - works for both mobile and desktop
   useEffect(() => {
     const params = new URLSearchParams(location.split('?')[1] || '');
     const conversationId = params.get('conversation');
     
-    if (conversationId && conversations.length > 0 && !selectedConversationId) {
-      console.log("URL'den conversation aranıyor:", conversationId, "Mevcut conversations:", conversations.length);
-      const conversation = conversations.find(c => c.id === conversationId) as 
-        Conversation & { otherUserName: string; otherUserId: string };
-      if (conversation) {
-        console.log("Conversation bulundu ve seçiliyor:", conversation);
-        onSelectConversation(conversation);
-      } else {
-        console.log("Conversation bulunamadı:", conversationId);
+    if (conversationId && conversations.length > 0) {
+      console.log("URL'den conversation aranıyor:", conversationId, "Mevcut conversations:", conversations.length, "SelectedId:", selectedConversationId);
+      
+      // Only auto-select if not already selected or if it's a different conversation
+      if (!selectedConversationId || selectedConversationId !== conversationId) {
+        const conversation = conversations.find(c => c.id === conversationId) as 
+          Conversation & { otherUserName: string; otherUserId: string };
+        if (conversation) {
+          console.log("Conversation bulundu ve seçiliyor (mobil/masaüstü):", conversation);
+          onSelectConversation(conversation);
+        } else {
+          console.log("Conversation bulunamadı:", conversationId);
+        }
       }
     }
   }, [location, conversations, selectedConversationId, onSelectConversation]);

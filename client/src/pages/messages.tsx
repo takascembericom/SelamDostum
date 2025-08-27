@@ -14,14 +14,14 @@ export default function MessagesPage() {
   >(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  // Handle conversation query parameter
+  // Handle conversation query parameter - works for both mobile and desktop
   useEffect(() => {
     const params = new URLSearchParams(location.split('?')[1] || '');
     const conversationId = params.get('conversation');
     
     if (conversationId && selectedConversation?.id !== conversationId) {
-      // Auto-select conversation from URL parameter
-      console.log("URL'den conversation seçiliyor:", conversationId);
+      // URL'den conversation seçilecek - ConversationsList içinde handle edilecek
+      console.log("Messages page: URL'den conversation ID tespit edildi:", conversationId);
     }
   }, [location, selectedConversation]);
 
@@ -68,7 +68,7 @@ export default function MessagesPage() {
                   <div className="w-full h-full">
                     <ConversationsList
                       onSelectConversation={handleSelectConversation}
-                      selectedConversationId={selectedConversation ? selectedConversation.id : null}
+                      selectedConversationId={null}
                     />
                   </div>
                 ) : (
@@ -91,7 +91,7 @@ export default function MessagesPage() {
                 <div className="w-1/3 border-r">
                   <ConversationsList
                     onSelectConversation={handleSelectConversation}
-                    selectedConversationId={selectedConversation ? selectedConversation.id : null}
+                    selectedConversationId={selectedConversation?.id ?? null}
                   />
                 </div>
 
