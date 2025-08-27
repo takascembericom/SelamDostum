@@ -40,14 +40,18 @@ export function ConversationsList({ onSelectConversation, selectedConversationId
       setLoading(false);
       
       // Auto-select conversation from URL parameter
-      const params = new URLSearchParams(location.split('?')[1]);
+      const params = new URLSearchParams(location.split('?')[1] || '');
       const conversationId = params.get('conversation');
       
       if (conversationId && !selectedConversationId) {
+        console.log("URL'den conversation aranıyor:", conversationId, "Mevcut conversations:", newConversations.length);
         const conversation = newConversations.find(c => c.id === conversationId) as 
           Conversation & { otherUserName: string; otherUserId: string };
         if (conversation) {
+          console.log("Conversation bulundu ve seçiliyor:", conversation);
           onSelectConversation(conversation);
+        } else {
+          console.log("Conversation bulunamadı:", conversationId);
         }
       }
     });

@@ -207,6 +207,7 @@ export default function UserProfile() {
     }
 
 
+    console.log("Rating gönderiliyor:", { raterUserId: profile.id, ratedUserId: userId, rating });
     addRatingMutation.mutate({
       raterUserId: profile.id,
       ratedUserId: userId,

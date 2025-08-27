@@ -16,14 +16,14 @@ export default function MessagesPage() {
 
   // Handle conversation query parameter
   useEffect(() => {
-    const params = new URLSearchParams(location.split('?')[1]);
+    const params = new URLSearchParams(location.split('?')[1] || '');
     const conversationId = params.get('conversation');
     
-    if (conversationId) {
-      // If there's a conversation parameter, we'll select it when conversations load
-      // This will be handled in the conversations list component
+    if (conversationId && selectedConversation?.id !== conversationId) {
+      // Auto-select conversation from URL parameter
+      console.log("URL'den conversation seçiliyor:", conversationId);
     }
-  }, [location]);
+  }, [location, selectedConversation]);
 
   // Handle window resize for responsive design
   useEffect(() => {

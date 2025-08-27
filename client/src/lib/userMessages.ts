@@ -123,10 +123,10 @@ export const getConversationMessages = async (conversationId: string): Promise<U
 // Get user's conversations
 export const getUserConversations = async (userId: string): Promise<Conversation[]> => {
   try {
+    // Removed orderBy to avoid Firebase index requirement
     const q = query(
       collection(db, "conversations"),
-      where("participants", "array-contains", userId),
-      orderBy("lastMessageTime", "desc")
+      where("participants", "array-contains", userId)
     );
 
     const querySnapshot = await getDocs(q);
@@ -151,7 +151,10 @@ export const getUserConversations = async (userId: string): Promise<Conversation
       } as Conversation & { otherUserName: string; otherUserId: string });
     }
 
-    return conversations;
+    // Sort conversations by lastMessageTime in memory
+    return conversations.sort((a, b) => 
+      b.lastMessageTime.getTime() - a.lastMessageTime.getTime()
+    );
   } catch (error: any) {
     throw new Error(error.message || "Konuşmalar alınamadı");
   }
@@ -244,10 +247,10 @@ export const subscribeToUserConversations = (
   userId: string,
   callback: (conversations: Conversation[]) => void
 ) => {
+  // Removed orderBy to avoid Firebase index requirement
   const q = query(
     collection(db, "conversations"),
-    where("participants", "array-contains", userId),
-    orderBy("lastMessageTime", "desc")
+    where("participants", "array-contains", userId)
   );
 
   return onSnapshot(q, async (snapshot) => {
@@ -278,6 +281,11 @@ export const subscribeToUserConversations = (
       } as Conversation & { otherUserName: string; otherUserId: string });
     }
 
-    callback(conversations);
+    // Sort conversations by lastMessageTime in memory
+    const sortedConversations = conversations.sort((a, b) => 
+      b.lastMessageTime.getTime() - a.lastMessageTime.getTime()
+    );
+    
+    callback(sortedConversations);
   });
 };
