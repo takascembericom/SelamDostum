@@ -218,9 +218,9 @@ export default function ItemDetail() {
                     <User className="h-5 w-5 text-gray-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900" data-testid="owner-name">
+                    <Link href={`/user/${item.ownerId}`} className="font-medium text-gray-900 hover:text-primary hover:underline" data-testid="owner-name">
                       {item.ownerName}
-                    </p>
+                    </Link>
                     <p className="text-sm text-gray-500">İlan Sahibi</p>
                   </div>
                 </div>

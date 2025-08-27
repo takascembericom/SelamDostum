@@ -8,6 +8,7 @@ export const userSchema = z.object({
   firstName: z.string().min(2),
   lastName: z.string().min(2),
   phone: z.string().min(10),
+  city: z.string().optional(),
   avatar: z.string().optional(),
   totalListings: z.number().default(0),
   averageRating: z.number().min(0).max(5).default(0),
@@ -117,6 +118,24 @@ export const insertChatMessageSchema = baseChatMessageSchema.omit({
 
 export type ChatMessage = z.infer<typeof chatMessageSchema>;
 export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
+
+// Rating schema for user ratings
+export const ratingSchema = z.object({
+  id: z.string(),
+  raterUserId: z.string(),
+  ratedUserId: z.string(),
+  rating: z.number().min(1).max(5),
+  comment: z.string().optional(),
+  createdAt: z.date(),
+});
+
+export const insertRatingSchema = ratingSchema.omit({
+  id: true,
+  createdAt: true,
+});
+
+export type Rating = z.infer<typeof ratingSchema>;
+export type InsertRating = z.infer<typeof insertRatingSchema>;
 
 // User-to-user messaging schema
 const baseUserMessageSchema = z.object({
