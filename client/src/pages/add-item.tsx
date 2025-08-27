@@ -63,6 +63,20 @@ export default function AddItem() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [userListingCount, setUserListingCount] = useState<number>(0);
   const [loadingListingCount, setLoadingListingCount] = useState(true);
+
+  // Cleanup function for blob URLs
+  useEffect(() => {
+    return () => {
+      // Cleanup all blob URLs when component unmounts
+      imageURLs.forEach(url => {
+        try {
+          URL.revokeObjectURL(url);
+        } catch (error) {
+          console.warn('Cleanup error:', error);
+        }
+      });
+    };
+  }, [imageURLs]);
   // Check user's current listing count for display purposes only
   useEffect(() => {
     const checkUserListings = async () => {
@@ -125,7 +139,14 @@ export default function AddItem() {
   const removeImage = (index: number) => {
     setSelectedImages(prev => prev.filter((_, i) => i !== index));
     setImageURLs(prev => {
-      URL.revokeObjectURL(prev[index]); // Clean up blob URL
+      // Safely clean up blob URL
+      try {
+        if (prev[index]) {
+          URL.revokeObjectURL(prev[index]);
+        }
+      } catch (error) {
+        console.warn('URL cleanup error:', error);
+      }
       return prev.filter((_, i) => i !== index);
     });
   };
@@ -158,45 +179,73 @@ export default function AddItem() {
     return await Promise.all(uploadPromises);
   };
 
-  // Simple image compression function
+  // Simple image compression function with error handling
   const compressImage = (file: File): Promise<File> => {
-    return new Promise((resolve) => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d')!;
-      const img = new Image();
-      
-      img.onload = () => {
-        // Calculate new dimensions (max 1200px width/height)
-        const maxSize = 1200;
-        let { width, height } = img;
+    return new Promise((resolve, reject) => {
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
         
-        if (width > height) {
-          if (width > maxSize) {
-            height = (height * maxSize) / width;
-            width = maxSize;
-          }
-        } else {
-          if (height > maxSize) {
-            width = (width * maxSize) / height;
-            height = maxSize;
-          }
+        if (!ctx) {
+          resolve(file); // Fallback to original file
+          return;
         }
         
-        canvas.width = width;
-        canvas.height = height;
+        const img = new Image();
         
-        ctx.drawImage(img, 0, 0, width, height);
-        
-        canvas.toBlob((blob) => {
-          if (blob) {
-            resolve(new File([blob], file.name, { type: 'image/jpeg' }));
-          } else {
+        img.onload = () => {
+          try {
+            // Calculate new dimensions (max 1200px width/height)
+            const maxSize = 1200;
+            let { width, height } = img;
+            
+            if (width > height) {
+              if (width > maxSize) {
+                height = (height * maxSize) / width;
+                width = maxSize;
+              }
+            } else {
+              if (height > maxSize) {
+                width = (width * maxSize) / height;
+                height = maxSize;
+              }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            canvas.toBlob((blob) => {
+              try {
+                if (blob) {
+                  resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                } else {
+                  resolve(file);
+                }
+                // Clean up
+                URL.revokeObjectURL(img.src);
+              } catch (error) {
+                console.warn('Blob creation error:', error);
+                resolve(file);
+              }
+            }, 'image/jpeg', 0.8);
+          } catch (error) {
+            console.warn('Canvas processing error:', error);
             resolve(file);
           }
-        }, 'image/jpeg', 0.8);
-      };
-      
-      img.src = URL.createObjectURL(file);
+        };
+        
+        img.onerror = () => {
+          console.warn('Image load error');
+          resolve(file);
+        };
+        
+        img.src = URL.createObjectURL(file);
+      } catch (error) {
+        console.warn('Compression setup error:', error);
+        resolve(file);
+      }
     });
   };
 
@@ -245,7 +294,27 @@ export default function AddItem() {
         updatedAt: serverTimestamp(),
       };
 
-      await addDoc(collection(db, 'items'), itemData);
+      // Attempt to add document with retry
+      let addDocSuccess = false;
+      let retryCount = 0;
+      const maxRetries = 3;
+      
+      while (!addDocSuccess && retryCount < maxRetries) {
+        try {
+          await addDoc(collection(db, 'items'), itemData);
+          addDocSuccess = true;
+        } catch (docError: any) {
+          retryCount++;
+          console.warn(`Add document attempt ${retryCount} failed:`, docError);
+          
+          if (retryCount >= maxRetries) {
+            throw new Error(`Veritabanı hatası: ${docError.code || docError.message}`);
+          }
+          
+          // Wait before retry
+          await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+        }
+      }
 
       // Update user's listing count in profile (non-blocking)
       if (profile.totalListings !== undefined) {
