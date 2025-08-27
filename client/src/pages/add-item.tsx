@@ -301,11 +301,11 @@ export default function AddItem() {
                           setSelectedCategory(value);
                         }} defaultValue={field.value}>
                           <FormControl>
-                            <SelectTrigger data-testid="select-category">
-                              <SelectValue placeholder="Kategori" />
+                            <SelectTrigger data-testid="select-category" className="relative">
+                              <SelectValue placeholder="Kategori seçin" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent className="z-[9999]" position="popper">
                             {ITEM_CATEGORIES.map((category) => (
                               <SelectItem key={category} value={category}>
                                 {CATEGORY_LABELS[category]}
