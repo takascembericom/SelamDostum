@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -30,7 +29,6 @@ export function UserRatingModal({
 }: UserRatingModalProps) {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
-  const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -52,7 +50,6 @@ export function UserRatingModal({
         body: JSON.stringify({
           toUserId: targetUser.id,
           rating,
-          comment: comment.trim() || undefined,
           tradeOfferId,
         }),
       });
@@ -68,7 +65,6 @@ export function UserRatingModal({
 
       // Reset form
       setRating(0);
-      setComment("");
       onRatingSubmitted?.();
       onClose();
     } catch (error) {
@@ -128,23 +124,6 @@ export function UserRatingModal({
             )}
           </div>
 
-          {/* Comment */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">
-              Yorum (İsteğe bağlı)
-            </label>
-            <Textarea
-              placeholder="Takas deneyiminizi paylaşın..."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              rows={3}
-              maxLength={500}
-              data-testid="textarea-comment"
-            />
-            <p className="text-xs text-gray-500 text-right">
-              {comment.length}/500
-            </p>
-          </div>
         </div>
 
         <DialogFooter>
