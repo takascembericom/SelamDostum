@@ -47,7 +47,6 @@ export default function Items() {
         let q = query(
           collection(db, 'items'),
           where('status', '==', 'aktif'),
-          orderBy('createdAt', 'desc'),
           limit(50)
         );
 
@@ -58,7 +57,6 @@ export default function Items() {
               collection(db, 'items'),
               where('status', '==', 'aktif'),
               where('category', '==', 'araba'),
-              orderBy('createdAt', 'desc'),
               limit(25)
             );
             
@@ -66,7 +64,6 @@ export default function Items() {
               collection(db, 'items'),
               where('status', '==', 'aktif'),
               where('category', '==', 'araba_yedek_parca'),
-              orderBy('createdAt', 'desc'),
               limit(25)
             );
             
@@ -121,7 +118,6 @@ export default function Items() {
               collection(db, 'items'),
               where('status', '==', 'aktif'),
               where('category', '==', categoryFilter),
-              orderBy('createdAt', 'desc'),
               limit(50)
             );
           }
@@ -136,7 +132,7 @@ export default function Items() {
             createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
             updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
           } as Item;
-        });
+        }).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
         // Client-side filtering for search and condition
         let filteredItems = itemsData;
