@@ -38,8 +38,8 @@ export const createOrGetConversation = async (
       return conversationId;
     }
 
-    // Create new conversation
-    const conversationData: InsertConversation = {
+    // Create new conversation - only add tradeOfferId if provided
+    const conversationData: any = {
       participants: [userId1, userId2],
       lastMessage: "",
       lastMessageTime: new Date(),
@@ -47,14 +47,16 @@ export const createOrGetConversation = async (
         [userId1]: 0,
         [userId2]: 0,
       },
-      tradeOfferId,
-    };
-
-    await setDoc(doc(db, "conversations", conversationId), {
-      ...conversationData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
-    });
+    };
+
+    // Only add tradeOfferId if it's provided and valid
+    if (tradeOfferId && tradeOfferId.trim().length > 0) {
+      conversationData.tradeOfferId = tradeOfferId;
+    }
+
+    await setDoc(doc(db, "conversations", conversationId), conversationData);
 
     return conversationId;
   } catch (error: any) {

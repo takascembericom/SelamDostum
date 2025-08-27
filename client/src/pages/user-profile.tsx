@@ -146,12 +146,31 @@ export default function UserProfile() {
   });
 
   const handleSendMessage = async () => {
-    if (!profile?.id || !userId) return;
+    if (!profile?.id || !userId) {
+      toast({
+        title: "Hata",
+        description: "Giriş yapmalısınız.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (profile.id === userId) {
+      toast({
+        title: "Hata",
+        description: "Kendinize mesaj gönderemezsiniz.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     try {
+      console.log("Mesaj gönderilecek:", { from: profile.id, to: userId });
       const conversationId = await createOrGetConversation(profile.id, userId);
+      console.log("Conversation ID:", conversationId);
       setLocation(`/messages?conversation=${conversationId}`);
     } catch (error: any) {
+      console.error("Mesaj gönderme hatası:", error);
       toast({
         title: "Hata",
         description: error.message || "Sohbet başlatılamadı",
@@ -161,7 +180,23 @@ export default function UserProfile() {
   };
 
   const handleSubmitRating = () => {
-    if (!profile?.id || !userId) return;
+    if (!profile?.id || !userId) {
+      toast({
+        title: "Hata",
+        description: "Giriş yapmalısınız.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (profile.id === userId) {
+      toast({
+        title: "Hata",
+        description: "Kendinizi değerlendiremezsiniz.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     // Check if user already rated this user
     const hasRated = ratings.some(r => r.raterUserId === profile.id);
@@ -174,11 +209,20 @@ export default function UserProfile() {
       return;
     }
 
+    if (!comment.trim() && rating === 5) {
+      toast({
+        title: "Uyarı",
+        description: "5 yıldız veriyorsanız lütfen bir yorum da ekleyin.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     addRatingMutation.mutate({
       raterUserId: profile.id,
       ratedUserId: userId,
       rating,
-      comment: comment.trim(),
+      comment: comment.trim() || undefined,
     });
   };
 
@@ -272,11 +316,11 @@ export default function UserProfile() {
               {/* User Stats */}
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div className="space-y-1">
-                  <div className="text-2xl font-bold text-primary">{userItems.length}</div>
+                  <div className="text-2xl font-bold text-primary">{itemsLoading ? "..." : userItems.length}</div>
                   <div className="text-sm text-gray-600">Aktif İlan</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-2xl font-bold text-green-600">{user.totalListings || 0}</div>
+                  <div className="text-2xl font-bold text-green-600">{user.totalListings || userItems.length}</div>
                   <div className="text-sm text-gray-600">Toplam İlan</div>
                 </div>
               </div>
