@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { collection, query, where, orderBy, getDocs, doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { collection, query, where, orderBy, getDocs, doc, updateDoc, serverTimestamp, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Redirect } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminChat } from "@/components/admin-chat";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, X, Eye, MessageCircle, LogOut, Shield, Settings, Key } from "lucide-react";
+import { Check, X, Eye, MessageCircle, LogOut, Shield, Settings, Key, Trash2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { LiveChat } from "@/components/live-chat";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CATEGORY_LABELS, CONDITION_LABELS } from "@shared/schema";
@@ -22,6 +23,8 @@ export default function AdminPanel() {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [bulkActionLoading, setBulkActionLoading] = useState(false);
   
   // Password change state
   const [newPassword, setNewPassword] = useState("");
@@ -202,6 +205,75 @@ export default function AdminPanel() {
     window.location.href = '/admin';
   };
 
+  // Bulk delete function
+  const handleBulkDelete = async () => {
+    if (selectedItems.size === 0) {
+      toast({
+        title: "Uyarı",
+        description: "Lütfen silinecek ilanları seçin",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setBulkActionLoading(true);
+    try {
+      // Delete all selected items
+      const deletePromises = Array.from(selectedItems).map(itemId => 
+        deleteDoc(doc(db, 'items', itemId))
+      );
+      
+      await Promise.all(deletePromises);
+
+      toast({
+        title: "Başarılı",
+        description: `${selectedItems.size} ilan başarıyla silindi`,
+      });
+
+      // Clear selection and refresh data
+      setSelectedItems(new Set());
+      queryClient.invalidateQueries({ queryKey: ['admin-pending-items'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-approved-items'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-rejected-items'] });
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "İlanlar silinirken hata oluştu",
+        variant: "destructive",
+      });
+    } finally {
+      setBulkActionLoading(false);
+    }
+  };
+
+  // Handle single item selection
+  const handleItemSelection = (itemId: string, checked: boolean) => {
+    setSelectedItems(prev => {
+      const newSet = new Set(prev);
+      if (checked) {
+        newSet.add(itemId);
+      } else {
+        newSet.delete(itemId);
+      }
+      return newSet;
+    });
+  };
+
+  // Handle select all/none for current tab
+  const handleSelectAll = (items: Item[], checked: boolean) => {
+    setSelectedItems(prev => {
+      const newSet = new Set(prev);
+      items.forEach(item => {
+        if (checked) {
+          newSet.add(item.id);
+        } else {
+          newSet.delete(item.id);
+        }
+      });
+      return newSet;
+    });
+  };
+
   // Password change function
   const handlePasswordChange = async () => {
     if (!newPassword || !confirmPassword) {
@@ -255,10 +327,19 @@ export default function AdminPanel() {
     }
   };
 
-  const ItemCard = ({ item, showActions = false }: { item: Item; showActions?: boolean }) => (
+  const ItemCard = ({ item, showActions = false, showCheckbox = false }: { item: Item; showActions?: boolean; showCheckbox?: boolean }) => (
     <Card className="mb-4">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start">
+          {showCheckbox && (
+            <div className="mr-3 mt-1">
+              <Checkbox
+                checked={selectedItems.has(item.id)}
+                onCheckedChange={(checked) => handleItemSelection(item.id, checked as boolean)}
+                data-testid={`checkbox-item-${item.id}`}
+              />
+            </div>
+          )}
           <div className="flex-1">
             <CardTitle className="text-lg">{item.title}</CardTitle>
             <div className="flex gap-2 mt-2">
@@ -437,9 +518,39 @@ export default function AdminPanel() {
                   <p className="text-gray-600">Bekleyen ilan bulunmuyor</p>
                 </div>
               ) : (
-                pendingItems.map(item => (
-                  <ItemCard key={item.id} item={item} showActions={true} />
-                ))
+                <>
+                  {/* Bulk actions for pending items */}
+                  <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <Checkbox
+                        checked={pendingItems.every(item => selectedItems.has(item.id))}
+                        onCheckedChange={(checked) => handleSelectAll(pendingItems, checked as boolean)}
+                        data-testid="checkbox-select-all-pending"
+                      />
+                      <span className="text-sm text-gray-600">
+                        {selectedItems.size > 0 
+                          ? `${selectedItems.size} ilan seçildi` 
+                          : "Tümünü seç"}
+                      </span>
+                    </div>
+                    {selectedItems.size > 0 && (
+                      <Button
+                        onClick={handleBulkDelete}
+                        disabled={bulkActionLoading}
+                        variant="destructive"
+                        size="sm"
+                        data-testid="button-bulk-delete-pending"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {bulkActionLoading ? "Siliniyor..." : "Seçilenleri Sil"}
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {pendingItems.map(item => (
+                    <ItemCard key={item.id} item={item} showActions={true} showCheckbox={true} />
+                  ))}
+                </>
               )}
             </TabsContent>
 
@@ -455,9 +566,39 @@ export default function AdminPanel() {
                   <p className="text-gray-600">Onaylanan ilan bulunmuyor</p>
                 </div>
               ) : (
-                approvedItems.map(item => (
-                  <ItemCard key={item.id} item={item} />
-                ))
+                <>
+                  {/* Bulk actions for approved items */}
+                  <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <Checkbox
+                        checked={approvedItems.every(item => selectedItems.has(item.id))}
+                        onCheckedChange={(checked) => handleSelectAll(approvedItems, checked as boolean)}
+                        data-testid="checkbox-select-all-approved"
+                      />
+                      <span className="text-sm text-gray-600">
+                        {selectedItems.size > 0 
+                          ? `${selectedItems.size} ilan seçildi` 
+                          : "Tümünü seç"}
+                      </span>
+                    </div>
+                    {selectedItems.size > 0 && (
+                      <Button
+                        onClick={handleBulkDelete}
+                        disabled={bulkActionLoading}
+                        variant="destructive"
+                        size="sm"
+                        data-testid="button-bulk-delete-approved"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {bulkActionLoading ? "Siliniyor..." : "Seçilenleri Sil"}
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {approvedItems.map(item => (
+                    <ItemCard key={item.id} item={item} showCheckbox={true} />
+                  ))}
+                </>
               )}
             </TabsContent>
 
@@ -473,9 +614,39 @@ export default function AdminPanel() {
                   <p className="text-gray-600">Reddedilen ilan bulunmuyor</p>
                 </div>
               ) : (
-                rejectedItems.map(item => (
-                  <ItemCard key={item.id} item={item} />
-                ))
+                <>
+                  {/* Bulk actions for rejected items */}
+                  <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <Checkbox
+                        checked={rejectedItems.every(item => selectedItems.has(item.id))}
+                        onCheckedChange={(checked) => handleSelectAll(rejectedItems, checked as boolean)}
+                        data-testid="checkbox-select-all-rejected"
+                      />
+                      <span className="text-sm text-gray-600">
+                        {selectedItems.size > 0 
+                          ? `${selectedItems.size} ilan seçildi` 
+                          : "Tümünü seç"}
+                      </span>
+                    </div>
+                    {selectedItems.size > 0 && (
+                      <Button
+                        onClick={handleBulkDelete}
+                        disabled={bulkActionLoading}
+                        variant="destructive"
+                        size="sm"
+                        data-testid="button-bulk-delete-rejected"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {bulkActionLoading ? "Siliniyor..." : "Seçilenleri Sil"}
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {rejectedItems.map(item => (
+                    <ItemCard key={item.id} item={item} showCheckbox={true} />
+                  ))}
+                </>
               )}
             </TabsContent>
 

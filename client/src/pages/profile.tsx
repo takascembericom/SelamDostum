@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { collection, query, where, orderBy, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, orderBy, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db, storage } from "@/lib/firebase";
 import { Item } from "@shared/schema";
 import { republishItem, deleteItem } from "@/lib/itemUtils";
@@ -10,7 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { ItemGrid } from "@/components/items/item-grid";
 import { TradeOffersList } from "@/components/trade/trade-offers-list";
 import { updateTradeOfferStatus, completeTrade } from "@/lib/tradeOffers";
-import { User, Package, Star, MapPin, Plus, Camera, Settings, Lock, ArrowRightLeft, MessageCircle } from "lucide-react";
+import { User, Package, Star, MapPin, Plus, Camera, Settings, Lock, ArrowRightLeft, MessageCircle, Trash2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ExpiredItemCard } from "@/components/items/expired-item-card";
 import { Link, Redirect } from "wouter";
 import { useState } from "react";
@@ -36,6 +37,8 @@ export default function Profile() {
   const [selectedConversation, setSelectedConversation] = useState<
     (Conversation & { otherUserName: string; otherUserId: string }) | null
   >(null);
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [bulkActionLoading, setBulkActionLoading] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -180,6 +183,73 @@ export default function Profile() {
         variant: "destructive",
       });
     }
+  };
+
+  // Bulk delete function for user items
+  const handleBulkDelete = async () => {
+    if (selectedItems.size === 0) {
+      toast({
+        title: "Uyarı",
+        description: "Lütfen silinecek ilanları seçin",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setBulkActionLoading(true);
+    try {
+      // Delete all selected items
+      const deletePromises = Array.from(selectedItems).map(itemId => 
+        deleteDoc(doc(db, 'items', itemId))
+      );
+      
+      await Promise.all(deletePromises);
+
+      toast({
+        title: "Başarılı",
+        description: `${selectedItems.size} ilan başarıyla silindi`,
+      });
+
+      // Clear selection and refresh data
+      setSelectedItems(new Set());
+      queryClient.invalidateQueries({ queryKey: ['user-items'] });
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "İlanlar silinirken hata oluştu",
+        variant: "destructive",
+      });
+    } finally {
+      setBulkActionLoading(false);
+    }
+  };
+
+  // Handle single item selection
+  const handleItemSelection = (itemId: string, checked: boolean) => {
+    setSelectedItems(prev => {
+      const newSet = new Set(prev);
+      if (checked) {
+        newSet.add(itemId);
+      } else {
+        newSet.delete(itemId);
+      }
+      return newSet;
+    });
+  };
+
+  // Handle select all/none for current tab
+  const handleSelectAll = (items: Item[], checked: boolean) => {
+    setSelectedItems(prev => {
+      const newSet = new Set(prev);
+      items.forEach(item => {
+        if (checked) {
+          newSet.add(item.id);
+        } else {
+          newSet.delete(item.id);
+        }
+      });
+      return newSet;
+    });
   };
 
   if (loading) {
@@ -602,10 +672,61 @@ export default function Profile() {
                     İlanlarınız admin tarafından incelendikten sonra yayınlanacak.
                   </p>
                 </div>
-                <ItemGrid
-                  items={pendingItems}
-                  onViewDetails={handleViewDetails}
-                />
+                
+                {/* Bulk actions for pending items */}
+                <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <Checkbox
+                      checked={pendingItems.every(item => selectedItems.has(item.id))}
+                      onCheckedChange={(checked) => handleSelectAll(pendingItems, checked as boolean)}
+                      data-testid="checkbox-select-all-pending"
+                    />
+                    <span className="text-sm text-gray-600">
+                      {selectedItems.size > 0 
+                        ? `${selectedItems.size} ilan seçildi` 
+                        : "Tümünü seç"}
+                    </span>
+                  </div>
+                  {selectedItems.size > 0 && (
+                    <Button
+                      onClick={handleBulkDelete}
+                      disabled={bulkActionLoading}
+                      variant="destructive"
+                      size="sm"
+                      data-testid="button-bulk-delete-pending"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      {bulkActionLoading ? "Siliniyor..." : "Seçilenleri Sil"}
+                    </Button>
+                  )}
+                </div>
+                
+                <div className="space-y-4">
+                  {pendingItems.map(item => (
+                    <Card key={item.id} className="mb-4">
+                      <CardHeader className="pb-3">
+                        <div className="flex justify-between items-start">
+                          <div className="mr-3 mt-1">
+                            <Checkbox
+                              checked={selectedItems.has(item.id)}
+                              onCheckedChange={(checked) => handleItemSelection(item.id, checked as boolean)}
+                              data-testid={`checkbox-item-${item.id}`}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <CardTitle className="text-lg">{item.title}</CardTitle>
+                            <p className="text-gray-600 mt-2">{item.description}</p>
+                            <div className="flex gap-2 mt-2">
+                              <Badge variant="outline">{item.category}</Badge>
+                              <Badge variant="outline">{item.condition}</Badge>
+                              <Badge variant="secondary">Onay Bekliyor</Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </CardHeader>
+                    </Card>
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="text-center py-16">
@@ -633,10 +754,62 @@ export default function Profile() {
                 <p className="text-gray-600">Aktif ilanlarınız yükleniyor...</p>
               </div>
             ) : activeItems.length > 0 ? (
-              <ItemGrid
-                items={activeItems}
-                onViewDetails={handleViewDetails}
-              />
+              <div className="space-y-4">
+                {/* Bulk actions for active items */}
+                <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <Checkbox
+                      checked={activeItems.every(item => selectedItems.has(item.id))}
+                      onCheckedChange={(checked) => handleSelectAll(activeItems, checked as boolean)}
+                      data-testid="checkbox-select-all-active"
+                    />
+                    <span className="text-sm text-gray-600">
+                      {selectedItems.size > 0 
+                        ? `${selectedItems.size} ilan seçildi` 
+                        : "Tümünü seç"}
+                    </span>
+                  </div>
+                  {selectedItems.size > 0 && (
+                    <Button
+                      onClick={handleBulkDelete}
+                      disabled={bulkActionLoading}
+                      variant="destructive"
+                      size="sm"
+                      data-testid="button-bulk-delete-active"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      {bulkActionLoading ? "Siliniyor..." : "Seçilenleri Sil"}
+                    </Button>
+                  )}
+                </div>
+                
+                <div className="space-y-4">
+                  {activeItems.map(item => (
+                    <Card key={item.id} className="mb-4">
+                      <CardHeader className="pb-3">
+                        <div className="flex justify-between items-start">
+                          <div className="mr-3 mt-1">
+                            <Checkbox
+                              checked={selectedItems.has(item.id)}
+                              onCheckedChange={(checked) => handleItemSelection(item.id, checked as boolean)}
+                              data-testid={`checkbox-item-${item.id}`}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <CardTitle className="text-lg">{item.title}</CardTitle>
+                            <p className="text-gray-600 mt-2">{item.description}</p>
+                            <div className="flex gap-2 mt-2">
+                              <Badge variant="outline">{item.category}</Badge>
+                              <Badge variant="outline">{item.condition}</Badge>
+                              <Badge variant="default">Aktif</Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </CardHeader>
+                    </Card>
+                  ))}
+                </div>
+              </div>
             ) : (
               <div className="text-center py-16">
                 <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -673,10 +846,77 @@ export default function Profile() {
                     İlanlarınız uygun olmadığı için yayınlanmadı. Yeni ilan ekleyebilirsiniz.
                   </p>
                 </div>
-                <ItemGrid
-                  items={rejectedItems}
-                  onViewDetails={handleViewDetails}
-                />
+                
+                {/* Bulk actions for rejected items */}
+                <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <Checkbox
+                      checked={rejectedItems.every(item => selectedItems.has(item.id))}
+                      onCheckedChange={(checked) => handleSelectAll(rejectedItems, checked as boolean)}
+                      data-testid="checkbox-select-all-rejected"
+                    />
+                    <span className="text-sm text-gray-600">
+                      {selectedItems.size > 0 
+                        ? `${selectedItems.size} ilan seçildi` 
+                        : "Tümünü seç"}
+                    </span>
+                  </div>
+                  {selectedItems.size > 0 && (
+                    <Button
+                      onClick={handleBulkDelete}
+                      disabled={bulkActionLoading}
+                      variant="destructive"
+                      size="sm"
+                      data-testid="button-bulk-delete-rejected"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      {bulkActionLoading ? "Siliniyor..." : "Seçilenleri Sil"}
+                    </Button>
+                  )}
+                </div>
+                
+                <div className="space-y-4">
+                  {rejectedItems.map(item => (
+                    <Card key={item.id} className="mb-4">
+                      <CardHeader className="pb-3">
+                        <div className="flex justify-between items-start">
+                          <div className="mr-3 mt-1">
+                            <Checkbox
+                              checked={selectedItems.has(item.id)}
+                              onCheckedChange={(checked) => handleItemSelection(item.id, checked as boolean)}
+                              data-testid={`checkbox-item-${item.id}`}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <CardTitle className="text-lg">{item.title}</CardTitle>
+                            <p className="text-gray-600 mt-2">{item.description}</p>
+                            <div className="flex gap-2 mt-2">
+                              <Badge variant="outline">{item.category}</Badge>
+                              <Badge variant="outline">{item.condition}</Badge>
+                              <Badge variant="destructive">Reddedildi</Badge>
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={() => handleRepublishItem(item.id)}
+                              size="sm"
+                              variant="outline"
+                            >
+                              Yeniden Yayınla
+                            </Button>
+                            <Button
+                              onClick={() => handleDeleteItem(item.id)}
+                              size="sm"
+                              variant="destructive"
+                            >
+                              Sil
+                            </Button>
+                          </div>
+                        </div>
+                      </CardHeader>
+                    </Card>
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="text-center py-16">
