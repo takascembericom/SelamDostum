@@ -55,19 +55,9 @@ export function Header() {
                   <img 
                     src={logoImage} 
                     alt="Takas Çemberi Logo" 
-                    className="h-20 w-auto mr-5 hidden sm:block"
+                    className="h-20 w-auto mr-5"
                   />
                   <span className="text-5xl font-bold text-gray-900 hidden sm:inline">Takas Çemberi</span>
-                  
-                  {/* Mobile Logo/Text */}
-                  <div className="sm:hidden">
-                    <h1 className="text-lg font-bold text-gray-900 leading-tight">
-                      Güvenli Takas Platformu
-                    </h1>
-                    <p className="text-xs text-gray-600">
-                      Eşyalarınızı güvenle takas edin
-                    </p>
-                  </div>
                 </div>
               </Link>
             </div>
