@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { collection, addDoc, query, where, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Redirect, useLocation } from "wouter";
@@ -56,6 +57,7 @@ export default function AddItem() {
   const { user, profile, loading } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imageURLs, setImageURLs] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -365,6 +367,10 @@ export default function AddItem() {
       }
       
       console.log('Item verified in database:', verifySnapshot.docs[0].data());
+
+      // Invalidate user items cache to show the new item
+      queryClient.invalidateQueries({ queryKey: ['user-items'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-pending-items'] });
 
       toast({
         title: "✅ İlanınız onay sürecindedir",

@@ -44,23 +44,34 @@ export default function Profile() {
     queryFn: async (): Promise<Item[]> => {
       if (!user?.uid) return [];
 
-      const q = query(
-        collection(db, 'items'),
-        where('ownerId', '==', user.uid),
-        orderBy('createdAt', 'desc')
-      );
+      try {
+        const q = query(
+          collection(db, 'items'),
+          where('ownerId', '==', user.uid)
+          // Remove orderBy to avoid index issues
+        );
 
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          createdAt: data.createdAt.toDate(),
-          updatedAt: data.updatedAt.toDate(),
-          expireAt: data.expireAt ? data.expireAt.toDate() : null,
-        } as Item;
-      });
+        const querySnapshot = await getDocs(q);
+        const items = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            ...data,
+            id: doc.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
+            expireAt: data.expireAt?.toDate ? data.expireAt.toDate() : (data.expireAt ? new Date(data.expireAt) : null),
+          } as Item;
+        });
+
+        console.log('Fetched user items:', items.length, 'for user:', user?.uid);
+        console.log('Items:', items.map(item => ({ id: item.id, status: item.status, title: item.title })));
+
+        // Sort by createdAt manually
+        return items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      } catch (error) {
+        console.error('Error fetching user items:', error);
+        throw error;
+      }
     },
     enabled: !!user?.uid,
   });
