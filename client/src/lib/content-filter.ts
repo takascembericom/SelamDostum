@@ -82,11 +82,11 @@ const BLOCKED_WORDS = [
   'zviyetini'
 ];
 
-// Check if text contains blocked words (improved to avoid false positives)
+// Check if text contains blocked words (word boundary based - no false positives)
 export function containsInappropriateContent(text: string): boolean {
   if (!text) return false;
   
-  // Normalize text but keep word boundaries
+  // Normalize text
   const normalizedText = text.toLowerCase()
     .replace(/[ıİ]/g, 'i')
     .replace(/[ğĞ]/g, 'g')
@@ -94,9 +94,6 @@ export function containsInappropriateContent(text: string): boolean {
     .replace(/[şŞ]/g, 's')
     .replace(/[öÖ]/g, 'o')
     .replace(/[çÇ]/g, 'c');
-  
-  // Split into words for better matching
-  const words = normalizedText.split(/[\s\-_\.\,\!\?\*\+\=\(\)\[\]\{\}\/\\\|\~\`\@\#\$\%\^\&]+/);
   
   return BLOCKED_WORDS.some(blockedWord => {
     const normalizedBlockedWord = blockedWord.toLowerCase()
@@ -107,25 +104,11 @@ export function containsInappropriateContent(text: string): boolean {
       .replace(/[öÖ]/g, 'o')
       .replace(/[çÇ]/g, 'c');
     
-    // Check both exact word matches and as part of words for multi-word blocked terms
-    return words.some(word => {
-      // Exact match
-      if (word === normalizedBlockedWord) return true;
-      
-      // For very short words (2 chars or less), require exact match to avoid false positives
-      if (normalizedBlockedWord.length <= 2) {
-        return word === normalizedBlockedWord;
-      }
-      
-      // For longer words, allow partial matching but with more context
-      if (normalizedBlockedWord.length >= 4) {
-        return word.includes(normalizedBlockedWord);
-      }
-      
-      return false;
-    }) || 
-    // Also check for exact phrase matches (for multi-word blocked terms)
-    normalizedText.includes(normalizedBlockedWord);
+    // Create regex with word boundaries - only match complete words
+    // \b ensures the word is not part of another word
+    const wordRegex = new RegExp(`\\b${normalizedBlockedWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+    
+    return wordRegex.test(normalizedText);
   });
 }
 
