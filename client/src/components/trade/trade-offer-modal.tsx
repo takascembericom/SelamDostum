@@ -45,12 +45,11 @@ export function TradeOfferModal({ isOpen, onClose, targetItem }: TradeOfferModal
       const q = query(
         collection(db, "items"),
         where("ownerId", "==", profile.id),
-        where("status", "==", "aktif"),
-        orderBy("createdAt", "desc")
+        where("status", "==", "aktif")
       );
 
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
+      const items = querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
           ...data,
@@ -59,6 +58,9 @@ export function TradeOfferModal({ isOpen, onClose, targetItem }: TradeOfferModal
           updatedAt: data.updatedAt.toDate(),
         } as Item;
       });
+
+      // Sort by createdAt in memory instead of database
+      return items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     },
     enabled: isOpen && !!profile?.id
   });
