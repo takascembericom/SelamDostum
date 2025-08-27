@@ -43,117 +43,122 @@ export default function Items() {
   const { data: items = [], isLoading, error } = useQuery({
     queryKey: ['items', searchQuery, categoryFilter, conditionFilter],
     queryFn: async (): Promise<Item[]> => {
-      let q = query(
-        collection(db, 'items'),
-        where('status', '==', 'aktif'),
-        orderBy('createdAt', 'desc'),
-        limit(50)
-      );
+      try {
+        let q = query(
+          collection(db, 'items'),
+          where('status', '==', 'aktif'),
+          orderBy('createdAt', 'desc'),
+          limit(50)
+        );
 
-      if (categoryFilter !== 'all') {
-        if (categoryFilter === 'araba_group') {
-          // For araba group, get both araba and araba_yedek_parca
-          const arabaQuery = query(
-            collection(db, 'items'),
-            where('status', '==', 'aktif'),
-            where('category', '==', 'araba'),
-            orderBy('createdAt', 'desc'),
-            limit(25)
-          );
-          
-          const yedekParcaQuery = query(
-            collection(db, 'items'),
-            where('status', '==', 'aktif'),
-            where('category', '==', 'araba_yedek_parca'),
-            orderBy('createdAt', 'desc'),
-            limit(25)
-          );
-          
-          const [arabaSnapshot, yedekParcaSnapshot] = await Promise.all([
-            getDocs(arabaQuery),
-            getDocs(yedekParcaQuery)
-          ]);
-          
-          const arabaItems = arabaSnapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-              ...data,
-              id: doc.id,
-              createdAt: data.createdAt.toDate(),
-              updatedAt: data.updatedAt.toDate(),
-            } as Item;
-          });
-          
-          const yedekParcaItems = yedekParcaSnapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-              ...data,
-              id: doc.id,
-              createdAt: data.createdAt.toDate(),
-              updatedAt: data.updatedAt.toDate(),
-            } as Item;
-          });
-          
-          const allArabaItems = [...arabaItems, ...yedekParcaItems].sort((a, b) => 
-            b.createdAt.getTime() - a.createdAt.getTime()
-          );
-          
-          // Client-side filtering for search and condition
-          let filteredItems = allArabaItems;
+        if (categoryFilter !== 'all') {
+          if (categoryFilter === 'araba_group') {
+            // For araba group, get both araba and araba_yedek_parca
+            const arabaQuery = query(
+              collection(db, 'items'),
+              where('status', '==', 'aktif'),
+              where('category', '==', 'araba'),
+              orderBy('createdAt', 'desc'),
+              limit(25)
+            );
+            
+            const yedekParcaQuery = query(
+              collection(db, 'items'),
+              where('status', '==', 'aktif'),
+              where('category', '==', 'araba_yedek_parca'),
+              orderBy('createdAt', 'desc'),
+              limit(25)
+            );
+            
+            const [arabaSnapshot, yedekParcaSnapshot] = await Promise.all([
+              getDocs(arabaQuery),
+              getDocs(yedekParcaQuery)
+            ]);
+            
+            const arabaItems = arabaSnapshot.docs.map(doc => {
+              const data = doc.data();
+              return {
+                ...data,
+                id: doc.id,
+                createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+                updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
+              } as Item;
+            });
+            
+            const yedekParcaItems = yedekParcaSnapshot.docs.map(doc => {
+              const data = doc.data();
+              return {
+                ...data,
+                id: doc.id,
+                createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+                updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
+              } as Item;
+            });
+            
+            const allArabaItems = [...arabaItems, ...yedekParcaItems].sort((a, b) => 
+              b.createdAt.getTime() - a.createdAt.getTime()
+            );
+            
+            // Client-side filtering for search and condition
+            let filteredItems = allArabaItems;
 
-          if (searchQuery.trim()) {
-            const query = searchQuery.toLowerCase();
-            filteredItems = filteredItems.filter(item =>
-              item.title.toLowerCase().includes(query) ||
-              item.description.toLowerCase().includes(query) ||
-              item.category.toLowerCase().includes(query)
+            if (searchQuery.trim()) {
+              const searchStr = searchQuery.toLowerCase();
+              filteredItems = filteredItems.filter(item =>
+                item.title.toLowerCase().includes(searchStr) ||
+                item.description.toLowerCase().includes(searchStr) ||
+                item.category.toLowerCase().includes(searchStr)
+              );
+            }
+
+            if (conditionFilter !== 'all') {
+              filteredItems = filteredItems.filter(item => item.condition === conditionFilter);
+            }
+
+            return filteredItems;
+          } else {
+            q = query(
+              collection(db, 'items'),
+              where('status', '==', 'aktif'),
+              where('category', '==', categoryFilter),
+              orderBy('createdAt', 'desc'),
+              limit(50)
             );
           }
+        }
 
-          if (conditionFilter !== 'all') {
-            filteredItems = filteredItems.filter(item => item.condition === conditionFilter);
-          }
+        const querySnapshot = await getDocs(q);
+        const itemsData = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            ...data,
+            id: doc.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
+          } as Item;
+        });
 
-          return filteredItems;
-        } else {
-          q = query(
-            collection(db, 'items'),
-            where('status', '==', 'aktif'),
-            where('category', '==', categoryFilter),
-            orderBy('createdAt', 'desc'),
-            limit(50)
+        // Client-side filtering for search and condition
+        let filteredItems = itemsData;
+
+        if (searchQuery.trim()) {
+          const searchStr = searchQuery.toLowerCase();
+          filteredItems = filteredItems.filter(item =>
+            item.title.toLowerCase().includes(searchStr) ||
+            item.description.toLowerCase().includes(searchStr) ||
+            item.category.toLowerCase().includes(searchStr)
           );
         }
+
+        if (conditionFilter !== 'all') {
+          filteredItems = filteredItems.filter(item => item.condition === conditionFilter);
+        }
+
+        return filteredItems;
+      } catch (error) {
+        console.error('Error fetching items:', error);
+        return [];
       }
-
-      const querySnapshot = await getDocs(q);
-      const itemsData = querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          createdAt: data.createdAt.toDate(),
-          updatedAt: data.updatedAt.toDate(),
-        } as Item;
-      });
-
-      // Client-side filtering for search and condition
-      let filteredItems = itemsData;
-
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
-        filteredItems = filteredItems.filter(item =>
-          item.title.toLowerCase().includes(query) ||
-          item.description.toLowerCase().includes(query) ||
-          item.category.toLowerCase().includes(query)
-        );
-      }
-
-      if (conditionFilter !== 'all') {
-        filteredItems = filteredItems.filter(item => item.condition === conditionFilter);
-      }
-
-      return filteredItems;
     },
   });
 
