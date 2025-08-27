@@ -44,6 +44,19 @@ export function Header() {
   return (
     <>
       <header className="bg-white shadow-sm sticky top-0 z-40">
+        {/* Mobile Floating Add Item Button */}
+        {user && (
+          <Link href="/add-item">
+            <Button 
+              className="fixed top-4 right-4 z-50 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg sm:hidden flex items-center gap-2"
+              data-testid="button-add-item-mobile"
+            >
+              <Plus className="h-5 w-5" />
+              İlan Ver
+            </Button>
+          </Link>
+        )}
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-24">
             <div className="flex items-center">
