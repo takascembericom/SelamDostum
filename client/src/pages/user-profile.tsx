@@ -160,8 +160,11 @@ export default function UserProfile() {
       return docRef.id;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-ratings", userId] });
-      queryClient.invalidateQueries({ queryKey: ["user", userId] });
+      // Invalidate all user-related queries to refresh data for all users
+      queryClient.invalidateQueries({ queryKey: ["user-ratings"] });
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      
       setShowRatingForm(false);
       setRating(5);
       toast({
@@ -288,9 +291,9 @@ export default function UserProfile() {
   }
 
   const isOwnProfile = profile?.id === userId;
-  const averageRating = ratings.length > 0 
-    ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length 
-    : 0;
+  // Use database values instead of client-side calculation
+  const averageRating = user.averageRating || 0;
+  const totalRatings = user.totalRatings || 0;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -336,7 +339,7 @@ export default function UserProfile() {
                   {averageRating > 0 ? averageRating.toFixed(1) : 'Değerlendirme yok'}
                 </span>
                 <span className="text-sm text-gray-500">
-                  ({ratings.length} değerlendirme)
+                  ({totalRatings} değerlendirme)
                 </span>
               </div>
             </CardHeader>
