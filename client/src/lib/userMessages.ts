@@ -238,23 +238,34 @@ export const subscribeToConversationMessages = (
   conversationId: string,
   callback: (messages: UserMessage[]) => void
 ) => {
+  // Remove orderBy to avoid Firebase index requirement
   const q = query(
     collection(db, "userMessages"),
-    where("conversationId", "==", conversationId),
-    orderBy("createdAt", "asc")
+    where("conversationId", "==", conversationId)
   );
 
   return onSnapshot(q, (snapshot) => {
+    console.log("subscribeToConversationMessages tetiklendi, conversation:", conversationId, "mesaj sayısı:", snapshot.docs.length);
     const messages: UserMessage[] = [];
     snapshot.forEach((doc) => {
       const data = doc.data();
+      console.log("Mesaj data:", doc.id, data);
       messages.push({
         ...data,
         id: doc.id,
         createdAt: data.createdAt.toDate(),
       } as UserMessage);
     });
-    callback(messages);
+    
+    // Sort messages by createdAt in memory
+    const sortedMessages = messages.sort((a, b) => 
+      a.createdAt.getTime() - b.createdAt.getTime()
+    );
+    
+    console.log("Sorted messages callback çağrılıyor, mesaj sayısı:", sortedMessages.length);
+    callback(sortedMessages);
+  }, (error) => {
+    console.error("subscribeToConversationMessages hatası:", error);
   });
 };
 

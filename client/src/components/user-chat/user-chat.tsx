@@ -83,7 +83,9 @@ export function UserChat({
   useEffect(() => {
     if (!conversationId) return;
 
+    console.log("UserChat: Mesajlara subscribe olunuyor, conversationId:", conversationId);
     const unsubscribe = subscribeToConversationMessages(conversationId, (newMessages) => {
+      console.log("UserChat: Yeni mesajlar alındı:", newMessages.length, newMessages);
       setMessages(newMessages);
       
       // Mark messages as read when they arrive
