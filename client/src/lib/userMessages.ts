@@ -294,23 +294,19 @@ export const subscribeToConversationMessages = (
       // Skip messages that are deleted by the current user
       const userId = currentUserId || getCurrentUserId();
       if (userId && data.deletedBy && Array.isArray(data.deletedBy) && data.deletedBy.includes(userId)) {
-        return; // Skip this message as it was deleted by the user
+        return;
       }
       
       messages.push({
         ...data,
         id: doc.id,
-        createdAt: data.createdAt.toDate(),
-        timestamp: data.timestamp ? data.timestamp.toDate() : data.createdAt.toDate(),
+        createdAt: data.createdAt ? data.createdAt.toDate() : new Date(),
+        timestamp: data.timestamp ? data.timestamp.toDate() : (data.createdAt ? data.createdAt.toDate() : new Date()),
       } as UserMessage);
     });
     
-    // Sort messages by timestamp/createdAt in chronological order (oldest first)
-    const sortedMessages = messages.sort((a, b) => {
-      const aTime = a.timestamp || a.createdAt;
-      const bTime = b.timestamp || b.createdAt;
-      return aTime.getTime() - bTime.getTime();
-    });
+    // Sort by createdAt like admin chat does - simple and reliable
+    const sortedMessages = messages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
     
     callback(sortedMessages);
   }, (error) => {

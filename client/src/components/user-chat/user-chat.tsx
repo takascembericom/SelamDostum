@@ -52,8 +52,12 @@ export function UserChat({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Scroll to bottom when messages change - but delay to avoid UI jumping
   useEffect(() => {
-    scrollToBottom();
+    const timeoutId = setTimeout(() => {
+      scrollToBottom();
+    }, 100);
+    return () => clearTimeout(timeoutId);
   }, [messages]);
 
   // Initialize conversation
@@ -81,26 +85,11 @@ export function UserChat({
 
   // Subscribe to messages
   useEffect(() => {
-    console.log("UserChat useEffect: conversationId =", conversationId, "profile?.id =", profile?.id);
     if (!conversationId) return;
 
-    console.log("UserChat: Starting message subscription for conversation:", conversationId);
     const unsubscribe = subscribeToConversationMessages(conversationId, (newMessages) => {
-      console.log("UserChat: Received messages from subscription:", newMessages.length);
-      // Double-check sorting in UI to ensure correct chronological order
-      const finalSortedMessages = newMessages.sort((a, b) => {
-        const aTime = a.timestamp || a.createdAt;
-        const bTime = b.timestamp || b.createdAt;
-        return aTime.getTime() - bTime.getTime();
-      });
-      
-      console.log("UserChat: Final sorted messages for UI:", finalSortedMessages.map(m => ({
-        text: m.text,
-        fromUserId: m.fromUserId,
-        createdAt: m.createdAt
-      })));
-      
-      setMessages(finalSortedMessages);
+      // Simple approach like admin chat - just set messages directly
+      setMessages(newMessages);
       
       // Mark messages as read when they arrive
       if (profile?.id) {
@@ -134,6 +123,11 @@ export function UserChat({
 
       await sendUserMessage(messageData);
       setNewMessage("");
+      
+      // Scroll to bottom after sending message
+      setTimeout(() => {
+        scrollToBottom();
+      }, 200);
     } catch (error: any) {
       toast({
         title: "Hata",
