@@ -31,6 +31,7 @@ export function LiveChat() {
   const [loading, setLoading] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
   const [chatCleared, setChatCleared] = useState(false);
+  const [chatClearedTimestamp, setChatClearedTimestamp] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -40,6 +41,17 @@ export function LiveChat() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // User değiştiğinde localStorage'dan chat durumunu oku
+  useEffect(() => {
+    if (user?.uid && typeof window !== 'undefined') {
+      const savedCleared = localStorage.getItem(`chat-cleared-${user.uid}`);
+      const savedTime = localStorage.getItem(`chat-cleared-time-${user.uid}`);
+      
+      setChatCleared(savedCleared === 'true');
+      setChatClearedTimestamp(savedTime ? parseInt(savedTime) : null);
+    }
+  }, [user?.uid]);
 
   // Listen to messages for this user
   useEffect(() => {
@@ -51,14 +63,18 @@ export function LiveChat() {
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      // Eğer kullanıcı chat'i kapatmışsa mesajları yükleme
-      if (chatCleared) {
-        return;
-      }
-
       const userMessages: ChatMessage[] = [];
       snapshot.forEach((doc) => {
         const data = doc.data();
+        const messageTime = data.timestamp?.toDate() || new Date();
+        
+        // Eğer chat kapatılmışsa, sadece kapatıldıktan sonraki mesajları göster
+        if (chatCleared && chatClearedTimestamp) {
+          if (messageTime.getTime() <= chatClearedTimestamp) {
+            return; // Eski mesajları atla
+          }
+        }
+        
         userMessages.push({
           id: doc.id,
           text: data.text,
@@ -66,7 +82,7 @@ export function LiveChat() {
           messageType: data.messageType || 'text',
           sender: data.sender,
           senderName: data.senderName,
-          createdAt: data.timestamp?.toDate() || new Date(),
+          createdAt: messageTime,
         });
       });
       userMessages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
@@ -74,15 +90,10 @@ export function LiveChat() {
     });
 
     return () => unsubscribe();
-  }, [user?.uid, chatCleared]);
+  }, [user?.uid, chatCleared, chatClearedTimestamp]);
 
   const handleSendMessage = async () => {
     if (!message.trim() || !user?.uid || loading) return;
-
-    // Yeni mesaj gönderilirken chat'i tekrar aktif hale getir
-    if (chatCleared) {
-      setChatCleared(false);
-    }
 
     setLoading(true);
     try {
@@ -117,11 +128,6 @@ export function LiveChat() {
   const handleImageUpload = async (imageUrl: string) => {
     if (!user?.uid || loading) return;
 
-    // Yeni resim gönderilirken chat'i tekrar aktif hale getir
-    if (chatCleared) {
-      setChatCleared(false);
-    }
-
     setLoading(true);
     try {
       await addDoc(collection(db, 'chatMessages'), {
@@ -146,9 +152,18 @@ export function LiveChat() {
   };
 
   const handleCloseChat = () => {
+    if (!user?.uid) return;
+    
     // Chat'i temizlenmiş olarak işaretle ve kapat
     // Mesajlar veritabanında kalır, admin panelinde görülmeye devam eder
+    const timestamp = Date.now();
     setChatCleared(true);
+    setChatClearedTimestamp(timestamp);
+    
+    // LocalStorage'a kaydet
+    localStorage.setItem(`chat-cleared-${user.uid}`, 'true');
+    localStorage.setItem(`chat-cleared-time-${user.uid}`, timestamp.toString());
+    
     setMessages([]);
     setMessage("");
     setShowImageUpload(false);
