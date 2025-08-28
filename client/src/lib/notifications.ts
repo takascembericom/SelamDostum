@@ -52,28 +52,29 @@ class NotificationManager {
   }
 
   public async showNotification(data: NotificationData): Promise<void> {
-    // Check if notifications are supported and permission is granted
-    if (!('Notification' in window)) {
-      console.warn('Bu tarayıcı bildirim özelliğini desteklemiyor');
-      return;
-    }
-
-    // Auto-request permission if not granted
-    if (this.permission !== 'granted') {
-      const permission = await this.requestPermission();
-      if (permission !== 'granted') {
-        console.warn('Bildirim izni verilmemiş');
+    try {
+      // Check if notifications are supported
+      if (!('Notification' in window)) {
+        console.warn('Bu tarayıcı bildirim özelliğini desteklemiyor');
         return;
       }
-    }
 
-    // Check if user is already on the page (don't spam with notifications)
-    if (document.visibilityState === 'visible') {
-      console.log('Kullanıcı sayfada, bildirim gösterilmiyor:', data.title);
-      return;
-    }
+      // Auto-request permission if not granted, but don't fail if denied
+      if (this.permission !== 'granted') {
+        const permission = await this.requestPermission();
+        if (permission !== 'granted') {
+          console.log('Bildirim izni verilmemiş, sadece in-app bildirimler gösterilecek');
+          return;
+        }
+      }
 
-    try {
+      // Only skip browser notification if user is on page, but still allow in-app
+      if (document.visibilityState === 'visible') {
+        console.log('Kullanıcı sayfada, browser bildirimi gösterilmiyor (in-app bildirim devam ediyor):', data.title);
+        return;
+      }
+
+      // Show browser notification if page is not visible
       const notification = new Notification(data.title, {
         body: data.body,
         icon: data.icon || '/favicon.ico',
@@ -85,7 +86,11 @@ class NotificationManager {
 
       // Auto close after 7 seconds
       setTimeout(() => {
-        notification.close();
+        try {
+          notification.close();
+        } catch (e) {
+          // Ignore close errors
+        }
       }, 7000);
 
       // Handle notification click
@@ -101,7 +106,11 @@ class NotificationManager {
           window.location.href = '/profile?tab=trade-offers';
         }
         
-        notification.close();
+        try {
+          notification.close();
+        } catch (e) {
+          // Ignore close errors
+        }
       };
 
     } catch (error) {

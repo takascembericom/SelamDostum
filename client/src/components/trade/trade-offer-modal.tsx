@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -33,6 +33,22 @@ export function TradeOfferModal({ isOpen, onClose, targetItem }: TradeOfferModal
   const { profile } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Prevent body scroll on mobile when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      // Add class to body to prevent scroll
+      document.body.classList.add('modal-open');
+    } else {
+      // Remove class when modal closes
+      document.body.classList.remove('modal-open');
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [isOpen]);
   const [selectedItemId, setSelectedItemId] = useState<string>("");
   const [message, setMessage] = useState("");
 
