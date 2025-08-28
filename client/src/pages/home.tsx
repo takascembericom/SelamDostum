@@ -150,8 +150,8 @@ export default function Home() {
                   📦 {t.home.recentItems}
                 </h2>
                 <p className="text-xl text-gray-600">
-                  {t.common.language === 'English' ? `Newly added ${latestItems.length} items` : 
-                   t.common.language === 'العربية' ? `${latestItems.length} عنصر تم إضافته حديثاً` :
+                  {t.common.language === 'English' ? `Recently added ${latestItems.length} items` : 
+                   t.common.language === 'العربية' ? `تم إضافة ${latestItems.length} عناصر مؤخراً` :
                    `Yeni eklenen ${latestItems.length} ilan`}
                 </p>
               </div>

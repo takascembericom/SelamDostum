@@ -16,8 +16,9 @@ export function Footer() {
               <span className="text-2xl font-bold">Takas Çemberi</span>
             </div>
             <p className="text-gray-400 mb-6" data-testid="text-company-description">
-              Türkiye'nin en güvenilir ilan değişim platformu. 
-              Sürdürülebilir bir gelecek için takasla değişim!
+              {t.common.language === 'English' ? "Turkey's most trusted item exchange platform. Trade for a sustainable future!" : 
+               t.common.language === 'العربية' ? 'منصة تبادل العناصر الأكثر موثوقية في تركيا. التبادل من أجل مستقبل مستدام!' :
+               'Türkiye\'nin en güvenilir ilan değişim platformu. Sürdürülebilir bir gelecek için takasla değişim!'}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-facebook">
@@ -43,44 +44,112 @@ export function Footer() {
 
           {/* Platform */}
           <div>
-            <h3 className="text-lg font-semibold mb-4" data-testid="text-platform-title">Platform</h3>
+            <h3 className="text-lg font-semibold mb-4" data-testid="text-platform-title">
+              {t.common.language === 'English' ? 'Platform' : 
+               t.common.language === 'العربية' ? 'المنصة' : 
+               'Platform'}
+            </h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-how-it-works">Nasıl Çalışır</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-security">Güvenlik</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-commission">Komisyon Oranları</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-mobile-app">Mobil Uygulama</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-how-it-works">
+                {t.common.language === 'English' ? 'How It Works' : 
+                 t.common.language === 'العربية' ? 'كيف تعمل' : 
+                 'Nasıl Çalışır'}
+              </a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-security">
+                {t.common.language === 'English' ? 'Security' : 
+                 t.common.language === 'العربية' ? 'الأمان' : 
+                 'Güvenlik'}
+              </a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-commission">
+                {t.common.language === 'English' ? 'Commission Rates' : 
+                 t.common.language === 'العربية' ? 'معدلات العمولة' : 
+                 'Komisyon Oranları'}
+              </a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-mobile-app">
+                {t.common.language === 'English' ? 'Mobile App' : 
+                 t.common.language === 'العربية' ? 'تطبيق الجوال' : 
+                 'Mobil Uygulama'}
+              </a></li>
             </ul>
           </div>
 
           {/* Support */}
           <div>
-            <h3 className="text-lg font-semibold mb-4" data-testid="text-support-title">Destek</h3>
+            <h3 className="text-lg font-semibold mb-4" data-testid="text-support-title">
+              {t.common.language === 'English' ? 'Support' : 
+               t.common.language === 'العربية' ? 'الدعم' : 
+               'Destek'}
+            </h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-help-center">Yardım Merkezi</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-contact">İletişim</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-live-support">Canlı Destek</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-faq">SSS</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-help-center">
+                {t.common.language === 'English' ? 'Help Center' : 
+                 t.common.language === 'العربية' ? 'مركز المساعدة' : 
+                 'Yardım Merkezi'}
+              </a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-contact">
+                {t.common.language === 'English' ? 'Contact' : 
+                 t.common.language === 'العربية' ? 'اتصل بنا' : 
+                 'İletişim'}
+              </a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-live-support">
+                {t.common.language === 'English' ? 'Live Support' : 
+                 t.common.language === 'العربية' ? 'الدعم المباشر' : 
+                 'Canlı Destek'}
+              </a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-faq">
+                {t.common.language === 'English' ? 'FAQ' : 
+                 t.common.language === 'العربية' ? 'الأسئلة الشائعة' : 
+                 'SSS'}
+              </a></li>
             </ul>
           </div>
 
           {/* Legal */}
           <div>
-            <h3 className="text-lg font-semibold mb-4" data-testid="text-legal-title">Yasal</h3>
+            <h3 className="text-lg font-semibold mb-4" data-testid="text-legal-title">
+              {t.common.language === 'English' ? 'Legal' : 
+               t.common.language === 'العربية' ? 'قانوني' : 
+               'Yasal'}
+            </h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-terms">Kullanım Şartları</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-privacy">Gizlilik Politikası</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-kvkk">KVKK</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-cookies">Çerezler</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-terms">
+                {t.common.language === 'English' ? 'Terms of Service' : 
+                 t.common.language === 'العربية' ? 'شروط الخدمة' : 
+                 'Kullanım Şartları'}
+              </a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-privacy">
+                {t.common.language === 'English' ? 'Privacy Policy' : 
+                 t.common.language === 'العربية' ? 'سياسة الخصوصية' : 
+                 'Gizlilik Politikası'}
+              </a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-kvkk">
+                {t.common.language === 'English' ? 'GDPR' : 
+                 t.common.language === 'العربية' ? 'حماية البيانات' : 
+                 'KVKK'}
+              </a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-cookies">
+                {t.common.language === 'English' ? 'Cookies' : 
+                 t.common.language === 'العربية' ? 'ملفات تعريف الارتباط' : 
+                 'Çerezler'}
+              </a></li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm" data-testid="text-copyright">© 2024 Takas. Tüm hakları saklıdır.</p>
+          <p className="text-gray-400 text-sm" data-testid="text-copyright">
+            {t.common.language === 'English' ? '© 2024 Takas. All rights reserved.' : 
+             t.common.language === 'العربية' ? '© 2024 تاكاس. جميع الحقوق محفوظة.' :
+             '© 2024 Takas. Tüm hakları saklıdır.'}
+          </p>
           <div className="flex items-center space-x-6 mt-4 md:mt-0">
             <div className="flex items-center space-x-2">
               <div className="w-4 h-4 bg-primary rounded"></div>
-              <span className="text-sm text-gray-400" data-testid="text-ssl-secure">SSL Güvenli</span>
+              <span className="text-sm text-gray-400" data-testid="text-ssl-secure">
+                {t.common.language === 'English' ? 'SSL Secure' : 
+                 t.common.language === 'العربية' ? 'آمن SSL' : 
+                 'SSL Güvenli'}
+              </span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-4 h-4 bg-green-400 rounded"></div>
