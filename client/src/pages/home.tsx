@@ -299,27 +299,14 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {!user ? (
-              <>
-                <Button 
-                  onClick={() => setShowRegisterModal(true)}
-                  className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg"
-                  data-testid="button-cta-register"
-                >
-                  <UserPlus className="h-5 w-5 mr-2" />
-                  Ücretsiz Kayıt Ol
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-4 rounded-lg font-semibold text-lg"
-                  asChild
-                  data-testid="button-cta-explore"
-                >
-                  <Link href="/items">
-                    <Search className="h-5 w-5 mr-2" />
-                    İlanları Keşfet
-                  </Link>
-                </Button>
-              </>
+              <Button 
+                onClick={() => setShowRegisterModal(true)}
+                className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg"
+                data-testid="button-cta-register"
+              >
+                <UserPlus className="h-5 w-5 mr-2" />
+                Ücretsiz Kayıt Ol
+              </Button>
             ) : (
               <Button 
                 className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg"
