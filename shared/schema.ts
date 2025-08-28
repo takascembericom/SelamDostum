@@ -49,6 +49,10 @@ export const itemSchema = z.object({
   approvedAt: z.date().optional(),
   approvedBy: z.string().optional(),
   expireAt: z.date().optional(),
+  // İlk yayın tarihi - düzenlemeler sonrası değişmez, süre hesabı için kullanılır
+  originalPublishDate: z.date().optional(),
+  // İlan süresinin dolacağı tarih (originalPublishDate + 30 gün)
+  expiresAt: z.date().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -58,11 +62,32 @@ export const insertItemSchema = itemSchema.omit({
   createdAt: true,
   updatedAt: true,
   expireAt: true,
+  originalPublishDate: true,
+  expiresAt: true,
   ownerName: true,
   ownerAvatar: true,
   isPaid: true,
   paymentId: true,
 });
+
+// Edit item schema - kullanıcı düzenlemesi için
+export const editItemSchema = itemSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  expireAt: true,
+  originalPublishDate: true, // Korunacak
+  expiresAt: true, // Korunacak
+  ownerName: true,
+  ownerAvatar: true,
+  isPaid: true,
+  paymentId: true,
+  status: true, // Düzenlemeden sonra "pending" yapılacak
+  approvedAt: true,
+  approvedBy: true,
+});
+
+// Types for Item schemas (moved to avoid duplication)
 
 // Trade offer schema
 export const tradeOfferSchema = z.object({
@@ -87,6 +112,7 @@ export type User = z.infer<typeof userSchema>;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Item = z.infer<typeof itemSchema>;
 export type InsertItem = z.infer<typeof insertItemSchema>;
+export type EditItem = z.infer<typeof editItemSchema>;
 export type TradeOffer = z.infer<typeof tradeOfferSchema>;
 export type InsertTradeOffer = z.infer<typeof insertTradeOfferSchema>;
 

@@ -26,6 +26,7 @@ import { createOrGetConversation } from "@/lib/userMessages";
 import { useLocation } from "wouter";
 import { ItemGrid } from "@/components/items/item-grid";
 import { CATEGORY_LABELS, CONDITION_LABELS } from "@shared/schema";
+import { Edit, Eye } from "lucide-react";
 
 export default function UserProfile() {
   const { id: userId } = useParams<{ id: string }>();
@@ -36,10 +37,6 @@ export default function UserProfile() {
   const [rating, setRating] = useState(5);
   const queryClient = useQueryClient();
   
-  console.log("UserProfile - userId from URL:", userId);
-  console.log("UserProfile - current profile:", profile?.id);
-  console.log("UserProfile - userId type:", typeof userId);
-  console.log("UserProfile - userId truthy?", !!userId);
 
   // Function to update user rating statistics
   const updateUserRatingStats = async (userId: string) => {
@@ -96,9 +93,6 @@ export default function UserProfile() {
     queryFn: async (): Promise<Item[]> => {
       if (!userId) return [];
       
-      console.log("=== QUERY DEBUG ===");
-      console.log("Query fetching items for userId:", userId);
-      
       // Single field query to avoid composite index requirement
       const q = query(
         collection(db, "items"),
@@ -107,12 +101,10 @@ export default function UserProfile() {
 
       try {
         const querySnapshot = await getDocs(q);
-        console.log("Query executed successfully. Documents found:", querySnapshot.docs.length);
         
         const items = querySnapshot.docs
           .map(doc => {
             const data = doc.data();
-            console.log("Processing doc:", doc.id, "ownerId:", data.ownerId, "status:", data.status);
             return {
               ...data,
               id: doc.id,
@@ -122,9 +114,6 @@ export default function UserProfile() {
           })
           .filter(item => item.status === "aktif") // Client-side status filtering
           .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()); // Client-side sorting
-        
-        console.log("Query result:", items.length, "items for userId:", userId);
-        console.log("Items found:", items);
         
         return items;
       } catch (error) {
@@ -285,6 +274,10 @@ export default function UserProfile() {
 
   const handleViewItemDetails = (item: Item) => {
     setLocation(`/item/${item.id}`);
+  };
+
+  const handleEditItem = (item: Item) => {
+    setLocation(`/items/${item.id}/edit`);
   };
 
   if (userLoading) {
@@ -490,10 +483,63 @@ export default function UserProfile() {
                 ))}
               </div>
             ) : userItems.length > 0 ? (
-              <ItemGrid 
-                items={userItems} 
-                onViewDetails={handleViewItemDetails}
-              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {userItems.map((item) => (
+                  <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="relative">
+                      <img
+                        src={item.images[0]}
+                        alt={item.title}
+                        className="w-full h-48 object-cover"
+                      />
+                      <Badge 
+                        variant="secondary" 
+                        className="absolute top-2 left-2 bg-white/90"
+                      >
+                        {CATEGORY_LABELS[item.category as keyof typeof CATEGORY_LABELS]}
+                      </Badge>
+                    </div>
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
+                        {item.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                        {item.description}
+                      </p>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm text-gray-500">
+                          {CONDITION_LABELS[item.condition]}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {item.location}
+                        </span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() => handleViewItemDetails(item)}
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          Detay
+                        </Button>
+                        {isOwnProfile && (
+                          <Button
+                            onClick={() => handleEditItem(item)}
+                            variant="default"
+                            size="sm"
+                            className="flex-1"
+                          >
+                            <Edit className="h-4 w-4 mr-1" />
+                            Düzenle
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             ) : (
               <div className="text-center py-12 bg-gray-50 rounded-lg">
                 <Package className="h-12 w-12 mx-auto text-gray-400 mb-4" />

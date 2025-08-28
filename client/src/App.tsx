@@ -17,6 +17,7 @@ import Messages from "@/pages/messages";
 import AdminPanel from "@/pages/admin";
 import AdminLogin from "@/pages/admin-login";
 import NotFound from "@/pages/not-found";
+import EditItemPage from "@/pages/edit-item";
 import { NotificationPermissionBanner } from "@/components/notifications/notification-permission-banner";
 
 function Router() {
@@ -25,6 +26,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/items" component={Items} />
       <Route path="/item/:id" component={ItemDetail} />
+      <Route path="/items/:id/edit" component={EditItemPage} />
       <Route path="/profile" component={Profile} />
       <Route path="/user/:id" component={UserProfile} />
       <Route path="/add-item" component={AddItem} />
