@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
-import { Plus, User, LogOut, Home, Shield, MessageCircle, Bell, Search, ArrowLeft, Mail, BellRing, FileSearch, ArrowRightLeft, CheckCircle, XCircle, Star } from "lucide-react";
+import { Plus, User, LogOut, Home, Shield, MessageCircle, Bell, Search, ArrowLeft, Mail, BellRing, FileSearch, ArrowRightLeft, CheckCircle, XCircle, Star, Globe } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +16,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useMessageNotifications } from "@/hooks/useMessageNotifications";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { markNotificationAsRead, markAllNotificationsAsRead } from "@/lib/notifications-db";
 import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
 
@@ -24,6 +25,7 @@ export function Header() {
   const { toast } = useToast();
   const { unreadCount } = useMessageNotifications();
   const { notifications, unreadCount: notificationUnreadCount } = useNotifications();
+  const { language, setLanguage, t } = useLanguage();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
 
@@ -31,12 +33,12 @@ export function Header() {
     try {
       await logoutUser();
       toast({
-        title: "Çıkış yapıldı",
-        description: "İyi günler!",
+        title: language === 'tr' ? 'Çıkış yapıldı' : language === 'en' ? 'Logged out' : 'تم تسجيل الخروج',
+        description: language === 'tr' ? 'İyi günler!' : language === 'en' ? 'Have a good day!' : 'نتمنى لك يوماً سعيداً!',
       });
     } catch (error: any) {
       toast({
-        title: "Hata",
+        title: t.common.error,
         description: error.message,
         variant: "destructive",
       });
@@ -67,7 +69,7 @@ export function Header() {
                     >
                       <ArrowLeft className="h-4 w-4 sm:hidden" />
                       <Home className="h-4 w-4 hidden sm:block" />
-                      <span className="hidden sm:inline">Ana Sayfa</span>
+                      <span className="hidden sm:inline">{t.nav.home}</span>
                     </Button>
                   </Link>
                   
@@ -80,7 +82,7 @@ export function Header() {
                     >
                       <FileSearch className="h-4 w-4 sm:hidden" />
                       <Search className="h-4 w-4 hidden sm:block" />
-                      <span className="hidden sm:inline">İlanlar</span>
+                      <span className="hidden sm:inline">{t.nav.items}</span>
                     </Button>
                   </Link>
                   
@@ -92,8 +94,8 @@ export function Header() {
                       data-testid="button-add-item"
                     >
                       <Plus className="h-4 w-4" />
-                      <span className="hidden sm:inline">İlan Ekle</span>
-                      <span className="sm:hidden">İlan Ver</span>
+                      <span className="hidden sm:inline">{t.nav.addItem}</span>
+                      <span className="sm:hidden">{t.nav.addItem}</span>
                     </Button>
                   </Link>
                   
@@ -106,7 +108,7 @@ export function Header() {
                     >
                       <Mail className="h-4 w-4 sm:hidden" />
                       <MessageCircle className="h-4 w-4 hidden sm:block" />
-                      <span className="hidden sm:inline">Mesajlar</span>
+                      <span className="hidden sm:inline">{t.nav.messages}</span>
                       {unreadCount > 0 && (
                         <Badge 
                           variant="destructive" 
@@ -129,7 +131,7 @@ export function Header() {
                       >
                         <BellRing className="h-4 w-4 sm:hidden" />
                         <Bell className="h-4 w-4 hidden sm:block" />
-                        <span className="hidden sm:inline">Bildirimler</span>
+                        <span className="hidden sm:inline">{t.nav.notifications}</span>
                         {notificationUnreadCount > 0 && (
                           <Badge 
                             variant="destructive" 
@@ -142,13 +144,13 @@ export function Header() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-80">
                       <div className="p-3 border-b">
-                        <h3 className="font-semibold">Bildirimler</h3>
+                        <h3 className="font-semibold">{t.nav.notifications}</h3>
                       </div>
                       <div className="max-h-64 overflow-y-auto">
                         {notifications.length === 0 ? (
                           <div className="p-8 text-center text-gray-500">
                             <Bell className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-                            <p className="text-sm">Henüz bildiriminiz yok</p>
+                            <p className="text-sm">{language === 'tr' ? 'Henüz bildiriminiz yok' : language === 'en' ? 'No notifications yet' : 'لا توجد إشعارات بعد'}</p>
                           </div>
                         ) : (
                           <div className="divide-y">
@@ -224,7 +226,7 @@ export function Header() {
                               }
                             }}
                           >
-                            Tümünü Okundu İşaretle
+                            {t.common.markAllRead}
                           </Button>
                         )}
                         <Button 
@@ -233,9 +235,42 @@ export function Header() {
                           className="text-xs"
                           onClick={() => window.location.href = '/profile?tab=trade-offers'}
                         >
-                          Tümünü Gör
+                          {t.common.viewAll}
                         </Button>
                       </div>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  
+                  {/* Language Selector */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" data-testid="button-language">
+                        <Globe className="h-4 w-4 mr-2" />
+                        <span className="hidden sm:inline">{t.common.language}</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem 
+                        onClick={() => setLanguage('tr')}
+                        className={language === 'tr' ? 'bg-blue-50' : ''}
+                        data-testid="language-tr"
+                      >
+                        🇹🇷 Türkçe
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => setLanguage('en')}
+                        className={language === 'en' ? 'bg-blue-50' : ''}
+                        data-testid="language-en"
+                      >
+                        🇺🇸 English
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => setLanguage('ar')}
+                        className={language === 'ar' ? 'bg-blue-50' : ''}
+                        data-testid="language-ar"
+                      >
+                        🇸🇦 العربية
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                   
@@ -257,12 +292,12 @@ export function Header() {
                       <DropdownMenuItem asChild>
                         <Link href="/profile" data-testid="link-profile">
                           <User className="h-4 w-4 mr-2" />
-                          Profil
+                          {t.nav.profile}
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleLogout} data-testid="button-logout">
                         <LogOut className="h-4 w-4 mr-2" />
-                        Çıkış Yap
+                        {t.auth.logout}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -274,13 +309,13 @@ export function Header() {
                     onClick={() => setShowLoginModal(true)}
                     data-testid="button-login"
                   >
-                    Giriş Yap
+                    {t.auth.login}
                   </Button>
                   <Button 
                     onClick={() => setShowRegisterModal(true)}
                     data-testid="button-register"
                   >
-                    Kayıt Ol
+                    {t.auth.register}
                   </Button>
                 </>
               )}
