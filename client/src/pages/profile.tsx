@@ -13,7 +13,7 @@ import { updateTradeOfferStatus, completeTrade } from "@/lib/tradeOffers";
 import { User, Package, Star, MapPin, Plus, Camera, Settings, Lock, ArrowRightLeft, MessageCircle, Trash2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ExpiredItemCard } from "@/components/items/expired-item-card";
-import { Link, Redirect } from "wouter";
+import { Link, Redirect, useLocation } from "wouter";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -41,6 +41,7 @@ export default function Profile() {
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
 
   // Trade offer action handlers - move before any conditional returns
   const handleAcceptOffer = useMutation({
@@ -804,6 +805,23 @@ export default function Profile() {
                               <Badge variant="default">Aktif</Badge>
                             </div>
                           </div>
+                          <div className="flex flex-col gap-2">
+                            <Button
+                              onClick={() => setLocation(`/items/${item.id}/edit`)}
+                              size="sm"
+                              variant="default"
+                              data-testid={`button-edit-${item.id}`}
+                            >
+                              ✏️ Düzenle
+                            </Button>
+                            <Button
+                              onClick={() => setLocation(`/item/${item.id}`)}
+                              size="sm"
+                              variant="outline"
+                            >
+                              👁️ Görüntüle
+                            </Button>
+                          </div>
                         </div>
                       </CardHeader>
                     </Card>
@@ -898,18 +916,19 @@ export default function Profile() {
                           </div>
                           <div className="flex gap-2">
                             <Button
-                              onClick={() => handleRepublishItem(item.id)}
+                              onClick={() => setLocation(`/items/${item.id}/edit`)}
+                              size="sm"
+                              variant="default"
+                              data-testid={`button-edit-${item.id}`}
+                            >
+                              ✏️ Düzenle
+                            </Button>
+                            <Button
+                              onClick={() => setLocation(`/item/${item.id}`)}
                               size="sm"
                               variant="outline"
                             >
-                              Yeniden Yayınla
-                            </Button>
-                            <Button
-                              onClick={() => handleDeleteItem(item.id)}
-                              size="sm"
-                              variant="destructive"
-                            >
-                              Sil
+                              👁️ Görüntüle
                             </Button>
                           </div>
                         </div>
