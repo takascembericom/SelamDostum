@@ -94,27 +94,21 @@ export default function Home() {
       location: "İstanbul",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       rating: 5,
-      text: t.common.language === 'English' ? "I traded my laptop for a camera. Very safe and easy." : 
-            t.common.language === 'العربية' ? "تبادلت الكمبيوتر المحمول الخاص بي بكاميرا. آمن وسهل جداً." :
-            "Laptopumu kamerayla takas ettim. Çok güvenli ve kolay."
+      text: t.common.testimonial1
     },
     {
       name: "Ayşe Demir",
       location: "Ankara", 
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face",
       rating: 5,
-      text: t.common.language === 'English' ? "Trading toys is great. We both saved money and got new toys." : 
-            t.common.language === 'العربية' ? "تبادل الألعاب رائع. وفرنا المال وحصلنا على ألعاب جديدة." :
-            "Oyuncakları değiştirmek harika. Hem tasarruf ettik hem yeni oyuncaklar aldık."
+      text: t.common.testimonial2
     },
     {
       name: "Zeynep Özkan",
       location: "İzmir",
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b494?w=40&h=40&fit=crop&crop=face",
       rating: 5,
-      text: t.common.language === 'English' ? "I trade my books for new books. Very practical." : 
-            t.common.language === 'العربية' ? "أتبادل كتبي بكتب جديدة. عملي جداً." :
-            "Kitaplarımı yeni kitaplarla değiştiriyorum. Çok praktik."
+      text: t.common.testimonial3
     }
   ];
 
@@ -262,14 +256,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="title-testimonials">
-              {t.common.language === 'English' ? 'User Reviews' : 
-               t.common.language === 'العربية' ? 'آراء المستخدمين' :
-               'Kullanıcı Yorumları'}
+              {t.common.testimonialsTitle}
             </h2>
             <p className="text-xl text-gray-600">
-              {t.common.language === 'English' ? 'Comments from our happy users' : 
-               t.common.language === 'العربية' ? 'تعليقات من مستخدمينا السعداء' :
-               'Mutlu kullanıcılarımızdan yorumlar'}
+              {t.common.testimonialsSubtitle}
             </p>
           </div>
 

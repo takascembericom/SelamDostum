@@ -107,7 +107,24 @@ export const translations = {
       view: "Görüntüle",
       markAllRead: "Tümünü Okundu İşaretle",
       viewAll: "Tümünü Gör",
-      language: "Dil"
+      language: "Dil",
+      // Ana sayfa kategoriler
+      categoriesTitle: "Kategorilere Göz Atın",
+      categoriesSubtitle: "İhtiyacınız olan ürün kategorisini seçin ve takas yapmaya başlayın",
+      // Kategori açıklamaları
+      teknolojikDesc: "Telefon, laptop, kamera takas edin",
+      beyazEsyaDesc: "Beyaz eşyalar değiştirin",
+      mobilyaDesc: "Mobilya değiştirin",
+      arabaDesc: "Araç parçaları takas edin",
+      oyuncakDesc: "Çocuk oyuncakları değiştirin",
+      tasinmazDesc: "Ev, arsa, tarla takas edin",
+      kitapDesc: "Kitap koleksiyonunuzu değiştirin",
+      // Yorumlar bölümü
+      testimonialsTitle: "Kullanıcı Yorumları",
+      testimonialsSubtitle: "Mutlu kullanıcılarımızdan yorumlar",
+      testimonial1: "Laptopumu kamerayla takas ettim. Çok güvenli ve kolay.",
+      testimonial2: "Oyuncakları değiştirmek harika. Hem tasarruf ettik hem yeni oyuncaklar aldık.",
+      testimonial3: "Kitaplarımı yeni kitaplarla değiştiriyorum. Çok praktik."
     },
     home: {
       welcomeTitle: "Takas Çemberi'ne Hoş Geldiniz",
@@ -276,7 +293,24 @@ export const translations = {
       view: "View",
       markAllRead: "Mark All Read",
       viewAll: "View All",
-      language: "Language"
+      language: "Language",
+      // Category section
+      categoriesTitle: "Browse Categories",
+      categoriesSubtitle: "Choose the product category you need and start trading",
+      // Category descriptions
+      teknolojikDesc: "Trade phones, laptops, cameras",
+      beyazEsyaDesc: "Exchange white goods",
+      mobilyaDesc: "Exchange furniture",
+      arabaDesc: "Trade vehicle parts",
+      oyuncakDesc: "Exchange children's toys",
+      tasinmazDesc: "Trade real estate, land, fields",
+      kitapDesc: "Exchange your book collection",
+      // Testimonials section
+      testimonialsTitle: "User Reviews",
+      testimonialsSubtitle: "Comments from our happy users",
+      testimonial1: "I traded my laptop for a camera. Very safe and easy.",
+      testimonial2: "Trading toys is great. We both saved money and got new toys.",
+      testimonial3: "I trade my books for new books. Very practical."
     },
     home: {
       welcomeTitle: "Welcome to Barter Circle",
@@ -325,6 +359,7 @@ export const translations = {
       araba_yedek_parca: "Car Parts",
       araba_group: "Cars & Parts",
       tasinmazlar: "Real Estate",
+      tasinmazlar_group: "Real Estate",
       teknolojik_urunler: "Technology Products",
       diger: "Other"
     },
@@ -445,7 +480,24 @@ export const translations = {
       view: "عرض",
       markAllRead: "تحديد الكل كمقروء",
       viewAll: "عرض الكل",
-      language: "اللغة"
+      language: "اللغة",
+      // Category section
+      categoriesTitle: "تصفح الفئات",
+      categoriesSubtitle: "اختر فئة المنتج التي تحتاجها وابدأ التداول",
+      // Category descriptions
+      teknolojikDesc: "تبادل الهواتف والكمبيوترات المحمولة والكاميرات",
+      beyazEsyaDesc: "تبادل الأجهزة المنزلية",
+      mobilyaDesc: "تبادل الأثاث",
+      arabaDesc: "تبادل قطع غيار السيارات",
+      oyuncakDesc: "تبادل ألعاب الأطفال",
+      tasinmazDesc: "تبادل المنازل والأراضي والحقول",
+      kitapDesc: "تبادل مجموعة كتبك",
+      // Testimonials section
+      testimonialsTitle: "آراء المستخدمين",
+      testimonialsSubtitle: "تعليقات من مستخدمينا السعداء",
+      testimonial1: "تبادلت الكمبيوتر المحمول الخاص بي بكاميرا. آمن وسهل جداً.",
+      testimonial2: "تبادل الألعاب رائع. وفرنا المال وحصلنا على ألعاب جديدة.",
+      testimonial3: "أتبادل كتبي بكتب جديدة. عملي جداً."
     },
     home: {
       welcomeTitle: "مرحباً بك في دائرة المقايضة",
@@ -494,6 +546,7 @@ export const translations = {
       araba_yedek_parca: "قطع غيار السيارات",
       araba_group: "السيارات وقطع الغيار",
       tasinmazlar: "العقارات",
+      tasinmazlar_group: "العقارات",
       teknolojik_urunler: "المنتجات التكنولوجية",
       diger: "أخرى"
     },

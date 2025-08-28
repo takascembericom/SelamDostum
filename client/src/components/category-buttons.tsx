@@ -59,64 +59,50 @@ export function CategoryButtons() {
   const categories = [
     {
       emoji: "📱",
-      title: t.common.language === 'English' ? "Tech Products" : 
-             t.common.language === 'العربية' ? "المنتجات التقنية" : "Teknolojik Ürünler",
-      description: t.common.language === 'English' ? "Trade phones, laptops, cameras" : 
-                   t.common.language === 'العربية' ? "تبادل الهواتف والكمبيوترات المحمولة والكاميرات" : "Telefon, laptop, kamera takas edin",
+      title: t.categories.teknolojik_urunler,
+      description: t.common.teknolojikDesc,
       href: "/items?category=teknolojik_urunler",
       dataTestId: "category-teknolojik-urunler"
     },
     {
       emoji: "🏠",
-      title: t.common.language === 'English' ? "Home Appliances" : 
-             t.common.language === 'العربية' ? "الأجهزة المنزلية" : "Beyaz Eşya",
-      description: t.common.language === 'English' ? "Exchange home appliances" : 
-                   t.common.language === 'العربية' ? "تبادل الأجهزة المنزلية" : "Beyaz eşyalar değiştirin",
+      title: t.categories.beyaz_esya,
+      description: t.common.beyazEsyaDesc,
       href: "/items?category=beyaz_esya",
       dataTestId: "category-beyaz-esya"
     },
     {
       emoji: "🪑",
-      title: t.common.language === 'English' ? "Furniture" : 
-             t.common.language === 'العربية' ? "الأثاث" : "Mobilya",
-      description: t.common.language === 'English' ? "Exchange furniture" : 
-                   t.common.language === 'العربية' ? "تبادل الأثاث" : "Mobilya değiştirin",
+      title: t.categories.mobilya,
+      description: t.common.mobilyaDesc,
       href: "/items?category=mobilya",
       dataTestId: "category-mobilya"
     },
     {
       emoji: "🚗",
-      title: t.common.language === 'English' ? "Car & Spare Parts" : 
-             t.common.language === 'العربية' ? "السيارات وقطع الغيار" : "Araba & Yedek Parça",
-      description: t.common.language === 'English' ? "Trade car parts" : 
-                   t.common.language === 'العربية' ? "تبادل قطع غيار السيارات" : "Araç parçaları takas edin",
+      title: t.categories.araba_group,
+      description: t.common.arabaDesc,
       href: "/items?category=araba_group",
       dataTestId: "category-araba-group"
     },
     {
       emoji: "🧸",
-      title: t.common.language === 'English' ? "Toys" : 
-             t.common.language === 'العربية' ? "الألعاب" : "Oyuncak",
-      description: t.common.language === 'English' ? "Exchange children's toys" : 
-                   t.common.language === 'العربية' ? "تبادل ألعاب الأطفال" : "Çocuk oyuncakları değiştirin",
+      title: t.categories.oyuncak,
+      description: t.common.oyuncakDesc,
       href: "/items?category=oyuncak",
       dataTestId: "category-oyuncak"
     },
     {
       emoji: "🏡",
-      title: t.common.language === 'English' ? "Real Estate" : 
-             t.common.language === 'العربية' ? "العقارات" : "Taşınmazlar",
-      description: t.common.language === 'English' ? "Trade houses, land, fields" : 
-                   t.common.language === 'العربية' ? "تبادل المنازل والأراضي والحقول" : "Ev, arsa, tarla takas edin",
+      title: t.categories.tasinmazlar_group,
+      description: t.common.tasinmazDesc,
       href: "/items?category=tasinmazlar_group",
       dataTestId: "category-tasinmazlar-group"
     },
     {
       emoji: "📚",
-      title: t.common.language === 'English' ? "Books" : 
-             t.common.language === 'العربية' ? "الكتب" : "Kitap",
-      description: t.common.language === 'English' ? "Exchange your book collection" : 
-                   t.common.language === 'العربية' ? "تبادل مجموعة كتبك" : "Kitap koleksiyonunuzu değiştirin",
+      title: t.categories.kitap,
+      description: t.common.kitapDesc,
       href: "/items?category=kitap",
       dataTestId: "category-kitap"
     }
@@ -127,14 +113,10 @@ export function CategoryButtons() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            {t.common.language === 'English' ? 'Browse Categories' : 
-             t.common.language === 'العربية' ? 'تصفح الفئات' : 
-             'Kategorilere Göz Atın'}
+            {t.common.categoriesTitle}
           </h2>
           <p className="text-lg text-gray-600">
-            {t.common.language === 'English' ? 'Select the product category you need and start trading' : 
-             t.common.language === 'العربية' ? 'اختر فئة المنتج التي تحتاجها وابدأ التداول' : 
-             'İhtiyacınız olan ürün kategorisini seçin ve takas yapmaya başlayın'}
+            {t.common.categoriesSubtitle}
           </p>
         </div>
         
