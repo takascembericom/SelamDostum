@@ -252,8 +252,8 @@ export default function UserProfile() {
       return;
     }
 
-    // Check if user already rated this user
-    const hasRated = ratings.some(r => r.raterUserId === profile.id);
+    // Check if user already rated this specific user
+    const hasRated = ratings.some(r => r.raterUserId === profile.id && r.ratedUserId === userId);
     if (hasRated) {
       toast({
         title: "Hata",
@@ -312,6 +312,9 @@ export default function UserProfile() {
   // Use database values instead of client-side calculation
   const averageRating = user.averageRating || 0;
   const totalRatings = user.totalRatings || 0;
+  
+  // Check if current user already rated this user
+  const hasAlreadyRated = ratings?.some(r => r.raterUserId === profile?.id && r.ratedUserId === userId) || false;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -400,18 +403,29 @@ export default function UserProfile() {
                       Mesaj Gönder
                     </Button>
                     
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setShowRatingForm(!showRatingForm)}
-                      className="w-full"
-                    >
-                      <Star className="h-4 w-4 mr-2" />
-                      Değerlendir
-                    </Button>
+                    {hasAlreadyRated ? (
+                      <Button 
+                        variant="outline" 
+                        disabled
+                        className="w-full opacity-50"
+                      >
+                        <Star className="h-4 w-4 mr-2 text-yellow-400 fill-current" />
+                        Zaten Değerlendirdiniz
+                      </Button>
+                    ) : (
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowRatingForm(!showRatingForm)}
+                        className="w-full"
+                      >
+                        <Star className="h-4 w-4 mr-2" />
+                        Değerlendir
+                      </Button>
+                    )}
                   </div>
 
                   {/* Rating Form */}
-                  {showRatingForm && (
+                  {showRatingForm && !hasAlreadyRated && (
                     <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
                       <div className="space-y-2">
                         <label className="text-sm font-medium">Puan</label>
