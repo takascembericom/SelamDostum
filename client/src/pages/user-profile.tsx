@@ -91,8 +91,6 @@ export default function UserProfile() {
     queryFn: async (): Promise<Item[]> => {
       if (!userId) return [];
       
-      console.log("Fetching user items for userId:", userId);
-      
       const q = query(
         collection(db, "items"),
         where("ownerId", "==", userId),
@@ -101,7 +99,7 @@ export default function UserProfile() {
       );
 
       const querySnapshot = await getDocs(q);
-      const items = querySnapshot.docs.map(doc => {
+      return querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
           ...data,
@@ -110,12 +108,8 @@ export default function UserProfile() {
           updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
         } as Item;
       });
-      
-      console.log("Fetched user items:", items.length, "for user:", userId);
-      console.log("Items:", items);
-      
-      return items;
     },
+    enabled: !!userId, // Only run query when userId exists
   });
 
   // Fetch user ratings
@@ -150,6 +144,7 @@ export default function UserProfile() {
 
       return ratingsData;
     },
+    enabled: !!userId, // Only run query when userId exists
   });
 
   // Add rating mutation
