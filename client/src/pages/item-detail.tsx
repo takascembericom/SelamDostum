@@ -66,12 +66,12 @@ export default function ItemDetail() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">İlan Bulunamadı</h1>
-          <p className="text-gray-600 mb-6">Aradığınız ilan mevcut değil veya kaldırılmış olabilir.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">{t.items.itemNotFound}</h1>
+          <p className="text-gray-600 mb-6">{t.items.itemNotFoundDesc}</p>
           <Link href="/items">
             <Button>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              İlanlara Dön
+              {t.items.backToItems}
             </Button>
           </Link>
         </div>
@@ -111,7 +111,7 @@ export default function ItemDetail() {
         <Link href="/items">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            İlanlara Dön
+            {t.items.backToItems}
           </Button>
         </Link>
       </div>
@@ -133,7 +133,7 @@ export default function ItemDetail() {
                   variant="secondary"
                   data-testid="badge-condition"
                 >
-                  {CONDITION_LABELS[item.condition]}
+                  {t.conditions[item.condition as keyof typeof t.conditions] || item.condition}
                 </Badge>
               </div>
             </CardContent>
@@ -190,14 +190,14 @@ export default function ItemDetail() {
 
           <div className="flex items-center gap-4">
             <Badge variant="outline" data-testid="category-item">
-              {CATEGORY_LABELS[item.category as keyof typeof CATEGORY_LABELS] || item.category}
+              {t.categories[item.category as keyof typeof t.categories] || item.category}
             </Badge>
             <Badge 
               variant={item.status === 'aktif' ? 'default' : 'secondary'}
               data-testid="status-item"
             >
-              {item.status === 'aktif' ? 'Aktif' : 
-               item.status === 'takas_edildi' ? 'Takas Edildi' : 
+              {item.status === 'aktif' ? t.items.statusActive : 
+               item.status === 'takas_edildi' ? t.items.statusTraded : 
                item.status}
             </Badge>
           </div>
@@ -205,7 +205,7 @@ export default function ItemDetail() {
           <Separator />
 
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">Açıklama</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-3">{t.items.itemDescription}</h2>
             <p className="text-gray-700 leading-relaxed" data-testid="description-item">
               {t.common.language === 'English' ? (item.descriptionEn || item.description) : 
                t.common.language === 'العربية' ? (item.descriptionAr || item.description) : 
@@ -227,7 +227,7 @@ export default function ItemDetail() {
                     <Link href={`/user/${item.ownerId}`} className="font-medium text-gray-900 hover:text-primary hover:underline" data-testid="owner-name">
                       {item.ownerName}
                     </Link>
-                    <p className="text-sm text-gray-500">İlan Sahibi</p>
+                    <p className="text-sm text-gray-500">{t.items.itemOwner}</p>
                   </div>
                 </div>
                 {!isOwner && profile && (
@@ -238,7 +238,7 @@ export default function ItemDetail() {
                     data-testid="button-send-message"
                   >
                     <MessageCircle className="h-4 w-4 mr-2" />
-                    Mesaj Gönder
+                    {t.items.sendMessage}
                   </Button>
                 )}
               </div>
@@ -254,10 +254,10 @@ export default function ItemDetail() {
                 onClick={() => setIsTradeModalOpen(true)}
                 data-testid="button-trade-offer"
               >
-                Takas Teklifi Ver
+                {t.items.tradeOffer}
               </Button>
               <p className="text-sm text-gray-500 text-center">
-                Bu ilan ile takas yapmak için kendi ilanlarınızdan birini seçin
+                {t.items.tradeOfferHint}
               </p>
             </div>
           )}

@@ -73,7 +73,17 @@ export const translations = {
       itemApproved: "İlan onaylandı",
       itemRejected: "İlan reddedildi",
       paymentRequired: "4. İlan İçin Ödeme Gerekli",
-      paymentDescription: "İlk 3 ilan ücretsiz! 4. ilan ve sonrasında her ilan için 10 TL ödeme yapmanız gerekmektedir."
+      paymentDescription: "İlk 3 ilan ücretsiz! 4. ilan ve sonrasında her ilan için 10 TL ödeme yapmanız gerekmektedir.",
+      backToItems: "İlanlara Dön",
+      itemDescription: "Açıklama",
+      itemOwner: "İlan Sahibi",
+      sendMessage: "Mesaj Gönder",
+      tradeOffer: "Takas Teklifi Ver",
+      tradeOfferHint: "Bu ilan ile takas yapmak için kendi ilanlarınızdan birini seçin",
+      itemNotFound: "İlan Bulunamadı",
+      itemNotFoundDesc: "Aradığınız ilan mevcut değil veya kaldırılmış olabilir.",
+      statusActive: "Aktif",
+      statusTraded: "Takas Edildi"
     },
     common: {
       save: "Kaydet",
@@ -232,7 +242,17 @@ export const translations = {
       itemApproved: "Item approved",
       itemRejected: "Item rejected",
       paymentRequired: "Payment Required for 4th Item",
-      paymentDescription: "First 3 items are free! For the 4th item and beyond, a payment of 10 TL is required for each item."
+      paymentDescription: "First 3 items are free! For the 4th item and beyond, a payment of 10 TL is required for each item.",
+      backToItems: "Back to Items",
+      itemDescription: "Description", 
+      itemOwner: "Item Owner",
+      sendMessage: "Send Message",
+      tradeOffer: "Make Trade Offer",
+      tradeOfferHint: "Select one of your items to trade with this item",
+      itemNotFound: "Item Not Found",
+      itemNotFoundDesc: "The item you are looking for does not exist or may have been removed.",
+      statusActive: "Active",
+      statusTraded: "Traded"
     },
     common: {
       save: "Save",
@@ -391,7 +411,17 @@ export const translations = {
       itemApproved: "تم قبول العنصر",
       itemRejected: "تم رفض العنصر",
       paymentRequired: "الدفع مطلوب للعنصر الرابع",
-      paymentDescription: "أول 3 عناصر مجانية! للعنصر الرابع وما بعده، مطلوب دفع 10 ليرة تركية لكل عنصر."
+      paymentDescription: "أول 3 عناصر مجانية! للعنصر الرابع وما بعده، مطلوب دفع 10 ليرة تركية لكل عنصر.",
+      backToItems: "العودة إلى العناصر",
+      itemDescription: "الوصف",
+      itemOwner: "مالك العنصر", 
+      sendMessage: "إرسال رسالة",
+      tradeOffer: "تقديم عرض تبادل",
+      tradeOfferHint: "اختر أحد عناصرك للتبادل مع هذا العنصر",
+      itemNotFound: "العنصر غير موجود",
+      itemNotFoundDesc: "العنصر الذي تبحث عنه غير موجود أو ربما تم حذفه.",
+      statusActive: "نشط",
+      statusTraded: "تم تبادله"
     },
     common: {
       save: "حفظ",
