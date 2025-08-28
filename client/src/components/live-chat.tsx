@@ -30,6 +30,7 @@ export function LiveChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [chatCleared, setChatCleared] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -50,6 +51,11 @@ export function LiveChat() {
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
+      // Eğer kullanıcı chat'i kapatmışsa mesajları yükleme
+      if (chatCleared) {
+        return;
+      }
+
       const userMessages: ChatMessage[] = [];
       snapshot.forEach((doc) => {
         const data = doc.data();
@@ -68,10 +74,15 @@ export function LiveChat() {
     });
 
     return () => unsubscribe();
-  }, [user?.uid]);
+  }, [user?.uid, chatCleared]);
 
   const handleSendMessage = async () => {
     if (!message.trim() || !user?.uid || loading) return;
+
+    // Yeni mesaj gönderilirken chat'i tekrar aktif hale getir
+    if (chatCleared) {
+      setChatCleared(false);
+    }
 
     setLoading(true);
     try {
@@ -106,6 +117,11 @@ export function LiveChat() {
   const handleImageUpload = async (imageUrl: string) => {
     if (!user?.uid || loading) return;
 
+    // Yeni resim gönderilirken chat'i tekrar aktif hale getir
+    if (chatCleared) {
+      setChatCleared(false);
+    }
+
     setLoading(true);
     try {
       await addDoc(collection(db, 'chatMessages'), {
@@ -130,8 +146,9 @@ export function LiveChat() {
   };
 
   const handleCloseChat = () => {
-    // Sadece lokal state'i temizle ve chat'i kapat
+    // Chat'i temizlenmiş olarak işaretle ve kapat
     // Mesajlar veritabanında kalır, admin panelinde görülmeye devam eder
+    setChatCleared(true);
     setMessages([]);
     setMessage("");
     setShowImageUpload(false);
