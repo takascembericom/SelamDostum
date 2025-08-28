@@ -153,7 +153,11 @@ export function Footer() {
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-4 h-4 bg-green-400 rounded"></div>
-              <span className="text-sm text-gray-400" data-testid="text-eco-friendly">Çevre Dostu</span>
+              <span className="text-sm text-gray-400" data-testid="text-eco-friendly">
+                {t.common.language === 'English' ? 'Eco Friendly' : 
+                 t.common.language === 'العربية' ? 'صديق للبيئة' : 
+                 'Çevre Dostu'}
+              </span>
             </div>
           </div>
         </div>
