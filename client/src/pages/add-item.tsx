@@ -121,10 +121,39 @@ export default function AddItem() {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    // Reset the input value to allow selecting the same files again if needed
+    e.target.value = '';
+
+    // Check if adding these files would exceed the limit
     if (files.length + selectedImages.length > 5) {
       toast({
         title: "Çok fazla fotoğraf",
-        description: "En fazla 5 fotoğraf",
+        description: "En fazla 5 fotoğraf ekleyebilirsiniz.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check individual file sizes (max 10MB per file)
+    const oversizedFiles = files.filter(file => file.size > 10 * 1024 * 1024);
+    if (oversizedFiles.length > 0) {
+      toast({
+        title: "Dosya boyutu çok büyük",
+        description: "Her fotoğraf en fazla 10MB olabilir.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file types
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const invalidFiles = files.filter(file => !allowedTypes.includes(file.type));
+    if (invalidFiles.length > 0) {
+      toast({
+        title: "Desteklenmeyen dosya türü",
+        description: "Sadece JPG, PNG ve WebP formatları desteklenir.",
         variant: "destructive",
       });
       return;
@@ -132,10 +161,19 @@ export default function AddItem() {
 
     setSelectedImages(prev => [...prev, ...files]);
     
-    // Create preview URLs
+    // Create preview URLs with error handling
     files.forEach(file => {
-      const url = URL.createObjectURL(file);
-      setImageURLs(prev => [...prev, url]);
+      try {
+        const url = URL.createObjectURL(file);
+        setImageURLs(prev => [...prev, url]);
+      } catch (error) {
+        console.error('Error creating preview URL:', error);
+        toast({
+          title: "Fotoğraf önizleme hatası",
+          description: "Bazı fotoğraflar önizlenemedi, ancak yüklenecekler.",
+          variant: "destructive",
+        });
+      }
     });
   };
 
@@ -582,8 +620,9 @@ export default function AddItem() {
                           <span className="text-sm text-gray-500">Fotoğraf Ekle</span>
                           <input
                             type="file"
-                            accept="image/*"
+                            accept="image/jpeg,image/jpg,image/png,image/webp"
                             multiple
+                            capture="environment"
                             onChange={handleImageUpload}
                             className="hidden"
                             data-testid="input-image-upload"
