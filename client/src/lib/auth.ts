@@ -63,6 +63,26 @@ export const loginUser = async (email: string, password: string) => {
     
     return user;
   } catch (error: any) {
+    // Firebase hata kodlarını Türkçe'ye çevir
+    if (error.code === 'auth/invalid-credential') {
+      throw new Error("E-posta adresi veya şifre yanlış.");
+    }
+    if (error.code === 'auth/user-not-found') {
+      throw new Error("Bu e-posta adresi ile kayıtlı bir kullanıcı bulunamadı.");
+    }
+    if (error.code === 'auth/wrong-password') {
+      throw new Error("Şifre yanlış.");
+    }
+    if (error.code === 'auth/too-many-requests') {
+      throw new Error("Çok fazla başarısız giriş denemesi. Lütfen daha sonra tekrar deneyin.");
+    }
+    if (error.code === 'auth/user-disabled') {
+      throw new Error("Bu hesap devre dışı bırakılmış.");
+    }
+    if (error.code === 'auth/invalid-email') {
+      throw new Error("Geçersiz e-posta adresi.");
+    }
+    
     throw new Error(error.message || "Giriş işlemi başarısız oldu");
   }
 };
