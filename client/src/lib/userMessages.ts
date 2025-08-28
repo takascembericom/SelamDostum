@@ -301,14 +301,14 @@ export const subscribeToConversationMessages = (
         ...data,
         id: doc.id,
         createdAt: data.createdAt ? data.createdAt.toDate() : new Date(),
-        timestamp: data.timestamp ? data.timestamp.toDate() : (data.createdAt ? data.createdAt.toDate() : new Date()),
+        timestamp: data.timestamp ? data.timestamp.toDate() : new Date(),
       } as UserMessage);
     });
     
-    // Sort by createdAt like admin chat does - simple and reliable
-    const sortedMessages = messages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    // Sort exactly like admin chat: by createdAt timestamp only
+    messages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
     
-    callback(sortedMessages);
+    callback(messages);
   }, (error) => {
     console.error("subscribeToConversationMessages hatası:", error);
   });
