@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth";
 
 interface CategoryButtonProps {
   emoji: string;
@@ -7,27 +8,52 @@ interface CategoryButtonProps {
   description: string;
   href: string;
   dataTestId?: string;
+  isLoggedIn: boolean;
 }
 
-const CategoryButton = ({ emoji, title, description, href, dataTestId }: CategoryButtonProps) => (
-  <Link href={href}>
-    <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border-2 hover:border-blue-300 group">
-      <CardContent className="p-6 text-center">
-        <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-200">
-          {emoji}
-        </div>
-        <h3 className="font-bold text-lg mb-2 text-gray-800 group-hover:text-blue-600">
-          {title}
-        </h3>
-        <p className="text-gray-600 text-sm group-hover:text-gray-700">
-          {description}
-        </p>
-      </CardContent>
-    </Card>
-  </Link>
-);
+const CategoryButton = ({ emoji, title, description, href, dataTestId, isLoggedIn }: CategoryButtonProps) => {
+  // Giriş yapmamış kullanıcılar için sadece görsel
+  if (!isLoggedIn) {
+    return (
+      <Card className="border-2 opacity-75">
+        <CardContent className="p-6 text-center">
+          <div className="text-4xl mb-3">
+            {emoji}
+          </div>
+          <h3 className="font-bold text-lg mb-2 text-gray-800">
+            {title}
+          </h3>
+          <p className="text-gray-600 text-sm">
+            {description}
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Giriş yapmış kullanıcılar için tıklanabilir buton
+  return (
+    <Link href={href}>
+      <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border-2 hover:border-blue-300 group">
+        <CardContent className="p-6 text-center">
+          <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-200">
+            {emoji}
+          </div>
+          <h3 className="font-bold text-lg mb-2 text-gray-800 group-hover:text-blue-600">
+            {title}
+          </h3>
+          <p className="text-gray-600 text-sm group-hover:text-gray-700">
+            {description}
+          </p>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+};
 
 export function CategoryButtons() {
+  const { user } = useAuth();
+  
   const categories = [
     {
       emoji: "📱",
@@ -101,6 +127,7 @@ export function CategoryButtons() {
               description={category.description}
               href={category.href}
               dataTestId={category.dataTestId}
+              isLoggedIn={!!user}
             />
           ))}
         </div>
