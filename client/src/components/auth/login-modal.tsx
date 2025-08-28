@@ -122,57 +122,61 @@ export function LoginModal({ open, onClose, onSwitchToRegister }: LoginModalProp
         </DialogHeader>
 
         {showResetPassword ? (
-          <Form {...resetForm}>
-            <form onSubmit={resetForm.handleSubmit(onResetPassword)} className="space-y-4">
-              <div className="text-sm text-gray-600 mb-4">
-                E-posta adresinizi girin. Şifre sıfırlama linki e-postanıza gönderilecek.
-              </div>
-              
-              <FormField
-                control={resetForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>E-posta</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="email" 
-                        placeholder="ornek@email.com" 
-                        value={field.value}
-                        onChange={field.onChange}
-                        onBlur={field.onBlur}
-                        name={field.name}
-                        autoComplete="email"
-                        data-testid="input-reset-email"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+          <div className="space-y-4">
+            <div className="text-sm text-gray-600 mb-4">
+              E-posta adresinizi girin. Şifre sıfırlama linki e-postanıza gönderilecek.
+            </div>
+            
+            <div>
+              <label htmlFor="reset-email" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
+                E-posta
+              </label>
+              <Input 
+                id="reset-email"
+                type="email" 
+                placeholder="ornek@email.com" 
+                value={resetForm.watch('email')}
+                onChange={(e) => resetForm.setValue('email', e.target.value)}
+                autoComplete="email"
+                className="w-full"
+                data-testid="input-reset-email"
               />
+              {resetForm.formState.errors.email && (
+                <p className="text-sm text-red-600 mt-1">
+                  {resetForm.formState.errors.email.message}
+                </p>
+              )}
+            </div>
 
-              <div className="flex gap-2">
-                <Button 
-                  type="button"
-                  variant="outline"
-                  className="flex-1" 
-                  onClick={() => setShowResetPassword(false)}
-                  disabled={resetLoading}
-                  data-testid="button-cancel-reset"
-                >
-                  Geri
-                </Button>
-                <Button 
-                  type="submit" 
-                  className="flex-1" 
-                  disabled={resetLoading}
-                  data-testid="button-submit-reset"
-                >
-                  {resetLoading ? "Gönderiliyor..." : "E-posta Gönder"}
-                </Button>
-              </div>
-            </form>
-          </Form>
+            <div className="flex gap-2">
+              <Button 
+                type="button"
+                variant="outline"
+                className="flex-1" 
+                onClick={() => setShowResetPassword(false)}
+                disabled={resetLoading}
+                data-testid="button-cancel-reset"
+              >
+                Geri
+              </Button>
+              <Button 
+                type="button" 
+                className="flex-1" 
+                disabled={resetLoading}
+                onClick={() => {
+                  const email = resetForm.getValues('email');
+                  if (email && /\S+@\S+\.\S+/.test(email)) {
+                    onResetPassword({ email });
+                  } else {
+                    resetForm.setError('email', { message: 'Geçerli e-posta giriniz' });
+                  }
+                }}
+                data-testid="button-submit-reset"
+              >
+                {resetLoading ? "Gönderiliyor..." : "E-posta Gönder"}
+              </Button>
+            </div>
+          </div>
         ) : (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
