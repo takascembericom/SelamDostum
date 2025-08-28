@@ -129,45 +129,18 @@ export function LiveChat() {
     }
   };
 
-  const handleCloseChat = async () => {
-    if (!user?.uid) {
-      setIsOpen(false);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      // Kullanıcının tüm mesajlarını sil
-      const q = query(
-        collection(db, 'chatMessages'),
-        where('userId', '==', user.uid)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
-      
-      await Promise.all(deletePromises);
-      
-      // Mesajları temizle ve chat'i kapat
-      setMessages([]);
-      setIsOpen(false);
-      
-      toast({
-        title: "Sohbet Temizlendi",
-        description: "Tüm mesaj geçmişi silindi",
-      });
-    } catch (error: any) {
-      console.error("Mesaj silme hatası:", error);
-      toast({
-        title: "Hata",
-        description: "Mesajlar silinirken hata oluştu",
-        variant: "destructive",
-      });
-      // Hata olsa bile chat'i kapat
-      setIsOpen(false);
-    } finally {
-      setLoading(false);
-    }
+  const handleCloseChat = () => {
+    // Sadece lokal state'i temizle ve chat'i kapat
+    // Mesajlar veritabanında kalır, admin panelinde görülmeye devam eder
+    setMessages([]);
+    setMessage("");
+    setShowImageUpload(false);
+    setIsOpen(false);
+    
+    toast({
+      title: "Sohbet Kapatıldı",
+      description: "Chat penceresi temizlendi",
+    });
   };
 
   return (
