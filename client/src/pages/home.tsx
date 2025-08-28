@@ -156,9 +156,8 @@ export default function Home() {
                   📦 {t.home.recentItems}
                 </h2>
                 <p className="text-xl text-gray-600">
-                  {t.common.language === 'English' ? `Recently added ${latestItems.length} items` : 
-                   t.common.language === 'العربية' ? `تم إضافة ${latestItems.length} عناصر مؤخراً` :
-                   `Yeni eklenen ${latestItems.length} ilan`}
+                  {t.home.recentItemsCount} {latestItems.length} {t.common.language === 'English' ? 'items' : 
+                   t.common.language === 'العربية' ? 'عناصر' : 'ilan'}
                 </p>
               </div>
               <Button 
@@ -236,9 +235,7 @@ export default function Home() {
               {t.home.howItWorks}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              {t.common.language === 'English' ? 'Trade in 4 easy steps' : 
-               t.common.language === 'العربية' ? 'التبادل في 4 خطوات سهلة' :
-               '4 adımda takas yapın'}
+              {t.home.stepsSubtitle}
             </p>
           </div>
 

@@ -128,7 +128,9 @@ export const translations = {
       },
       recentItems: "Son İlanlar",
       noRecentItems: "Henüz ilan bulunmuyor",
-      loginToSeeMore: "Daha fazla görmek için giriş yapın"
+      loginToSeeMore: "Daha fazla görmek için giriş yapın",
+      stepsSubtitle: "4 adımda takas yapın",
+      recentItemsCount: "Yeni eklenen"
     }
   },
   en: {
@@ -259,8 +261,10 @@ export const translations = {
         diger: "Other"
       },
       recentItems: "Recent Items",
-      noRecentItems: "No items found yet",
-      loginToSeeMore: "Login to see more"
+      noRecentItems: "No items found yet", 
+      loginToSeeMore: "Login to see more",
+      stepsSubtitle: "Trade in 4 easy steps",
+      recentItemsCount: "Recently added"
     }
   },
   ar: {
@@ -392,7 +396,9 @@ export const translations = {
       },
       recentItems: "العناصر الحديثة",
       noRecentItems: "لم يتم العثور على عناصر بعد",
-      loginToSeeMore: "سجل الدخول لترى المزيد"
+      loginToSeeMore: "سجل الدخول لترى المزيد",
+      stepsSubtitle: "التبادل في 4 خطوات سهلة",
+      recentItemsCount: "تم إضافة مؤخراً"
     }
   }
 };
