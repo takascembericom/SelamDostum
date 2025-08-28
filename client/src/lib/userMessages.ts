@@ -305,12 +305,19 @@ export const subscribeToConversationMessages = (
       } as UserMessage);
     });
     
-    // Sort messages by timestamp/createdAt in chronological order
+    // Sort messages by timestamp/createdAt in chronological order (oldest first)
     const sortedMessages = messages.sort((a, b) => {
       const aTime = a.timestamp || a.createdAt;
       const bTime = b.timestamp || b.createdAt;
       return aTime.getTime() - bTime.getTime();
     });
+    
+    console.log("Sorted messages for UI:", sortedMessages.map(m => ({
+      text: m.text,
+      fromUserId: m.fromUserId,
+      createdAt: m.createdAt,
+      timestamp: m.timestamp
+    })));
     
     callback(sortedMessages);
   }, (error) => {
