@@ -129,8 +129,11 @@ export default function Home() {
           <h1 className="text-3xl md:text-4xl font-bold mb-4" data-testid="title-hero">
             Güvenli Takas Platformu
           </h1>
+          <p className="text-xl md:text-2xl mb-4 font-semibold" data-testid="welcome-text">
+            Takas Çemberine Hoş Geldiniz
+          </p>
           <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto opacity-90" data-testid="description-hero">
-            Eşyalarınızı güvenle takas edin
+            Sizde 4 kolay adımda üye olarak ilk ilanınızı verin
           </p>
         </div>
       </section>
