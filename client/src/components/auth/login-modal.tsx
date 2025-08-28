@@ -138,7 +138,11 @@ export function LoginModal({ open, onClose, onSwitchToRegister }: LoginModalProp
                       <Input 
                         type="email" 
                         placeholder="ornek@email.com" 
-                        {...field} 
+                        value={field.value}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        autoComplete="email"
                         data-testid="input-reset-email"
                       />
                     </FormControl>
