@@ -131,6 +131,31 @@ export const translations = {
       loginToSeeMore: "Daha fazla görmek için giriş yapın",
       stepsSubtitle: "4 adımda takas yapın",
       recentItemsCount: "Yeni eklenen"
+    },
+    categories: {
+      all: "Tümü",
+      elektronik: "Elektronik",
+      mobilya: "Mobilya",
+      giyim: "Giyim",
+      kitap: "Kitap",
+      oyuncak: "Oyuncak",
+      spor: "Spor",
+      beyaz_esya: "Beyaz Eşya",
+      otomobil: "Otomobil",
+      araba: "Araba",
+      araba_yedek_parca: "Araba Yedek Parça",
+      araba_group: "Araba & Yedek Parça", 
+      tasinmazlar: "Taşınmazlar",
+      teknolojik_urunler: "Teknolojik Ürünler",
+      diger: "Diğer"
+    },
+    conditions: {
+      all: "Tümü",
+      yeni: "Yeni",
+      kullanilmis: "Kullanılmış",
+      orta: "Orta",
+      cok_iyi: "Çok İyi",
+      kusurlu: "Kusurlu"
     }
   },
   en: {
@@ -265,6 +290,31 @@ export const translations = {
       loginToSeeMore: "Login to see more",
       stepsSubtitle: "Trade in 4 easy steps",
       recentItemsCount: "Recently added"
+    },
+    categories: {
+      all: "All",
+      elektronik: "Electronics",
+      mobilya: "Furniture",
+      giyim: "Clothing",
+      kitap: "Books",
+      oyuncak: "Toys",
+      spor: "Sports",
+      beyaz_esya: "Home Appliances",
+      otomobil: "Automotive",
+      araba: "Cars",
+      araba_yedek_parca: "Car Parts",
+      araba_group: "Cars & Parts",
+      tasinmazlar: "Real Estate",
+      teknolojik_urunler: "Technology Products",
+      diger: "Other"
+    },
+    conditions: {
+      all: "All",
+      yeni: "New",
+      kullanilmis: "Used",
+      orta: "Fair",
+      cok_iyi: "Very Good",
+      kusurlu: "Damaged"
     }
   },
   ar: {
@@ -399,6 +449,31 @@ export const translations = {
       loginToSeeMore: "سجل الدخول لترى المزيد",
       stepsSubtitle: "التبادل في 4 خطوات سهلة",
       recentItemsCount: "تم إضافة مؤخراً"
+    },
+    categories: {
+      all: "الكل",
+      elektronik: "الإلكترونيات",
+      mobilya: "الأثاث",
+      giyim: "الملابس",
+      kitap: "الكتب",
+      oyuncak: "الألعاب",
+      spor: "الرياضة",
+      beyaz_esya: "الأجهزة المنزلية",
+      otomobil: "السيارات",
+      araba: "السيارات",
+      araba_yedek_parca: "قطع غيار السيارات",
+      araba_group: "السيارات وقطع الغيار",
+      tasinmazlar: "العقارات",
+      teknolojik_urunler: "المنتجات التكنولوجية",
+      diger: "أخرى"
+    },
+    conditions: {
+      all: "الكل",
+      yeni: "جديد",
+      kullanilmis: "مستعمل",
+      orta: "متوسط",
+      cok_iyi: "جيد جداً",
+      kusurlu: "معطوب"
     }
   }
 };

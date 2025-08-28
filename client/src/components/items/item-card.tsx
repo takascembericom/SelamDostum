@@ -16,7 +16,9 @@ export function ItemCard({ item, onViewDetails }: ItemCardProps) {
   const { t } = useLanguage();
   
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('tr-TR');
+    const locale = t.common.language === 'English' ? 'en-US' : 
+                  t.common.language === 'العربية' ? 'ar-SA' : 'tr-TR';
+    return new Date(date).toLocaleDateString(locale);
   };
 
   return (
@@ -35,7 +37,7 @@ export function ItemCard({ item, onViewDetails }: ItemCardProps) {
           variant="secondary"
           data-testid={`badge-condition-${item.id}`}
         >
-          {CONDITION_LABELS[item.condition]}
+          {t.conditions[item.condition as keyof typeof t.conditions] || item.condition}
         </Badge>
       </div>
       
@@ -45,7 +47,7 @@ export function ItemCard({ item, onViewDetails }: ItemCardProps) {
             #{item.itemNumber || '----'}
           </span>
           <Badge variant="outline" data-testid={`category-item-${item.id}`}>
-            {CATEGORY_LABELS[item.category as keyof typeof CATEGORY_LABELS] || item.category}
+            {t.categories[item.category as keyof typeof t.categories] || item.category}
           </Badge>
         </div>
         <div className="flex items-start justify-between mb-2">

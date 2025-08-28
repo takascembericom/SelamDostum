@@ -174,8 +174,11 @@ export default function Items() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center" data-testid="error-state">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Hata</h2>
-          <p className="text-gray-600">Yükleme hatası.</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t.common.error}</h2>
+          <p className="text-gray-600">
+            {t.common.language === 'English' ? 'Loading error.' : 
+             t.common.language === 'العربية' ? 'خطأ في التحميل.' : 'Yükleme hatası.'}
+          </p>
         </div>
       </div>
     );
@@ -223,14 +226,17 @@ export default function Items() {
                     <SelectValue placeholder={t.items.category} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">{t.common.language === 'English' ? 'All' : t.common.language === 'العربية' ? 'الكل' : 'Tümü'}</SelectItem>
-                    <SelectItem value="araba_group">🚗 Araba & Yedek Parça</SelectItem>
-                    <SelectItem value="tasinmazlar">🏡 Taşınmazlar</SelectItem>
-                    {Object.entries(CATEGORY_LABELS).filter(([key]) => 
-                      !['araba', 'araba_yedek_parca', 'tasinmazlar'].includes(key)
-                    ).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>{label}</SelectItem>
-                    ))}
+                    <SelectItem value="all">{t.categories.all}</SelectItem>
+                    <SelectItem value="araba_group">🚗 {t.categories.araba_group}</SelectItem>
+                    <SelectItem value="tasinmazlar">🏡 {t.categories.tasinmazlar}</SelectItem>
+                    <SelectItem value="elektronik">📱 {t.categories.elektronik}</SelectItem>
+                    <SelectItem value="mobilya">🪑 {t.categories.mobilya}</SelectItem>
+                    <SelectItem value="giyim">👕 {t.categories.giyim}</SelectItem>
+                    <SelectItem value="kitap">📚 {t.categories.kitap}</SelectItem>
+                    <SelectItem value="oyuncak">🧸 {t.categories.oyuncak}</SelectItem>
+                    <SelectItem value="spor">⚽ {t.categories.spor}</SelectItem>
+                    <SelectItem value="beyaz_esya">🏠 {t.categories.beyaz_esya}</SelectItem>
+                    <SelectItem value="diger">📦 {t.categories.diger}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -240,10 +246,12 @@ export default function Items() {
                     <SelectValue placeholder={t.items.condition} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">{t.common.language === 'English' ? 'All Conditions' : t.common.language === 'العربية' ? 'جميع الحالات' : 'Tüm Durumlar'}</SelectItem>
-                    {Object.entries(CONDITION_LABELS).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>{label}</SelectItem>
-                    ))}
+                    <SelectItem value="all">{t.conditions.all}</SelectItem>
+                    <SelectItem value="yeni">{t.conditions.yeni}</SelectItem>
+                    <SelectItem value="kullanilmis">{t.conditions.kullanilmis}</SelectItem>
+                    <SelectItem value="orta">{t.conditions.orta}</SelectItem>
+                    <SelectItem value="cok_iyi">{t.conditions.cok_iyi}</SelectItem>
+                    <SelectItem value="kusurlu">{t.conditions.kusurlu}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -254,7 +262,9 @@ export default function Items() {
         {/* Results */}
         <div className="mb-4 flex items-center justify-between">
           <p className="text-gray-600" data-testid="text-results-count">
-            {isLoading ? 'Yükleniyor...' : `${items.length} ilan bulundu`}
+            {isLoading ? t.common.loading : 
+             `${items.length} ${t.common.language === 'English' ? 'items found' : 
+              t.common.language === 'العربية' ? 'عناصر موجودة' : 'ilan bulundu'}`}
           </p>
         </div>
 
