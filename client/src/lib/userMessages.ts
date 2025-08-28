@@ -312,13 +312,6 @@ export const subscribeToConversationMessages = (
       return aTime.getTime() - bTime.getTime();
     });
     
-    console.log("Sorted messages for UI:", sortedMessages.map(m => ({
-      text: m.text,
-      fromUserId: m.fromUserId,
-      createdAt: m.createdAt,
-      timestamp: m.timestamp
-    })));
-    
     callback(sortedMessages);
   }, (error) => {
     console.error("subscribeToConversationMessages hatası:", error);
