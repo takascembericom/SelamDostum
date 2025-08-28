@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Star } from "lucide-react";
 import { CONDITION_LABELS, CATEGORY_LABELS } from "@shared/schema";
 import { Link } from "wouter";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ItemCardProps {
   item: Item;
@@ -12,6 +13,8 @@ interface ItemCardProps {
 }
 
 export function ItemCard({ item, onViewDetails }: ItemCardProps) {
+  const { t } = useLanguage();
+  
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('tr-TR');
   };
@@ -86,7 +89,7 @@ export function ItemCard({ item, onViewDetails }: ItemCardProps) {
             onClick={() => onViewDetails(item)}
             data-testid={`button-details-${item.id}`}
           >
-            Detaylar
+            {t.common.view}
           </Button>
         </div>
       </CardContent>

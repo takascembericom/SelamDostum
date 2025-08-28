@@ -162,7 +162,7 @@ export default function Home() {
                 data-testid="button-view-all-items"
               >
                 <Link href="/items">
-                  Tümünü Gör
+                  {t.common.viewAll}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>
               </Button>
@@ -197,7 +197,7 @@ export default function Home() {
                     data-testid="button-view-all-mobile"
                   >
                     <Link href="/items">
-                      Tümünü Gör
+                      {t.common.viewAll}
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Link>
                   </Button>
@@ -208,12 +208,12 @@ export default function Home() {
                 <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                   <span className="text-gray-400 text-2xl">📦</span>
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-2">Henüz ilan yok</h3>
-                <p className="text-gray-500 mb-6">İlk ilanınızı ekleyerek başlayın!</p>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">{t.home.noRecentItems}</h3>
+                <p className="text-gray-500 mb-6">{t.items.addItem}</p>
                 <Button asChild>
                   <Link href="/add-item">
                     <Plus className="h-4 w-4 mr-2" />
-                    İlan Ekle
+                    {t.items.addItem}
                   </Link>
                 </Button>
               </div>
@@ -227,10 +227,12 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="title-how-it-works">
-              Nasıl Çalışır?
+              {t.home.howItWorks}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              4 adımda takas yapın
+              {t.common.language === 'English' ? 'Trade in 4 easy steps' : 
+               t.common.language === 'العربية' ? 'التبادل في 4 خطوات سهلة' :
+               '4 adımda takas yapın'}
             </p>
           </div>
 
@@ -257,9 +259,15 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="title-testimonials">
-              Kullanıcı Yorumları
+              {t.common.language === 'English' ? 'User Reviews' : 
+               t.common.language === 'العربية' ? 'آراء المستخدمين' :
+               'Kullanıcı Yorumları'}
             </h2>
-            <p className="text-xl text-gray-600">Mutlu kullanıcılarımızdan yorumlar</p>
+            <p className="text-xl text-gray-600">
+              {t.common.language === 'English' ? 'Comments from our happy users' : 
+               t.common.language === 'العربية' ? 'تعليقات من مستخدمينا السعداء' :
+               'Mutlu kullanıcılarımızdan yorumlar'}
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -295,11 +303,12 @@ export default function Home() {
       <section className="py-20 bg-gradient-to-r from-primary to-green-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6" data-testid="title-cta">
-            Hemen Başla!
+            {t.home.getStarted}
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Ücretsiz kayıt ol ve binlerce ilan arasından seç. 
-            İlk takas özel indirimli!
+            {t.common.language === 'English' ? 'Register for free and choose from thousands of listings. First trade with special discount!' : 
+             t.common.language === 'العربية' ? 'سجل مجاناً واختر من آلاف الإعلانات. أول تبادل بخصم خاص!' :
+             'Ücretsiz kayıt ol ve binlerce ilan arasından seç. İlk takas özel indirimli!'}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {!user ? (
@@ -309,7 +318,7 @@ export default function Home() {
                 data-testid="button-cta-register"
               >
                 <UserPlus className="h-5 w-5 mr-2" />
-                Ücretsiz Kayıt Ol
+                {t.auth.register}
               </Button>
             ) : (
               <Button 
@@ -319,7 +328,9 @@ export default function Home() {
               >
                 <Link href="/add-item">
                   <Plus className="h-5 w-5 mr-2" />
-                  İlk İlanını Ekle
+                  {t.common.language === 'English' ? 'Add Your First Item' : 
+                   t.common.language === 'العربية' ? 'أضف عنصرك الأول' :
+                   'İlk İlanını Ekle'}
                 </Link>
               </Button>
             )}

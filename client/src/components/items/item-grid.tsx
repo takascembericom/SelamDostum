@@ -1,5 +1,6 @@
 import { Item } from "@shared/schema";
 import { ItemCard } from "./item-card";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ItemGridProps {
   items: Item[];
@@ -7,14 +8,16 @@ interface ItemGridProps {
 }
 
 export function ItemGrid({ items, onViewDetails }: ItemGridProps) {
+  const { t } = useLanguage();
+  
   if (items.length === 0) {
     return (
       <div className="text-center py-16" data-testid="empty-items">
         <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
           <span className="text-gray-400 text-2xl">📦</span>
         </div>
-        <h3 className="text-xl font-medium text-gray-900 mb-2">Henüz ilan yok</h3>
-        <p className="text-gray-500">İlk ilanınızı ekleyerek başlayın!</p>
+        <h3 className="text-xl font-medium text-gray-900 mb-2">{t.home.noRecentItems}</h3>
+        <p className="text-gray-500">{t.items.addItem}</p>
       </div>
     );
   }
