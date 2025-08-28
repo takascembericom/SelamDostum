@@ -114,14 +114,18 @@ export default function Home() {
             />
           </div>
           
-          <h1 className="text-3xl md:text-4xl font-bold mb-4" data-testid="title-hero">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight" data-testid="title-hero">
             {t.home.welcomeTitle}
           </h1>
-          <p className="text-xl md:text-2xl mb-4 font-semibold" data-testid="welcome-text">
+          <p className="text-lg sm:text-xl md:text-2xl mb-4 font-semibold" data-testid="welcome-text">
             {t.home.welcomeSubtitle}
           </p>
-          <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto opacity-90" data-testid="description-hero">
-            {t.home.heroDescription}
+          <p className="text-sm sm:text-base md:text-lg mb-8 max-w-xl mx-auto opacity-90 px-4" data-testid="description-hero">
+            {t.common.language === 'English' ? 
+              'Exchange unused items for what you need. Eco-friendly, economic & social trading platform.' : 
+             t.common.language === 'العربية' ? 
+              'استبدل العناصر غير المستخدمة بما تحتاجه. منصة تداول صديقة للبيئة واقتصادية واجتماعية.' :
+              'Kullanmadığınız eşyalarınızı başkalarının ihtiyaç duyduğu ürünlerle değiştirin. Çevreye duyarlı, ekonomik ve sosyal bir takas platformu.'}
           </p>
         </div>
       </section>
