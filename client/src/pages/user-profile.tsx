@@ -37,7 +37,9 @@ export default function UserProfile() {
   const queryClient = useQueryClient();
   
   console.log("UserProfile - userId from URL:", userId);
-  console.log("UserProfile - current profile:", profile?.uid);
+  console.log("UserProfile - current profile:", profile?.id);
+  console.log("UserProfile - userId type:", typeof userId);
+  console.log("UserProfile - userId truthy?", !!userId);
 
   // Function to update user rating statistics
   const updateUserRatingStats = async (userId: string) => {
