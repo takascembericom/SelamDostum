@@ -148,6 +148,7 @@ const baseUserMessageSchema = z.object({
   conversationId: z.string(),
   isRead: z.boolean().default(false),
   timestamp: z.any(),
+  deletedBy: z.array(z.string()).optional().default([]), // Array of user IDs who deleted this message
   createdAt: z.date(),
 });
 

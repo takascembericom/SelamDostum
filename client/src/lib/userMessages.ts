@@ -17,6 +17,23 @@ import {
 import { db } from "@/lib/firebase";
 import { UserMessage, InsertUserMessage, Conversation, InsertConversation } from "@shared/schema";
 
+// Helper function to get current user ID from auth
+const getCurrentUserId = (): string | null => {
+  try {
+    if (typeof window !== 'undefined') {
+      // Get from Firebase auth or context - for now check localStorage
+      const user = localStorage.getItem('currentUser');
+      if (user) {
+        const parsed = JSON.parse(user);
+        return parsed.id || parsed.uid || null;
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+
 // Generate conversation ID from two user IDs (always same order)
 export const generateConversationId = (userId1: string, userId2: string): string => {
   return [userId1, userId2].sort().join('_');
@@ -212,9 +229,10 @@ export const markMessagesAsRead = async (conversationId: string, userId: string)
   }
 };
 
-// Delete conversation for a user (hide it)
+// Delete conversation for a user (hide it and mark messages as deleted)
 export const deleteConversationForUser = async (conversationId: string, userId: string): Promise<void> => {
   try {
+    // Mark conversation as deleted for this user
     const conversationRef = doc(db, "conversations", conversationId);
     const conversationDoc = await getDoc(conversationRef);
     
@@ -228,6 +246,29 @@ export const deleteConversationForUser = async (conversationId: string, userId: 
         updatedAt: Timestamp.now(),
       });
     }
+
+    // Mark all messages in this conversation as deleted for this user
+    const messagesQuery = query(
+      collection(db, "userMessages"),
+      where("conversationId", "==", conversationId)
+    );
+
+    const messagesSnapshot = await getDocs(messagesQuery);
+    const deletePromises = messagesSnapshot.docs.map(messageDoc => {
+      const messageData = messageDoc.data();
+      const deletedBy = messageData.deletedBy || [];
+      
+      // Add userId to deletedBy array if not already there
+      if (!deletedBy.includes(userId)) {
+        deletedBy.push(userId);
+        return updateDoc(doc(db, "userMessages", messageDoc.id), { 
+          deletedBy: deletedBy 
+        });
+      }
+      return Promise.resolve();
+    });
+
+    await Promise.all(deletePromises);
   } catch (error: any) {
     throw new Error(error.message || "Konuşma silinemedi");
   }
@@ -236,7 +277,8 @@ export const deleteConversationForUser = async (conversationId: string, userId: 
 // Listen to conversation messages (real-time)
 export const subscribeToConversationMessages = (
   conversationId: string,
-  callback: (messages: UserMessage[]) => void
+  callback: (messages: UserMessage[]) => void,
+  currentUserId?: string
 ) => {
   // Remove orderBy to avoid Firebase index requirement
   const q = query(
@@ -245,24 +287,31 @@ export const subscribeToConversationMessages = (
   );
 
   return onSnapshot(q, (snapshot) => {
-    console.log("subscribeToConversationMessages tetiklendi, conversation:", conversationId, "mesaj sayısı:", snapshot.docs.length);
     const messages: UserMessage[] = [];
     snapshot.forEach((doc) => {
       const data = doc.data();
-      console.log("Mesaj data:", doc.id, data);
+      
+      // Skip messages that are deleted by the current user
+      const userId = currentUserId || getCurrentUserId();
+      if (userId && data.deletedBy && Array.isArray(data.deletedBy) && data.deletedBy.includes(userId)) {
+        return; // Skip this message as it was deleted by the user
+      }
+      
       messages.push({
         ...data,
         id: doc.id,
         createdAt: data.createdAt.toDate(),
+        timestamp: data.timestamp ? data.timestamp.toDate() : data.createdAt.toDate(),
       } as UserMessage);
     });
     
-    // Sort messages by createdAt in memory
-    const sortedMessages = messages.sort((a, b) => 
-      a.createdAt.getTime() - b.createdAt.getTime()
-    );
+    // Sort messages by timestamp/createdAt in chronological order
+    const sortedMessages = messages.sort((a, b) => {
+      const aTime = a.timestamp || a.createdAt;
+      const bTime = b.timestamp || b.createdAt;
+      return aTime.getTime() - bTime.getTime();
+    });
     
-    console.log("Sorted messages callback çağrılıyor, mesaj sayısı:", sortedMessages.length);
     callback(sortedMessages);
   }, (error) => {
     console.error("subscribeToConversationMessages hatası:", error);

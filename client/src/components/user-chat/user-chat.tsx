@@ -83,16 +83,14 @@ export function UserChat({
   useEffect(() => {
     if (!conversationId) return;
 
-    console.log("UserChat: Mesajlara subscribe olunuyor, conversationId:", conversationId);
     const unsubscribe = subscribeToConversationMessages(conversationId, (newMessages) => {
-      console.log("UserChat: Yeni mesajlar alındı:", newMessages.length, newMessages);
       setMessages(newMessages);
       
       // Mark messages as read when they arrive
       if (profile?.id) {
         markMessagesAsRead(conversationId, profile.id).catch(console.error);
       }
-    });
+    }, profile?.id);
 
     // Also mark as read when conversation first opens
     if (profile?.id) {
@@ -115,6 +113,7 @@ export function UserChat({
         conversationId,
         isRead: false,
         timestamp: new Date(),
+        deletedBy: [],
       };
 
       await sendUserMessage(messageData);
@@ -143,6 +142,7 @@ export function UserChat({
         conversationId,
         isRead: false,
         timestamp: new Date(),
+        deletedBy: [],
       };
 
       await sendUserMessage(messageData);
