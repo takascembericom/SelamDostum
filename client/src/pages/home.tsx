@@ -28,24 +28,9 @@ export default function Home() {
     queryKey: ['homepage-items'],
     queryFn: async (): Promise<Item[]> => {
       try {
-        const q = query(
-          collection(db, 'items'),
-          where('status', '==', 'aktif'),
-          limit(20)
-        );
-
-        const querySnapshot = await getDocs(q);
-        const itemsData = querySnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            ...data,
-            id: doc.id,
-            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
-            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
-          } as Item;
-        }).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-
-        return itemsData;
+        const response = await fetch('/api/items');
+        const items = await response.json();
+        return items.slice(0, 20); // Limit to 20 items for homepage
       } catch (error) {
         console.error('Error fetching homepage items:', error);
         return [];
