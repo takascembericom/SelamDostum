@@ -165,6 +165,10 @@ export default function UserProfile() {
       console.log("Mesaj gönderilecek:", { from: profile.id, to: userId });
       const conversationId = await createOrGetConversation(profile.id, userId);
       console.log("Conversation ID:", conversationId);
+      
+      // Conversation oluşturulduktan sonra kısa bir bekleme
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       setLocation(`/messages?conversation=${conversationId}`);
     } catch (error: any) {
       console.error("Mesaj gönderme hatası:", error);

@@ -50,6 +50,7 @@ export function ConversationsList({ onSelectConversation, selectedConversationId
     
     if (conversationId && conversations.length > 0) {
       console.log("URL'den conversation aranıyor:", conversationId, "Mevcut conversations:", conversations.length, "SelectedId:", selectedConversationId);
+      console.log("Conversations list:", conversations.map(c => ({ id: c.id, otherUserId: c.otherUserId, otherUserName: c.otherUserName })));
       
       // Only auto-select if not already selected or if it's a different conversation
       if (!selectedConversationId || selectedConversationId !== conversationId) {
@@ -59,9 +60,12 @@ export function ConversationsList({ onSelectConversation, selectedConversationId
           console.log("Conversation bulundu ve seçiliyor (mobil/masaüstü):", conversation);
           onSelectConversation(conversation);
         } else {
-          console.log("Conversation bulunamadı:", conversationId);
+          console.log("Conversation bulunamadı. Aranan ID:", conversationId);
+          console.log("Mevcut conversation ID'leri:", conversations.map(c => c.id));
         }
       }
+    } else if (conversationId && conversations.length === 0) {
+      console.log("Conversations henüz yüklenmemiş, conversation ID var:", conversationId);
     }
   }, [location, conversations, selectedConversationId, onSelectConversation]);
 
