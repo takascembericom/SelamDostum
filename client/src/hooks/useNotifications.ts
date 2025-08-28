@@ -21,10 +21,10 @@ export function useNotifications() {
 
     // Listen to notifications for the current user
     const notificationsRef = collection(db, 'notifications');
+    // Simplified query without orderBy to avoid index requirement
     const q = query(
       notificationsRef,
-      where('userId', '==', profile.id),
-      orderBy('createdAt', 'desc')
+      where('userId', '==', profile.id)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -45,6 +45,9 @@ export function useNotifications() {
           unreadNotifications++;
         }
       });
+      
+      // Sort notifications by date in code since we can't use orderBy without index
+      notificationList.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
       
       setNotifications(notificationList);
       setUnreadCount(unreadNotifications);

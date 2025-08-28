@@ -90,10 +90,10 @@ export const createTradeOffer = async (tradeOfferData: InsertTradeOffer): Promis
 export const getSentTradeOffers = async (userId: string): Promise<TradeOfferWithItems[]> => {
   try {
     console.log("Fetching sent trade offers for user:", userId);
+    // Simplified query without orderBy to avoid index requirement
     const q = query(
       collection(db, "tradeOffers"),
-      where("fromUserId", "==", userId),
-      orderBy("createdAt", "desc")
+      where("fromUserId", "==", userId)
     );
 
     const querySnapshot = await getDocs(q);
@@ -115,6 +115,9 @@ export const getSentTradeOffers = async (userId: string): Promise<TradeOfferWith
       tradeOffers.push(tradeOffer);
     }
 
+    // Sort by date in code since we can't use orderBy without index
+    tradeOffers.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
     console.log("Returning", tradeOffers.length, "enriched sent offers");
     return tradeOffers;
   } catch (error: any) {
@@ -127,10 +130,10 @@ export const getSentTradeOffers = async (userId: string): Promise<TradeOfferWith
 export const getReceivedTradeOffers = async (userId: string): Promise<TradeOfferWithItems[]> => {
   try {
     console.log("Fetching received trade offers for user:", userId);
+    // Simplified query without orderBy to avoid index requirement
     const q = query(
       collection(db, "tradeOffers"),
-      where("toUserId", "==", userId),
-      orderBy("createdAt", "desc")
+      where("toUserId", "==", userId)
     );
 
     const querySnapshot = await getDocs(q);
@@ -151,6 +154,9 @@ export const getReceivedTradeOffers = async (userId: string): Promise<TradeOffer
       await enrichTradeOfferWithItemDetails(tradeOffer);
       tradeOffers.push(tradeOffer);
     }
+
+    // Sort by date in code since we can't use orderBy without index
+    tradeOffers.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
     console.log("Returning", tradeOffers.length, "enriched received offers");
     return tradeOffers;

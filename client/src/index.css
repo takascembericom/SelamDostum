@@ -137,3 +137,23 @@ body.modal-open {
     min-width: 44px;
   }
 }
+
+/* Prevent Radix Portal DOM errors */
+[data-radix-popper-content-wrapper] {
+  z-index: 50;
+}
+
+/* More robust portal error prevention */
+.radix-portal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.radix-portal-container > * {
+  pointer-events: auto;
+}
