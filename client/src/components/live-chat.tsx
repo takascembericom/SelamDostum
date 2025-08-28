@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, X, Send, Minimize2, Camera, Image } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp, getDocs, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { ImageUpload } from "@/components/image-upload";
@@ -129,6 +129,47 @@ export function LiveChat() {
     }
   };
 
+  const handleCloseChat = async () => {
+    if (!user?.uid) {
+      setIsOpen(false);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Kullanıcının tüm mesajlarını sil
+      const q = query(
+        collection(db, 'chatMessages'),
+        where('userId', '==', user.uid)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
+      
+      await Promise.all(deletePromises);
+      
+      // Mesajları temizle ve chat'i kapat
+      setMessages([]);
+      setIsOpen(false);
+      
+      toast({
+        title: "Sohbet Temizlendi",
+        description: "Tüm mesaj geçmişi silindi",
+      });
+    } catch (error: any) {
+      console.error("Mesaj silme hatası:", error);
+      toast({
+        title: "Hata",
+        description: "Mesajlar silinirken hata oluştu",
+        variant: "destructive",
+      });
+      // Hata olsa bile chat'i kapat
+      setIsOpen(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {/* Chat Bubble */}
@@ -179,8 +220,9 @@ export function LiveChat() {
                   variant="ghost"
                   size="sm"
                   className="h-8 w-8 p-0 text-white hover:bg-blue-700"
-                  onClick={() => setIsOpen(false)}
+                  onClick={handleCloseChat}
                   data-testid="button-close-chat"
+                  disabled={loading}
                 >
                   <X className="h-4 w-4" />
                 </Button>

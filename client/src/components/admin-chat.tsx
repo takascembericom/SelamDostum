@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, where, deleteDoc, doc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, where, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { MessageCircle, Send, User, Camera, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -122,6 +122,39 @@ export function AdminChat() {
       });
     } finally {
       setDeletingMessageId(null);
+    }
+  };
+
+  const handleDeleteAllMessages = async (userId: string) => {
+    if (!userId || loading) return;
+
+    setLoading(true);
+    try {
+      const q = query(
+        collection(db, 'chatMessages'),
+        where('userId', '==', userId)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
+      
+      await Promise.all(deletePromises);
+      
+      toast({
+        title: "Tüm Mesajlar Silindi",
+        description: "Kullanıcının tüm sohbet geçmişi silindi",
+      });
+      
+      // Seçili kullanıcıyı sıfırla
+      setSelectedUserId(null);
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: "Mesajlar silinirken hata oluştu",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -244,9 +277,23 @@ export function AdminChat() {
       {/* Chat Messages */}
       <Card className="lg:col-span-2">
         <CardHeader>
-          <CardTitle>
-            {selectedConversation ? `${selectedConversation.userName} ile Sohbet` : 'Bir konuşma seçin'}
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>
+              {selectedConversation ? `${selectedConversation.userName} ile Sohbet` : 'Bir konuşma seçin'}
+            </CardTitle>
+            {selectedConversation && (
+              <Button
+                onClick={() => handleDeleteAllMessages(selectedConversation.userId)}
+                disabled={loading}
+                variant="destructive"
+                size="sm"
+                className="ml-2"
+              >
+                <Trash2 className="h-4 w-4 mr-1" />
+                Tüm Sohbeti Sil
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="flex flex-col h-[500px] p-0">
           {selectedConversation ? (
