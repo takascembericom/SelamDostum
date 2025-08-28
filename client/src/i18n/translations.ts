@@ -160,6 +160,80 @@ export const translations = {
       step3Description: "İstediğiniz ilanı arayın",
       step4Title: "Takas Yap",
       step4Description: "Teklif gönderin ve takas yapın",
+      // Detay bilgileri
+      howItWorksDetail: {
+        title: "Nasıl Çalışır",
+        description: "Eşyalarını ücretsiz ilanla, takas teklifleri al ve kolayca değişim yap."
+      },
+      securityDetail: {
+        title: "Güvenlik",
+        description: "Kullanıcı bilgilerin ve işlemlerin güvenli altyapıyla korunur."
+      },
+      commissionDetail: {
+        title: "Komisyon Oranları", 
+        description: "Takas işlemlerinde kesinlikle komisyon alınmaz."
+      },
+      mobileAppDetail: {
+        title: "Mobil Uygulama",
+        description: "Takas Çemberi'ni dilediğin an cebinden kullanabilirsin."
+      },
+      helpCenterDetail: {
+        title: "Yardım Merkezi",
+        description: "Sık sorulan sorular ve rehberlerle sorunlarını kolayca çöz."
+      },
+      contactDetail: {
+        title: "İletişim", 
+        description: "Bizimle mail ya da canlı destek mesajlaşma ile doğrudan iletişime geçebilirsin."
+      },
+      liveSupportDetail: {
+        title: "Canlı Destek",
+        description: "7/24 anlık sohbet desteği ile her soruna hızlı çözüm bul."
+      },
+      faqDetail: {
+        title: "SSS (Sıkça Sorulan Sorular)",
+        items: {
+          q1: {
+            question: "Nasıl üye olabilirim?",
+            answer: "E-posta adresinle ücretsiz kayıt olabilirsin."
+          },
+          q2: {
+            question: "Takas yapmak ücretli mi?",
+            answer: "Hayır, tamamen ücretsizdir."
+          },
+          q3: {
+            question: "Komisyon alınıyor mu?",
+            answer: "Hayır, hiçbir işlemden komisyon alınmaz."
+          },
+          q4: {
+            question: "İlanımı nasıl eklerim?",
+            answer: "Profilinden \"İlan Ekle\" seçeneğini kullanarak kolayca ekleyebilirsin."
+          },
+          q5: {
+            question: "Kötü niyetli kullanıcıya rastlarsam ne olur?",
+            answer: "Şikayet edebilirsin, ekibimiz inceleyip gerekirse hesabı askıya alır."
+          },
+          q6: {
+            question: "Mobil uygulama var mı?",
+            answer: "Evet, Android ve iOS üzerinden indirebilirsin."
+          }
+        }
+      },
+      termsOfUseDetail: {
+        title: "Kullanım Şartları",
+        description: "Platformu kullanırken etik ve ahlak çerçevesinde ilerlemelisiniz. Şikayetler incelenir ve gerekli görüldüğü anda hesabınız askıya alınır."
+      },
+      privacyPolicyDetail: {
+        title: "Gizlilik Politikası", 
+        description: "Kişisel verilerin korunması bizim için önceliklidir. Ad, e-posta, telefon gibi bilgiler sadece hizmet sunumu için kullanılır ve üçüncü kişilerle izinsiz paylaşılmaz. Güvenlik için modern şifreleme ve veri koruma yöntemleri uygulanır. Kullanıcılar, istedikleri zaman hesaplarını silebilir ve verilerinin silinmesini talep edebilir."
+      },
+      kvkkDetail: {
+        title: "KVKK (Kişisel Verilerin Korunması Kanunu)",
+        description: "Toplanan kişisel veriler yalnızca platform hizmetlerinin yürütülmesi amacıyla kullanılır. Verilerin işlenme amacı, hukuki sebebi ve saklama süresi kullanıcılara şeffaf şekilde bildirilir. Kullanıcılar, kendi verilerine erişme, düzeltme, silme ve işlemeyi durdurma haklarına sahiptir. İlgili talepler kullanıcı destek birimine iletilebilir. KVKK kapsamında gerekli teknik ve idari güvenlik tedbirleri alınmaktadır."
+      },
+      cookiesDetail: {
+        title: "Çerezler",
+        description: "Site deneyimini geliştirmek için çerezler kullanılır. Çerezler sayesinde giriş bilgilerin hatırlanır, ilanlar kişiselleştirilir ve site performansı ölçülür. İsteyen kullanıcılar tarayıcı ayarlarından çerezleri kapatabilir."
+      },
       featuredItems: "Öne Çıkan İlanlar",
       browseByCategory: "Kategorilere Göz At",
       categories: {
@@ -366,6 +440,80 @@ export const translations = {
       step3Description: "Search for the item you want",
       step4Title: "Make Trade",
       step4Description: "Send offers and make trades",
+      // Detail information
+      howItWorksDetail: {
+        title: "How It Works",
+        description: "List your items for free, receive trade offers and easily exchange."
+      },
+      securityDetail: {
+        title: "Security",
+        description: "Your user information and transactions are protected with secure infrastructure."
+      },
+      commissionDetail: {
+        title: "Commission Rates", 
+        description: "No commission is charged on trade transactions."
+      },
+      mobileAppDetail: {
+        title: "Mobile App",
+        description: "Use Barter Circle from your pocket anytime you want."
+      },
+      helpCenterDetail: {
+        title: "Help Center",
+        description: "Easily solve your problems with frequently asked questions and guides."
+      },
+      contactDetail: {
+        title: "Contact", 
+        description: "Contact us directly via email or live support messaging."
+      },
+      liveSupportDetail: {
+        title: "Live Support",
+        description: "Find quick solutions to every problem with 24/7 instant chat support."
+      },
+      faqDetail: {
+        title: "FAQ (Frequently Asked Questions)",
+        items: {
+          q1: {
+            question: "How can I become a member?",
+            answer: "You can register for free with your email address."
+          },
+          q2: {
+            question: "Is trading paid?",
+            answer: "No, it's completely free."
+          },
+          q3: {
+            question: "Is commission charged?",
+            answer: "No, no commission is charged from any transaction."
+          },
+          q4: {
+            question: "How do I add my listing?",
+            answer: "You can easily add it using the \"Add Listing\" option from your profile."
+          },
+          q5: {
+            question: "What happens if I encounter a malicious user?",
+            answer: "You can report them, our team will review and suspend the account if necessary."
+          },
+          q6: {
+            question: "Is there a mobile app?",
+            answer: "Yes, you can download it from Android and iOS."
+          }
+        }
+      },
+      termsOfUseDetail: {
+        title: "Terms of Use",
+        description: "You must proceed within ethical and moral framework while using the platform. Complaints are reviewed and your account is suspended when deemed necessary."
+      },
+      privacyPolicyDetail: {
+        title: "Privacy Policy", 
+        description: "Protection of personal data is our priority. Information such as name, email, phone is used only for service provision and is not shared with third parties without permission. Modern encryption and data protection methods are applied for security. Users can delete their accounts anytime and request deletion of their data."
+      },
+      kvkkDetail: {
+        title: "GDPR (General Data Protection Regulation)",
+        description: "Personal data collected is used only for the execution of platform services. The purpose, legal basis and retention period of data processing are transparently communicated to users. Users have the right to access, correct, delete and stop processing their own data. Related requests can be submitted to user support unit. Necessary technical and administrative security measures are taken under GDPR."
+      },
+      cookiesDetail: {
+        title: "Cookies",
+        description: "Cookies are used to improve site experience. Thanks to cookies, your login information is remembered, listings are personalized and site performance is measured. Users who want can turn off cookies from browser settings."
+      },
       featuredItems: "Featured Items",
       browseByCategory: "Browse by Category",
       categories: {
@@ -573,6 +721,80 @@ export const translations = {
       step3Description: "ابحث عن العنصر الذي تريده",
       step4Title: "قم بالتداول",
       step4Description: "أرسل عروض وقم بالتداول",
+      // معلومات مفصلة
+      howItWorksDetail: {
+        title: "كيف يعمل",
+        description: "أدرج عناصرك مجاناً، واستقبل عروض التبادل وقم بالتبادل بسهولة."
+      },
+      securityDetail: {
+        title: "الأمان",
+        description: "معلومات المستخدم والمعاملات محمية بأساس أمني آمن."
+      },
+      commissionDetail: {
+        title: "معدلات العمولة", 
+        description: "لا يتم أخذ عمولة نهائياً في معاملات التبادل."
+      },
+      mobileAppDetail: {
+        title: "التطبيق المحمول",
+        description: "استخدم دائرة المقايضة من جيبك في أي وقت تريد."
+      },
+      helpCenterDetail: {
+        title: "مركز المساعدة",
+        description: "حل مشاكلك بسهولة مع الأسئلة الشائعة والأدلة."
+      },
+      contactDetail: {
+        title: "اتصل بنا", 
+        description: "تواصل معنا مباشرة عبر البريد الإلكتروني أو رسائل الدعم المباشر."
+      },
+      liveSupportDetail: {
+        title: "الدعم المباشر",
+        description: "اعثر على حلول سريعة لكل مشكلة مع دعم الدردشة الفوري 24/7."
+      },
+      faqDetail: {
+        title: "الأسئلة الشائعة",
+        items: {
+          q1: {
+            question: "كيف يمكنني أن أصبح عضواً؟",
+            answer: "يمكنك التسجيل مجاناً بعنوان بريدك الإلكتروني."
+          },
+          q2: {
+            question: "هل التداول مدفوع؟",
+            answer: "لا، إنه مجاني تماماً."
+          },
+          q3: {
+            question: "هل يتم أخذ عمولة؟",
+            answer: "لا، لا يتم أخذ عمولة من أي معاملة."
+          },
+          q4: {
+            question: "كيف أضيف إعلاني؟",
+            answer: "يمكنك إضافته بسهولة باستخدام خيار \"إضافة إعلان\" من ملفك الشخصي."
+          },
+          q5: {
+            question: "ماذا يحدث إذا واجهت مستخدماً خبيثاً؟",
+            answer: "يمكنك الإبلاغ عنه، سيراجع فريقنا ويعلق الحساب إذا لزم الأمر."
+          },
+          q6: {
+            question: "هل يوجد تطبيق محمول؟",
+            answer: "نعم، يمكنك تحميله من Android و iOS."
+          }
+        }
+      },
+      termsOfUseDetail: {
+        title: "شروط الاستخدام",
+        description: "يجب عليك المضي قدماً ضمن الإطار الأخلاقي والأدبي أثناء استخدام المنصة. يتم مراجعة الشكاوى ويتم تعليق حسابك عند الضرورة."
+      },
+      privacyPolicyDetail: {
+        title: "سياسة الخصوصية", 
+        description: "حماية البيانات الشخصية هي أولويتنا. المعلومات مثل الاسم والبريد الإلكتروني والهاتف تُستخدم فقط لتقديم الخدمة ولا يتم مشاركتها مع أطراف ثالثة بدون إذن. تُطبق طرق التشفير الحديثة وحماية البيانات للأمان. يمكن للمستخدمين حذف حساباتهم في أي وقت وطلب حذف بياناتهم."
+      },
+      kvkkDetail: {
+        title: "قانون حماية البيانات الشخصية",
+        description: "البيانات الشخصية المجمعة تُستخدم فقط لتنفيذ خدمات المنصة. يتم إبلاغ المستخدمين بشفافية عن غرض معالجة البيانات والأساس القانوني ومدة الاحتفاظ. للمستخدمين الحق في الوصول إلى بياناتهم الخاصة وتصحيحها وحذفها وإيقاف معالجتها. يمكن تقديم الطلبات ذات الصلة إلى وحدة دعم المستخدمين. يتم اتخاذ التدابير الأمنية التقنية والإدارية اللازمة في إطار قانون حماية البيانات الشخصية."
+      },
+      cookiesDetail: {
+        title: "ملفات تعريف الارتباط",
+        description: "تُستخدم ملفات تعريف الارتباط لتحسين تجربة الموقع. بفضل ملفات تعريف الارتباط، يتم تذكر معلومات تسجيل الدخول وتخصيص الإعلانات وقياس أداء الموقع. يمكن للمستخدمين الذين يريدون إيقاف ملفات تعريف الارتباط من إعدادات المتصفح."
+      },
       featuredItems: "العناصر المميزة",
       browseByCategory: "تصفح حسب الفئة",
       categories: {

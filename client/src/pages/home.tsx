@@ -6,7 +6,8 @@ import { db } from "@/lib/firebase";
 import { Item } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, UserPlus, Plus, ArrowRight, Star } from "lucide-react";
+import { Search, UserPlus, Plus, ArrowRight, Star, HelpCircle, Lock, Phone, Smartphone, Info, Scale, Cookie } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LoginModal } from "@/components/auth/login-modal";
@@ -273,6 +274,164 @@ export default function Home() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ ve Bilgilendirme Accordion Bölümü */}
+      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              {t.common.language === 'English' ? 'Frequently Asked Questions & Platform Information' : 
+               t.common.language === 'العربية' ? 'الأسئلة الشائعة ومعلومات المنصة' :
+               'Sık Sorulan Sorular ve Platform Bilgileri'}
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-400">
+              {t.common.language === 'English' ? 'Everything you need to know about Barter Circle' : 
+               t.common.language === 'العربية' ? 'كل ما تحتاج لمعرفته حول دائرة المقايضة' :
+               'Takas Çemberi hakkında bilmeniz gereken her şey'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Sol taraf - Platform Bilgileri */}
+            <div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                {t.common.language === 'English' ? 'Platform Information' : 
+                 t.common.language === 'العربية' ? 'معلومات المنصة' :
+                 'Platform Bilgileri'}
+              </h3>
+              <Accordion type="single" collapsible className="w-full space-y-3">
+                <AccordionItem value="how-it-works" className="border rounded-lg px-4">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <div className="flex items-center gap-3">
+                      <Info className="h-5 w-5 text-blue-600" />
+                      <span>{t.home.howItWorksDetail.title}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                    {t.home.howItWorksDetail.description}
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="security" className="border rounded-lg px-4">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <div className="flex items-center gap-3">
+                      <Lock className="h-5 w-5 text-green-600" />
+                      <span>{t.home.securityDetail.title}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                    {t.home.securityDetail.description}
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="commission" className="border rounded-lg px-4">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <div className="flex items-center gap-3">
+                      <Scale className="h-5 w-5 text-yellow-600" />
+                      <span>{t.home.commissionDetail.title}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                    {t.home.commissionDetail.description}
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="mobile-app" className="border rounded-lg px-4">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <div className="flex items-center gap-3">
+                      <Smartphone className="h-5 w-5 text-purple-600" />
+                      <span>{t.home.mobileAppDetail.title}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                    {t.home.mobileAppDetail.description}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+
+            {/* Sağ taraf - SSS */}
+            <div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                {t.home.faqDetail.title}
+              </h3>
+              <Accordion type="single" collapsible className="w-full space-y-3">
+                {Object.entries(t.home.faqDetail.items).map(([key, item]) => (
+                  <AccordionItem key={key} value={key} className="border rounded-lg px-4">
+                    <AccordionTrigger className="text-left hover:no-underline">
+                      <div className="flex items-center gap-3">
+                        <HelpCircle className="h-5 w-5 text-blue-600" />
+                        <span>{item.question}</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                      {item.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </div>
+
+          {/* Alt kısım - Hukuki Bilgiler */}
+          <div className="mt-12">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
+              {t.common.language === 'English' ? 'Legal Information' : 
+               t.common.language === 'العربية' ? 'المعلومات القانونية' :
+               'Hukuki Bilgiler'}
+            </h3>
+            <Accordion type="single" collapsible className="w-full max-w-4xl mx-auto space-y-3">
+              <AccordionItem value="terms" className="border rounded-lg px-4">
+                <AccordionTrigger className="text-left hover:no-underline">
+                  <div className="flex items-center gap-3">
+                    <Scale className="h-5 w-5 text-red-600" />
+                    <span>{t.home.termsOfUseDetail.title}</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                  {t.home.termsOfUseDetail.description}
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="privacy" className="border rounded-lg px-4">
+                <AccordionTrigger className="text-left hover:no-underline">
+                  <div className="flex items-center gap-3">
+                    <Lock className="h-5 w-5 text-green-600" />
+                    <span>{t.home.privacyPolicyDetail.title}</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                  {t.home.privacyPolicyDetail.description}
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="kvkk" className="border rounded-lg px-4">
+                <AccordionTrigger className="text-left hover:no-underline">
+                  <div className="flex items-center gap-3">
+                    <Info className="h-5 w-5 text-blue-600" />
+                    <span>{t.home.kvkkDetail.title}</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                  {t.home.kvkkDetail.description}
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="cookies" className="border rounded-lg px-4">
+                <AccordionTrigger className="text-left hover:no-underline">
+                  <div className="flex items-center gap-3">
+                    <Cookie className="h-5 w-5 text-orange-600" />
+                    <span>{t.home.cookiesDetail.title}</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                  {t.home.cookiesDetail.description}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
       </section>
