@@ -16,9 +16,7 @@ export function Footer() {
               <span className="text-2xl font-bold">Takas Çemberi</span>
             </div>
             <p className="text-gray-400 mb-6" data-testid="text-company-description">
-              {t.common.language === 'English' ? "Turkey's most trusted item exchange platform. Trade for a sustainable future!" : 
-               t.common.language === 'العربية' ? 'منصة تبادل العناصر الأكثر موثوقية في تركيا. التبادل من أجل مستقبل مستدام!' :
-               'Türkiye\'nin en güvenilir ilan değişim platformu. Sürdürülebilir bir gelecek için takasla değişim!'}
+              {t.common.footerDescription}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-facebook">
@@ -45,30 +43,20 @@ export function Footer() {
           {/* Platform */}
           <div>
             <h3 className="text-lg font-semibold mb-4" data-testid="text-platform-title">
-              {t.common.language === 'English' ? 'Platform' : 
-               t.common.language === 'العربية' ? 'المنصة' : 
-               'Platform'}
+              {t.common.platform}
             </h3>
             <ul className="space-y-2">
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-how-it-works">
-                {t.common.language === 'English' ? 'How It Works' : 
-                 t.common.language === 'العربية' ? 'كيف تعمل' : 
-                 'Nasıl Çalışır'}
+                {t.common.howItWorksLink}
               </a></li>
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-security">
-                {t.common.language === 'English' ? 'Security' : 
-                 t.common.language === 'العربية' ? 'الأمان' : 
-                 'Güvenlik'}
+                {t.common.security}
               </a></li>
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-commission">
-                {t.common.language === 'English' ? 'Commission Rates' : 
-                 t.common.language === 'العربية' ? 'معدلات العمولة' : 
-                 'Komisyon Oranları'}
+                {t.common.commissionRates}
               </a></li>
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-mobile-app">
-                {t.common.language === 'English' ? 'Mobile App' : 
-                 t.common.language === 'العربية' ? 'تطبيق الجوال' : 
-                 'Mobil Uygulama'}
+                {t.common.mobileApp}
               </a></li>
             </ul>
           </div>
@@ -76,30 +64,20 @@ export function Footer() {
           {/* Support */}
           <div>
             <h3 className="text-lg font-semibold mb-4" data-testid="text-support-title">
-              {t.common.language === 'English' ? 'Support' : 
-               t.common.language === 'العربية' ? 'الدعم' : 
-               'Destek'}
+              {t.common.support}
             </h3>
             <ul className="space-y-2">
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-help-center">
-                {t.common.language === 'English' ? 'Help Center' : 
-                 t.common.language === 'العربية' ? 'مركز المساعدة' : 
-                 'Yardım Merkezi'}
+                {t.common.helpCenter}
               </a></li>
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-contact">
-                {t.common.language === 'English' ? 'Contact' : 
-                 t.common.language === 'العربية' ? 'اتصل بنا' : 
-                 'İletişim'}
+                {t.common.contact}
               </a></li>
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-live-support">
-                {t.common.language === 'English' ? 'Live Support' : 
-                 t.common.language === 'العربية' ? 'الدعم المباشر' : 
-                 'Canlı Destek'}
+                {t.common.liveSupport}
               </a></li>
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-faq">
-                {t.common.language === 'English' ? 'FAQ' : 
-                 t.common.language === 'العربية' ? 'الأسئلة الشائعة' : 
-                 'SSS'}
+                {t.common.faq}
               </a></li>
             </ul>
           </div>
@@ -107,30 +85,20 @@ export function Footer() {
           {/* Legal */}
           <div>
             <h3 className="text-lg font-semibold mb-4" data-testid="text-legal-title">
-              {t.common.language === 'English' ? 'Legal' : 
-               t.common.language === 'العربية' ? 'قانوني' : 
-               'Yasal'}
+              {t.common.legal}
             </h3>
             <ul className="space-y-2">
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-terms">
-                {t.common.language === 'English' ? 'Terms of Service' : 
-                 t.common.language === 'العربية' ? 'شروط الخدمة' : 
-                 'Kullanım Şartları'}
+                {t.common.termsOfUse}
               </a></li>
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-privacy">
-                {t.common.language === 'English' ? 'Privacy Policy' : 
-                 t.common.language === 'العربية' ? 'سياسة الخصوصية' : 
-                 'Gizlilik Politikası'}
+                {t.common.privacyPolicy}
               </a></li>
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-kvkk">
-                {t.common.language === 'English' ? 'GDPR' : 
-                 t.common.language === 'العربية' ? 'حماية البيانات' : 
-                 'KVKK'}
+                {t.common.kvkk}
               </a></li>
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-cookies">
-                {t.common.language === 'English' ? 'Cookies' : 
-                 t.common.language === 'العربية' ? 'ملفات تعريف الارتباط' : 
-                 'Çerezler'}
+                {t.common.cookies}
               </a></li>
             </ul>
           </div>
@@ -138,25 +106,19 @@ export function Footer() {
 
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm" data-testid="text-copyright">
-            {t.common.language === 'English' ? '© 2024 Takas. All rights reserved.' : 
-             t.common.language === 'العربية' ? '© 2024 تاكاس. جميع الحقوق محفوظة.' :
-             '© 2024 Takas. Tüm hakları saklıdır.'}
+            {t.common.allRightsReserved}
           </p>
           <div className="flex items-center space-x-6 mt-4 md:mt-0">
             <div className="flex items-center space-x-2">
               <div className="w-4 h-4 bg-primary rounded"></div>
               <span className="text-sm text-gray-400" data-testid="text-ssl-secure">
-                {t.common.language === 'English' ? 'SSL Secure' : 
-                 t.common.language === 'العربية' ? 'آمن SSL' : 
-                 'SSL Güvenli'}
+                {t.common.sslSecure}
               </span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-4 h-4 bg-green-400 rounded"></div>
               <span className="text-sm text-gray-400" data-testid="text-eco-friendly">
-                {t.common.language === 'English' ? 'Eco Friendly' : 
-                 t.common.language === 'العربية' ? 'صديق للبيئة' : 
-                 'Çevre Dostu'}
+                {t.common.ecoFriendly}
               </span>
             </div>
           </div>
