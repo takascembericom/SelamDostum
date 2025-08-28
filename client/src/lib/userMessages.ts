@@ -11,6 +11,7 @@ import {
   getDoc,
   onSnapshot,
   Timestamp,
+  serverTimestamp,
   or,
   and
 } from "firebase/firestore";
@@ -100,11 +101,11 @@ export const createOrGetConversation = async (
 // Send a message
 export const sendUserMessage = async (messageData: InsertUserMessage): Promise<string> => {
   try {
-    // Add message to userMessages collection
+    // Add message to userMessages collection - use serverTimestamp like admin chat
     const docRef = await addDoc(collection(db, "userMessages"), {
       ...messageData,
-      timestamp: Timestamp.now(),
-      createdAt: Timestamp.now(),
+      timestamp: serverTimestamp(),
+      createdAt: serverTimestamp(),
     });
 
     // Update conversation's last message
@@ -118,9 +119,9 @@ export const sendUserMessage = async (messageData: InsertUserMessage): Promise<s
 
       await updateDoc(conversationRef, {
         lastMessage: messageData.text || '📷 Resim gönderildi',
-        lastMessageTime: Timestamp.now(),
+        lastMessageTime: serverTimestamp(),
         unreadCount: newUnreadCount,
-        updatedAt: Timestamp.now(),
+        updatedAt: serverTimestamp(),
       });
     }
 
