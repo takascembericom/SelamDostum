@@ -48,16 +48,16 @@ export function UserChat({
   const [showImageUpload, setShowImageUpload] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (smooth = true) => {
+    messagesEndRef.current?.scrollIntoView({ 
+      behavior: smooth ? "smooth" : "instant",
+      block: "end"
+    });
   };
 
-  // Scroll to bottom when messages change - but delay to avoid UI jumping
+  // Auto-scroll to bottom when messages change
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      scrollToBottom();
-    }, 100);
-    return () => clearTimeout(timeoutId);
+    scrollToBottom();
   }, [messages]);
 
   // Initialize conversation
@@ -124,10 +124,8 @@ export function UserChat({
       await sendUserMessage(messageData);
       setNewMessage("");
       
-      // Scroll to bottom after sending message
-      setTimeout(() => {
-        scrollToBottom();
-      }, 200);
+      // Immediate scroll to stay at bottom
+      scrollToBottom(false);
     } catch (error: any) {
       toast({
         title: "Hata",
@@ -157,6 +155,9 @@ export function UserChat({
 
       await sendUserMessage(messageData);
       setShowImageUpload(false);
+      
+      // Immediate scroll to stay at bottom after image sent
+      scrollToBottom(false);
       
       toast({
         title: "Başarılı",
@@ -257,7 +258,7 @@ export function UserChat({
       </CardHeader>
 
       {/* Messages */}
-      <CardContent className="flex-1 overflow-y-auto p-4 space-y-4 max-h-96">
+      <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
           <div className="text-center py-8">
             <MessageCircle className="h-12 w-12 mx-auto text-gray-400 mb-4" />
