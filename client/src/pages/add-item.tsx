@@ -271,11 +271,11 @@ export default function AddItem() {
   };
 
   const handleSubmit = async () => {
-    // İkinci ilan için ödeme kontrolü
-    if (userListingCount >= 1) {
+    // Dördüncü ilan için ödeme kontrolü
+    if (userListingCount >= 3) {
       toast({
-        title: "İkinci İlan İçin Ödeme Gerekli",
-        description: "İkinci ilan ve sonrasında her ilan için 10 TL ödeme yapmanız gerekmektedir. Lütfen ödeme paketinizi satın alın.",
+        title: "4. İlan İçin Ödeme Gerekli",
+        description: "İlk 3 ilan ücretsiz! 4. ilan ve sonrasında her ilan için 10 TL ödeme yapmanız gerekmektedir. Lütfen ödeme paketinizi satın alın.",
         variant: "destructive",
       });
       return;
