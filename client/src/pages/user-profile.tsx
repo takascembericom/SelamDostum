@@ -91,6 +91,8 @@ export default function UserProfile() {
     queryFn: async (): Promise<Item[]> => {
       if (!userId) return [];
       
+      console.log("Fetching user items for userId:", userId);
+      
       const q = query(
         collection(db, "items"),
         where("ownerId", "==", userId),
@@ -99,7 +101,7 @@ export default function UserProfile() {
       );
 
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
+      const items = querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
           ...data,
@@ -108,6 +110,11 @@ export default function UserProfile() {
           updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
         } as Item;
       });
+      
+      console.log("Fetched user items:", items.length, "for user:", userId);
+      console.log("Items:", items);
+      
+      return items;
     },
   });
 
