@@ -159,50 +159,143 @@ export default function AddItem() {
       throw new Error("En az 1 fotoğraf ekleyin");
     }
 
-    // Upload to Replit Object Storage
-    const uploadPromises = selectedImages.map(async (file, index) => {
-      // Compress image if too large (max 800KB)
-      let processedFile = file;
-      if (file.size > 800 * 1024) {
-        processedFile = await compressImage(file);
+    const uploadedPaths: string[] = [];
+    
+    // Upload images one by one to prevent UI freezing on mobile
+    for (let i = 0; i < selectedImages.length; i++) {
+      const file = selectedImages[i];
+      
+      try {
+        // Show progress
+        toast({
+          title: `Resim yükleniyor ${i + 1}/${selectedImages.length}`,
+          description: "Lütfen bekleyin...",
+        });
+        
+        // Compress image if too large - use lighter compression for mobile
+        let processedFile = file;
+        if (file.size > 1024 * 1024) { // 1MB
+          processedFile = await compressImageMobile(file);
+        }
+        
+        // Get upload URL from backend
+        const uploadResponse = await fetch('/api/objects/upload', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (!uploadResponse.ok) {
+          throw new Error('Yükleme URL\'si alınamadı');
+        }
+        
+        const { uploadURL } = await uploadResponse.json();
+        
+        // Upload file to object storage
+        const fileUploadResponse = await fetch(uploadURL, {
+          method: 'PUT',
+          body: processedFile,
+          headers: {
+            'Content-Type': processedFile.type,
+          },
+        });
+        
+        if (!fileUploadResponse.ok) {
+          throw new Error('Resim yükleme başarısız');
+        }
+        
+        // Return the object storage path
+        const objectPath = uploadURL.split('?')[0].split('/').slice(-2).join('/');
+        uploadedPaths.push(`/objects/${objectPath}`);
+        
+        // Small delay to prevent UI blocking
+        await new Promise(resolve => setTimeout(resolve, 50));
+        
+      } catch (error) {
+        console.error(`Error uploading image ${i + 1}:`, error);
+        throw error;
       }
-      
-      // Get upload URL from backend
-      const uploadResponse = await fetch('/api/objects/upload', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (!uploadResponse.ok) {
-        throw new Error('Yükleme URL\'si alınamadı');
-      }
-      
-      const { uploadURL } = await uploadResponse.json();
-      
-      // Upload file to object storage
-      const fileUploadResponse = await fetch(uploadURL, {
-        method: 'PUT',
-        body: processedFile,
-        headers: {
-          'Content-Type': processedFile.type,
-        },
-      });
-      
-      if (!fileUploadResponse.ok) {
-        throw new Error('Resim yükleme başarısız');
-      }
-      
-      // Return the object storage path
-      const objectPath = uploadURL.split('?')[0].split('/').slice(-2).join('/');
-      return `/objects/${objectPath}`;
-    });
+    }
 
-    return await Promise.all(uploadPromises);
+    return uploadedPaths;
   };
 
-  // Simple image compression function with error handling
+  // Mobile-optimized image compression function
+  const compressImageMobile = (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      try {
+        // For mobile, use simpler compression
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        if (!ctx) {
+          resolve(file); // Fallback to original file
+          return;
+        }
+        
+        const img = new Image();
+        
+        img.onload = () => {
+          try {
+            // Smaller max size for mobile to reduce processing time
+            const maxSize = 800;
+            let { width, height } = img;
+            
+            if (width > height) {
+              if (width > maxSize) {
+                height = (height * maxSize) / width;
+                width = maxSize;
+              }
+            } else {
+              if (height > maxSize) {
+                width = (width * maxSize) / height;
+                height = maxSize;
+              }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Use requestAnimationFrame to prevent UI blocking
+            requestAnimationFrame(() => {
+              ctx.drawImage(img, 0, 0, width, height);
+              
+              canvas.toBlob((blob) => {
+                try {
+                  if (blob) {
+                    resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                  } else {
+                    resolve(file);
+                  }
+                  // Clean up
+                  URL.revokeObjectURL(img.src);
+                } catch (error) {
+                  console.warn('Blob creation error:', error);
+                  resolve(file);
+                }
+              }, 'image/jpeg', 0.7); // Lower quality for faster processing
+            });
+          } catch (error) {
+            console.warn('Canvas processing error:', error);
+            resolve(file);
+          }
+        };
+        
+        img.onerror = () => {
+          console.warn('Image load error');
+          resolve(file);
+        };
+        
+        img.src = URL.createObjectURL(file);
+      } catch (error) {
+        console.warn('Compression setup error:', error);
+        resolve(file);
+      }
+    });
+  };
+
+  // Keep original compression function for fallback
   const compressImage = (file: File): Promise<File> => {
     return new Promise((resolve, reject) => {
       try {
