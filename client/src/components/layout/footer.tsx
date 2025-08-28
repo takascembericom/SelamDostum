@@ -1,4 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export function Footer() {
   const { t } = useLanguage();
@@ -40,67 +41,76 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Platform */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4" data-testid="text-platform-title">
-              {t.common.platform}
-            </h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-how-it-works">
-                {t.common.howItWorksLink}
-              </a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-security">
-                {t.common.security}
-              </a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-commission">
-                {t.common.commissionRates}
-              </a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-mobile-app">
-                {t.common.mobileApp}
-              </a></li>
-            </ul>
-          </div>
+          {/* Platform, Support, Legal - Accordion Format */}
+          <div className="md:col-span-3">
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="platform" className="border-gray-700">
+                <AccordionTrigger className="text-lg font-semibold text-white hover:no-underline" data-testid="text-platform-title">
+                  {t.common.platform}
+                </AccordionTrigger>
+                <AccordionContent className="space-y-2 pt-2">
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-how-it-works">
+                    {t.home.howItWorksDetail.title}: {t.home.howItWorksDetail.description}
+                  </div>
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-security">
+                    {t.home.securityDetail.title}: {t.home.securityDetail.description}
+                  </div>
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-commission">
+                    {t.home.commissionDetail.title}: {t.home.commissionDetail.description}
+                  </div>
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-mobile-app">
+                    {t.home.mobileAppDetail.title}: {t.home.mobileAppDetail.description}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
 
-          {/* Support */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4" data-testid="text-support-title">
-              {t.common.support}
-            </h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-help-center">
-                {t.common.helpCenter}
-              </a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-contact">
-                {t.common.contact}
-              </a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-live-support">
-                {t.common.liveSupport}
-              </a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-faq">
-                {t.common.faq}
-              </a></li>
-            </ul>
-          </div>
+              <AccordionItem value="support" className="border-gray-700">
+                <AccordionTrigger className="text-lg font-semibold text-white hover:no-underline" data-testid="text-support-title">
+                  {t.common.support}
+                </AccordionTrigger>
+                <AccordionContent className="space-y-2 pt-2">
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-help-center">
+                    {t.home.helpCenterDetail.title}: {t.home.helpCenterDetail.description}
+                  </div>
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-contact">
+                    {t.home.contactDetail.title}: {t.home.contactDetail.description}
+                  </div>
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-live-support">
+                    {t.home.liveSupportDetail.title}: {t.home.liveSupportDetail.description}
+                  </div>
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-faq">
+                    {t.home.faqDetail.title}
+                    <div className="mt-2 space-y-1">
+                      {Object.entries(t.home.faqDetail.items).map(([key, item]) => (
+                        <div key={key} className="text-sm text-gray-500">
+                          <strong>{item.question}</strong> {item.answer}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
 
-          {/* Legal */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4" data-testid="text-legal-title">
-              {t.common.legal}
-            </h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-terms">
-                {t.common.termsOfUse}
-              </a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-privacy">
-                {t.common.privacyPolicy}
-              </a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-kvkk">
-                {t.common.kvkk}
-              </a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors" data-testid="link-cookies">
-                {t.common.cookies}
-              </a></li>
-            </ul>
+              <AccordionItem value="legal" className="border-gray-700">
+                <AccordionTrigger className="text-lg font-semibold text-white hover:no-underline" data-testid="text-legal-title">
+                  {t.common.legal}
+                </AccordionTrigger>
+                <AccordionContent className="space-y-2 pt-2">
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-terms">
+                    {t.home.termsOfUseDetail.title}: {t.home.termsOfUseDetail.description}
+                  </div>
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-privacy">
+                    {t.home.privacyPolicyDetail.title}: {t.home.privacyPolicyDetail.description}
+                  </div>
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-kvkk">
+                    {t.home.kvkkDetail.title}: {t.home.kvkkDetail.description}
+                  </div>
+                  <div className="text-gray-400 hover:text-white transition-colors cursor-pointer p-2" data-testid="link-cookies">
+                    {t.home.cookiesDetail.title}: {t.home.cookiesDetail.description}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
 
