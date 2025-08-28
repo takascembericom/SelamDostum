@@ -52,12 +52,16 @@ export function ItemCard({ item, onViewDetails }: ItemCardProps) {
         </div>
         <div className="flex items-start justify-between mb-2">
           <h3 className="font-semibold text-gray-900 line-clamp-2" data-testid={`title-item-${item.id}`}>
-            {item.title}
+            {t.common.language === 'English' ? (item.titleEn || item.title) : 
+             t.common.language === 'العربية' ? (item.titleAr || item.title) : 
+             item.title}
           </h3>
         </div>
         
         <p className="text-gray-600 text-sm mb-3 line-clamp-2" data-testid={`description-item-${item.id}`}>
-          {item.description}
+          {t.common.language === 'English' ? (item.descriptionEn || item.description) : 
+           t.common.language === 'العربية' ? (item.descriptionAr || item.description) : 
+           item.description}
         </p>
         
         <div className="flex items-center justify-between text-sm text-gray-500 mb-3">

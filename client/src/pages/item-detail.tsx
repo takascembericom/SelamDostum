@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Item, CONDITION_LABELS, CATEGORY_LABELS } from "@shared/schema";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 export default function ItemDetail() {
   const { id } = useParams<{ id: string }>();
   const { profile } = useAuth();
+  const { t } = useLanguage();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
   const [, setLocation] = useLocation();
@@ -164,7 +166,9 @@ export default function ItemDetail() {
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2" data-testid="title-item">
-              {item.title}
+              {t.common.language === 'English' ? (item.titleEn || item.title) : 
+               t.common.language === 'العربية' ? (item.titleAr || item.title) : 
+               item.title}
             </h1>
             <div className="flex items-center gap-4 text-sm text-gray-500">
               <div className="flex items-center gap-1">
@@ -203,7 +207,9 @@ export default function ItemDetail() {
           <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-3">Açıklama</h2>
             <p className="text-gray-700 leading-relaxed" data-testid="description-item">
-              {item.description}
+              {t.common.language === 'English' ? (item.descriptionEn || item.description) : 
+               t.common.language === 'العربية' ? (item.descriptionAr || item.description) : 
+               item.description}
             </p>
           </div>
 

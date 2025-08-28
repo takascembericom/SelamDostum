@@ -34,6 +34,11 @@ export const itemSchema = z.object({
   itemNumber: z.number().min(500001, "İlan numarası 500001'den başlamalı"),
   title: z.string().min(3).max(100),
   description: z.string().min(10).max(1000),
+  // Çevrilmiş başlık ve açıklamalar
+  titleEn: z.string().optional(),
+  titleAr: z.string().optional(),
+  descriptionEn: z.string().optional(),
+  descriptionAr: z.string().optional(),
   category: z.string(),
   condition: z.enum(['yeni', 'cok_iyi', 'iyi', 'orta', 'kullanilmis']),
   images: z.array(z.string()).min(1).max(5),
