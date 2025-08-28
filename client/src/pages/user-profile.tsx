@@ -35,6 +35,9 @@ export default function UserProfile() {
   const [showRatingForm, setShowRatingForm] = useState(false);
   const [rating, setRating] = useState(5);
   const queryClient = useQueryClient();
+  
+  console.log("UserProfile - userId from URL:", userId);
+  console.log("UserProfile - current profile:", profile?.uid);
 
   // Function to update user rating statistics
   const updateUserRatingStats = async (userId: string) => {
