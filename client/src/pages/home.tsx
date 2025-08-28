@@ -135,89 +135,85 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Latest Items Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="title-latest-items">
-                📦 En Son İlanlar
-              </h2>
-              <p className="text-xl text-gray-600">
-                Yeni eklenen {latestItems.length} ilan
-              </p>
+      {/* Latest Items Section - Only show for logged in users */}
+      {user && (
+        <section className="py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center mb-12">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="title-latest-items">
+                  📦 En Son İlanlar
+                </h2>
+                <p className="text-xl text-gray-600">
+                  Yeni eklenen {latestItems.length} ilan
+                </p>
+              </div>
+              <Button 
+                asChild
+                variant="outline"
+                className="hidden sm:flex"
+                data-testid="button-view-all-items"
+              >
+                <Link href="/items">
+                  Tümünü Gör
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Link>
+              </Button>
             </div>
-            <Button 
-              asChild
-              variant="outline"
-              className="hidden sm:flex"
-              data-testid="button-view-all-items"
-            >
-              <Link href="/items">
-                Tümünü Gör
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
-          </div>
 
-          {/* Items Grid */}
-          {itemsLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-white rounded-lg overflow-hidden shadow-sm">
-                  <Skeleton className="w-full h-48" />
-                  <div className="p-4">
-                    <Skeleton className="h-4 w-3/4 mb-2" />
-                    <Skeleton className="h-4 w-1/2 mb-2" />
-                    <Skeleton className="h-3 w-full mb-2" />
-                    <Skeleton className="h-3 w-2/3" />
+            {/* Items Grid */}
+            {itemsLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="bg-white rounded-lg overflow-hidden shadow-sm">
+                    <Skeleton className="w-full h-48" />
+                    <div className="p-4">
+                      <Skeleton className="h-4 w-3/4 mb-2" />
+                      <Skeleton className="h-4 w-1/2 mb-2" />
+                      <Skeleton className="h-3 w-full mb-2" />
+                      <Skeleton className="h-3 w-2/3" />
+                    </div>
                   </div>
+                ))}
+              </div>
+            ) : latestItems.length > 0 ? (
+              <>
+                <ItemGrid 
+                  items={latestItems} 
+                  onViewDetails={(item) => window.location.href = `/item/${item.id}`}
+                />
+                {/* Mobile View All Button */}
+                <div className="flex justify-center mt-8 sm:hidden">
+                  <Button 
+                    asChild
+                    variant="outline"
+                    data-testid="button-view-all-mobile"
+                  >
+                    <Link href="/items">
+                      Tümünü Gör
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Link>
+                  </Button>
                 </div>
-              ))}
-            </div>
-          ) : latestItems.length > 0 ? (
-            <>
-              <ItemGrid 
-                items={latestItems} 
-                onViewDetails={(item) => window.location.href = `/item/${item.id}`}
-              />
-              {/* Mobile View All Button */}
-              <div className="flex justify-center mt-8 sm:hidden">
-                <Button 
-                  asChild
-                  variant="outline"
-                  data-testid="button-view-all-mobile"
-                >
-                  <Link href="/items">
-                    Tümünü Gör
-                    <ArrowRight className="h-4 w-4 ml-2" />
+              </>
+            ) : (
+              <div className="text-center py-16">
+                <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                  <span className="text-gray-400 text-2xl">📦</span>
+                </div>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">Henüz ilan yok</h3>
+                <p className="text-gray-500 mb-6">İlk ilanınızı ekleyerek başlayın!</p>
+                <Button asChild>
+                  <Link href="/add-item">
+                    <Plus className="h-4 w-4 mr-2" />
+                    İlan Ekle
                   </Link>
                 </Button>
               </div>
-            </>
-          ) : (
-            <div className="text-center py-16">
-              <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <span className="text-gray-400 text-2xl">📦</span>
-              </div>
-              <h3 className="text-xl font-medium text-gray-900 mb-2">Henüz ilan yok</h3>
-              {user ? (
-                <>
-                  <p className="text-gray-500 mb-6">İlk ilanınızı ekleyerek başlayın!</p>
-                  <Button asChild>
-                    <Link href="/add-item">
-                      <Plus className="h-4 w-4 mr-2" />
-                      İlan Ekle
-                    </Link>
-                  </Button>
-                </>
-              ) : (
-                <p className="text-gray-500 mb-6">İlanları görmek için giriş yapın</p>
-              )}
-            </div>
-          )}
-        </div>
-      </section>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* How It Works */}
       <section className="py-20 bg-white">
