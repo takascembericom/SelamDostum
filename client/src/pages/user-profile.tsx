@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { doc, getDoc, query, collection, where, getDocs, addDoc, orderBy } from "firebase/firestore";
+import { doc, getDoc, query, collection, where, getDocs, addDoc, orderBy, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { User, Item, Rating, InsertRating } from "@shared/schema";
 import { useAuth } from "@/hooks/useAuth";
@@ -35,6 +35,37 @@ export default function UserProfile() {
   const [showRatingForm, setShowRatingForm] = useState(false);
   const [rating, setRating] = useState(5);
   const queryClient = useQueryClient();
+
+  // Function to update user rating statistics
+  const updateUserRatingStats = async (userId: string) => {
+    try {
+      // Get all ratings for this user
+      const ratingsQuery = query(
+        collection(db, "ratings"),
+        where("ratedUserId", "==", userId)
+      );
+      
+      const ratingsSnapshot = await getDocs(ratingsQuery);
+      const ratings = ratingsSnapshot.docs.map(doc => doc.data());
+      
+      const totalRatings = ratings.length;
+      const averageRating = totalRatings > 0 
+        ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / totalRatings 
+        : 0;
+      
+      // Update user document with new statistics
+      const userRef = doc(db, "users", userId);
+      await updateDoc(userRef, {
+        totalRatings,
+        averageRating: Math.round(averageRating * 10) / 10, // Round to 1 decimal
+      });
+      
+      console.log(`User ${userId} rating stats updated: ${totalRatings} ratings, avg: ${averageRating}`);
+    } catch (error) {
+      console.error("Error updating user rating stats:", error);
+      throw error;
+    }
+  };
 
   // Fetch user data
   const { data: user, isLoading: userLoading } = useQuery({
@@ -117,10 +148,15 @@ export default function UserProfile() {
   // Add rating mutation
   const addRatingMutation = useMutation({
     mutationFn: async (ratingData: InsertRating) => {
+      // Add rating to ratings collection
       const docRef = await addDoc(collection(db, "ratings"), {
         ...ratingData,
         createdAt: new Date(),
       });
+
+      // Update user statistics
+      await updateUserRatingStats(ratingData.ratedUserId);
+      
       return docRef.id;
     },
     onSuccess: () => {
