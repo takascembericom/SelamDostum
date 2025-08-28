@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { LiveChat } from "@/components/live-chat";
+import { useAuth } from "@/hooks/useAuth";
 import Home from "@/pages/home";
 import Items from "@/pages/items";
 import ItemDetail from "@/pages/item-detail";
@@ -58,20 +59,28 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <TooltipProvider>
-          <div className="min-h-screen flex flex-col">
-            <Header />
-            <NotificationPermissionBanner />
-            <main className="flex-1">
-              <Router />
-            </main>
-            <Footer />
-          </div>
-          <LiveChat />
-          <Toaster />
-        </TooltipProvider>
+        <AuthenticatedContent />
       </AuthProvider>
     </QueryClientProvider>
+  );
+}
+
+function AuthenticatedContent() {
+  const { user } = useAuth();
+  
+  return (
+    <TooltipProvider>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        {user && <NotificationPermissionBanner />}
+        <main className="flex-1">
+          <Router />
+        </main>
+        <Footer />
+      </div>
+      {user && <LiveChat />}
+      <Toaster />
+    </TooltipProvider>
   );
 }
 

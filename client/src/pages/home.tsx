@@ -201,14 +201,18 @@ export default function Home() {
                 <span className="text-gray-400 text-2xl">📦</span>
               </div>
               <h3 className="text-xl font-medium text-gray-900 mb-2">Henüz ilan yok</h3>
-              <p className="text-gray-500 mb-6">İlk ilanınızı ekleyerek başlayın!</p>
-              {user && (
-                <Button asChild>
-                  <Link href="/add-item">
-                    <Plus className="h-4 w-4 mr-2" />
-                    İlan Ekle
-                  </Link>
-                </Button>
+              {user ? (
+                <>
+                  <p className="text-gray-500 mb-6">İlk ilanınızı ekleyerek başlayın!</p>
+                  <Button asChild>
+                    <Link href="/add-item">
+                      <Plus className="h-4 w-4 mr-2" />
+                      İlan Ekle
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                <p className="text-gray-500 mb-6">İlanları görmek için giriş yapın</p>
               )}
             </div>
           )}
