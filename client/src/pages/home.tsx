@@ -350,6 +350,42 @@ export default function Home() {
                     {t.home.mobileAppDetail.description}
                   </AccordionContent>
                 </AccordionItem>
+
+                <AccordionItem value="help-center" className="border rounded-lg px-4">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <div className="flex items-center gap-3">
+                      <HelpCircle className="h-5 w-5 text-orange-600" />
+                      <span>{t.home.helpCenterDetail.title}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                    {t.home.helpCenterDetail.description}
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="contact" className="border rounded-lg px-4">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <div className="flex items-center gap-3">
+                      <Phone className="h-5 w-5 text-blue-600" />
+                      <span>{t.home.contactDetail.title}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                    {t.home.contactDetail.description}
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="live-support" className="border rounded-lg px-4">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <div className="flex items-center gap-3">
+                      <Phone className="h-5 w-5 text-green-600" />
+                      <span>{t.home.liveSupportDetail.title}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600 dark:text-gray-400 pt-2 pb-4">
+                    {t.home.liveSupportDetail.description}
+                  </AccordionContent>
+                </AccordionItem>
               </Accordion>
             </div>
 
