@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
-import { Plus, User, LogOut, Home, Shield, MessageCircle, Bell, Search, ArrowLeft, Mail, BellRing, FileSearch } from "lucide-react";
+import { Plus, User, LogOut, Home, Shield, MessageCircle, Bell, Search, ArrowLeft, Mail, BellRing, FileSearch, ArrowRightLeft, CheckCircle, XCircle, Star } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -15,12 +15,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { useMessageNotifications } from "@/hooks/useMessageNotifications";
+import { useNotifications } from "@/hooks/useNotifications";
+import { markNotificationAsRead, markAllNotificationsAsRead } from "@/lib/notifications-db";
 import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
 
 export function Header() {
   const { user, profile } = useAuth();
   const { toast } = useToast();
   const { unreadCount } = useMessageNotifications();
+  const { notifications, unreadCount: notificationUnreadCount } = useNotifications();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
 
@@ -127,7 +130,14 @@ export function Header() {
                         <BellRing className="h-4 w-4 sm:hidden" />
                         <Bell className="h-4 w-4 hidden sm:block" />
                         <span className="hidden sm:inline">Bildirimler</span>
-                        {/* TODO: Add notification count */}
+                        {notificationUnreadCount > 0 && (
+                          <Badge 
+                            variant="destructive" 
+                            className="absolute -top-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-xs p-0 min-w-0"
+                          >
+                            {notificationUnreadCount > 99 ? '99+' : notificationUnreadCount}
+                          </Badge>
+                        )}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-80">
@@ -135,14 +145,94 @@ export function Header() {
                         <h3 className="font-semibold">Bildirimler</h3>
                       </div>
                       <div className="max-h-64 overflow-y-auto">
-                        {/* No notifications */}
-                        <div className="p-8 text-center text-gray-500">
-                          <Bell className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-                          <p className="text-sm">Henüz bildiriminiz yok</p>
-                        </div>
+                        {notifications.length === 0 ? (
+                          <div className="p-8 text-center text-gray-500">
+                            <Bell className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                            <p className="text-sm">Henüz bildiriminiz yok</p>
+                          </div>
+                        ) : (
+                          <div className="divide-y">
+                            {notifications.map((notification) => (
+                              <div
+                                key={notification.id}
+                                className={`p-3 hover:bg-gray-50 cursor-pointer ${
+                                  !notification.isRead ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                                }`}
+                                onClick={() => {
+                                  if (!notification.isRead) {
+                                    markNotificationAsRead(notification.id).catch(console.error);
+                                  }
+                                  // Navigate to relevant page based on notification type
+                                  if (notification.type === 'trade_offer' || 
+                                      notification.type === 'trade_accepted' || 
+                                      notification.type === 'trade_rejected') {
+                                    window.location.href = '/profile?tab=trade-offers';
+                                  }
+                                }}
+                              >
+                                <div className="flex items-start gap-3">
+                                  <div className="flex-shrink-0 mt-1">
+                                    {notification.type === 'trade_offer' && (
+                                      <ArrowRightLeft className="h-4 w-4 text-blue-500" />
+                                    )}
+                                    {notification.type === 'trade_accepted' && (
+                                      <CheckCircle className="h-4 w-4 text-green-500" />
+                                    )}
+                                    {notification.type === 'trade_rejected' && (
+                                      <XCircle className="h-4 w-4 text-red-500" />
+                                    )}
+                                    {notification.type === 'trade_completed' && (
+                                      <Star className="h-4 w-4 text-yellow-500" />
+                                    )}
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-gray-900 truncate">
+                                      {notification.title}
+                                    </p>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                      {notification.message}
+                                    </p>
+                                    <p className="text-xs text-gray-400 mt-1">
+                                      {notification.createdAt.toLocaleDateString('tr-TR', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                      })}
+                                    </p>
+                                  </div>
+                                  {!notification.isRead && (
+                                    <div className="flex-shrink-0">
+                                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                       <div className="p-3 border-t text-center">
-                        <Button variant="ghost" size="sm" className="text-xs">
+                        {notificationUnreadCount > 0 && (
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="text-xs mr-2"
+                            onClick={() => {
+                              if (profile?.id) {
+                                markAllNotificationsAsRead(profile.id).catch(console.error);
+                              }
+                            }}
+                          >
+                            Tümünü Okundu İşaretle
+                          </Button>
+                        )}
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-xs"
+                          onClick={() => window.location.href = '/profile?tab=trade-offers'}
+                        >
                           Tümünü Gör
                         </Button>
                       </div>

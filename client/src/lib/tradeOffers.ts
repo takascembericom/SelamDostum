@@ -61,7 +61,16 @@ export const createTradeOffer = async (tradeOfferData: InsertTradeOffer): Promis
           `${fromUser.firstName} ${fromUser.lastName || ''}`.trim() : 
           fromUser.email || 'Bir kullanıcı';
         
-        // Request notification permission first, then send notification
+        // Create in-app notification first
+        const { createTradeOfferNotification } = await import('@/lib/notifications-db');
+        await createTradeOfferNotification(
+          tradeOfferData.toUserId,
+          fromUserName,
+          toItem.title,
+          docRef.id
+        );
+        
+        // Send browser push notification
         const { requestNotificationPermission } = await import('@/lib/notifications');
         await requestNotificationPermission();
         await sendNewTradeOfferNotification(fromUserName, toItem.title);
@@ -164,20 +173,33 @@ export const updateTradeOfferStatus = async (
     // Send notification based on status change
     if (tradeOfferData && (status === 'reddedildi' || status === 'kabul_edildi')) {
       try {
-        const [toUser, toItem] = await Promise.all([
-          getUserById(tradeOfferData.toUserId),
+        const [fromUser, toItem] = await Promise.all([
+          getUserById(tradeOfferData.fromUserId),
           getItemById(tradeOfferData.toItemId)
         ]);
 
-        if (toUser && toItem) {
-          const toUserName = toUser.firstName ? 
-            `${toUser.firstName} ${toUser.lastName || ''}`.trim() : 
-            toUser.email || 'Bir kullanıcı';
+        if (fromUser && toItem) {
+          const fromUserName = fromUser.firstName ? 
+            `${fromUser.firstName} ${fromUser.lastName || ''}`.trim() : 
+            fromUser.email || 'Bir kullanıcı';
 
+          // Create in-app notification first
           if (status === 'reddedildi') {
-            await sendTradeRejectedNotification(toUserName, toItem.title);
+            const { createTradeRejectedNotification } = await import('@/lib/notifications-db');
+            await createTradeRejectedNotification(
+              tradeOfferData.fromUserId,
+              toItem.title,
+              tradeOfferId
+            );
+            await sendTradeRejectedNotification(fromUserName, toItem.title);
           } else if (status === 'kabul_edildi') {
-            await sendTradeAcceptedNotification(toUserName, toItem.title);
+            const { createTradeAcceptedNotification } = await import('@/lib/notifications-db');
+            await createTradeAcceptedNotification(
+              tradeOfferData.fromUserId,
+              toItem.title,
+              tradeOfferId
+            );
+            await sendTradeAcceptedNotification(fromUserName, toItem.title);
           }
         }
       } catch (notificationError) {
