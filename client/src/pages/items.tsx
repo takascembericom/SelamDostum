@@ -10,12 +10,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search, Filter } from "lucide-react";
 import { CATEGORY_LABELS, CONDITION_LABELS } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Items() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [conditionFilter, setConditionFilter] = useState<string>("all");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const { t } = useLanguage();
 
   // Get URL search params
   useEffect(() => {
@@ -185,10 +187,10 @@ export default function Items() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4" data-testid="title-items">
-            İlanlar
+            {t.nav.items}
           </h1>
           <p className="text-gray-600">
-            İlan bulun ve takas edin
+            {t.items.searchItems.replace('...', '')}
           </p>
         </div>
 
@@ -200,7 +202,7 @@ export default function Items() {
               <div className="flex-1">
                 <Input
                   type="text"
-                  placeholder="İlan ara..."
+                  placeholder={t.items.searchItems}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full"
@@ -209,7 +211,7 @@ export default function Items() {
               </div>
               <Button type="submit" data-testid="button-search-items">
                 <Search className="h-4 w-4 mr-2" />
-                Ara
+                {t.common.search}
               </Button>
             </div>
 
@@ -218,10 +220,10 @@ export default function Items() {
               <div className="flex-1">
                 <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                   <SelectTrigger data-testid="select-category">
-                    <SelectValue placeholder="Kategori" />
+                    <SelectValue placeholder={t.items.category} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Tümü</SelectItem>
+                    <SelectItem value="all">{t.common.language === 'English' ? 'All' : t.common.language === 'العربية' ? 'الكل' : 'Tümü'}</SelectItem>
                     <SelectItem value="araba_group">🚗 Araba & Yedek Parça</SelectItem>
                     <SelectItem value="tasinmazlar">🏡 Taşınmazlar</SelectItem>
                     {Object.entries(CATEGORY_LABELS).filter(([key]) => 
@@ -235,10 +237,10 @@ export default function Items() {
               <div className="flex-1">
                 <Select value={conditionFilter} onValueChange={setConditionFilter}>
                   <SelectTrigger data-testid="select-condition">
-                    <SelectValue placeholder="Durum seçin" />
+                    <SelectValue placeholder={t.items.condition} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Tüm Durumlar</SelectItem>
+                    <SelectItem value="all">{t.common.language === 'English' ? 'All Conditions' : t.common.language === 'العربية' ? 'جميع الحالات' : 'Tüm Durumlar'}</SelectItem>
                     {Object.entries(CONDITION_LABELS).map(([key, label]) => (
                       <SelectItem key={key} value={key}>{label}</SelectItem>
                     ))}

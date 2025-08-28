@@ -30,6 +30,7 @@ import {
 import { Upload, X, Camera, CreditCard } from "lucide-react";
 import { ITEM_CATEGORIES, CATEGORY_LABELS, CONDITION_LABELS, TASINMAZLAR_SUBCATEGORIES, TURKISH_CITIES, CAR_BRANDS } from "@shared/schema";
 import { containsInappropriateContent, getContentFilterErrorMessage } from "@/lib/content-filter";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const addItemSchema = z.object({
   title: z.string().min(3, "En az 3 karakter").max(100, "En fazla 100 karakter")
@@ -58,6 +59,7 @@ export default function AddItem() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imageURLs, setImageURLs] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);

@@ -24,9 +24,11 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { ConversationsList } from "@/components/user-chat/conversations-list";
 import { UserChat } from "@/components/user-chat/user-chat";
 import { Conversation } from "@shared/schema";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Profile() {
   const { user, profile, loading } = useAuth();
+  const { t } = useLanguage();
   const [selectedTab, setSelectedTab] = useState<'pending-items' | 'active-items' | 'rejected-items' | 'expired-items' | 'trade-offers' | 'messages'>('pending-items');
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);

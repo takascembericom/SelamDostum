@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { loginUser, sendPasswordReset } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Dialog,
   DialogContent,
@@ -47,6 +48,7 @@ export function LoginModal({ open, onClose, onSwitchToRegister }: LoginModalProp
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),

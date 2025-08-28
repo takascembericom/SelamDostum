@@ -6,9 +6,11 @@ import { Conversation } from "@shared/schema";
 import { Card } from "@/components/ui/card";
 import { MessageCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function MessagesPage() {
   const [location] = useLocation();
+  const { t } = useLanguage();
   const [selectedConversation, setSelectedConversation] = useState<
     (Conversation & { otherUserName: string; otherUserId: string }) | null
   >(null);

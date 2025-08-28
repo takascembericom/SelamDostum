@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, UserPlus, Plus, ArrowRight, Star } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
 import { CategoryButtons } from "@/components/category-buttons";
@@ -17,6 +18,7 @@ import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo
 
 export default function Home() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -61,26 +63,26 @@ export default function Home() {
   const steps = [
     {
       icon: <UserPlus className="h-8 w-8" />,
-      title: "1. Hesap Oluştur",
-      description: "Ücretsiz kayıt olun",
+      title: `1. ${t.home.step1Title}`,
+      description: t.home.step1Description,
       color: "bg-primary/10 text-primary"
     },
     {
       icon: <Plus className="h-8 w-8" />,
-      title: "2. İlan Ekle",
-      description: "İlanınızın fotoğrafını ekleyin",
+      title: `2. ${t.home.step2Title}`,
+      description: t.home.step2Description,
       color: "bg-secondary/10 text-secondary"
     },
     {
       icon: <Search className="h-8 w-8" />,
-      title: "3. İlan Bul",
-      description: "İstediğiniz ilanı arayın",
+      title: `3. ${t.home.step3Title}`,
+      description: t.home.step3Description,
       color: "bg-accent/10 text-accent"
     },
     {
       icon: <div className="text-2xl">🤝</div>,
-      title: "4. Takas Yap",
-      description: "Teklif gönderin ve takas yapın",
+      title: `4. ${t.home.step4Title}`,
+      description: t.home.step4Description,
       color: "bg-green-500/10 text-green-500"
     }
   ];
@@ -127,13 +129,13 @@ export default function Home() {
           </div>
           
           <h1 className="text-3xl md:text-4xl font-bold mb-4" data-testid="title-hero">
-            Güvenli Takas Platformu
+            {t.home.welcomeTitle}
           </h1>
           <p className="text-xl md:text-2xl mb-4 font-semibold" data-testid="welcome-text">
-            Takas Çemberine Hoş Geldiniz
+            {t.home.welcomeSubtitle}
           </p>
           <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto opacity-90" data-testid="description-hero">
-            Sizde 4 kolay adımda üye olarak ilk ilanınızı verin
+            {t.home.heroDescription}
           </p>
         </div>
       </section>
@@ -145,10 +147,12 @@ export default function Home() {
             <div className="flex justify-between items-center mb-12">
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="title-latest-items">
-                  📦 En Son İlanlar
+                  📦 {t.home.recentItems}
                 </h2>
                 <p className="text-xl text-gray-600">
-                  Yeni eklenen {latestItems.length} ilan
+                  {t.common.language === 'English' ? `Newly added ${latestItems.length} items` : 
+                   t.common.language === 'العربية' ? `${latestItems.length} عنصر تم إضافته حديثاً` :
+                   `Yeni eklenen ${latestItems.length} ilan`}
                 </p>
               </div>
               <Button 
