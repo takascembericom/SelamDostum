@@ -352,7 +352,7 @@ export default function UserProfile() {
                   <div className="text-sm text-gray-600">Aktif İlan</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-2xl font-bold text-green-600">{user.totalListings || userItems.length}</div>
+                  <div className="text-2xl font-bold text-green-600">{user.totalListings || 0}</div>
                   <div className="text-sm text-gray-600">Toplam İlan</div>
                 </div>
               </div>
@@ -486,7 +486,7 @@ export default function UserProfile() {
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
               <ThumbsUp className="h-6 w-6 mr-2" />
-              Değerlendirmeler ({ratings.length})
+              Değerlendirmeler ({totalRatings})
             </h2>
             
             {ratingsLoading ? (
@@ -503,7 +503,7 @@ export default function UserProfile() {
                   </div>
                 ))}
               </div>
-            ) : ratings.length > 0 ? (
+            ) : totalRatings > 0 ? (
               <div className="space-y-4">
                 {ratings.map((rating) => (
                   <Card key={rating.id}>
