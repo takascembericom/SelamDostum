@@ -106,21 +106,29 @@ export default function UserProfile() {
         orderBy("createdAt", "desc")
       );
 
-      const querySnapshot = await getDocs(q);
-      const items = querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
-          updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
-        } as Item;
-      });
-      
-      console.log("Query result:", items.length, "items for userId:", userId);
-      console.log("Items found:", items);
-      
-      return items;
+      try {
+        const querySnapshot = await getDocs(q);
+        console.log("Query executed successfully. Documents found:", querySnapshot.docs.length);
+        
+        const items = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          console.log("Processing doc:", doc.id, "ownerId:", data.ownerId, "status:", data.status);
+          return {
+            ...data,
+            id: doc.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
+          } as Item;
+        });
+        
+        console.log("Query result:", items.length, "items for userId:", userId);
+        console.log("Items found:", items);
+        
+        return items;
+      } catch (error) {
+        console.error("Query error:", error);
+        return [];
+      }
     },
     enabled: !!userId, // Only run query when userId exists
   });
