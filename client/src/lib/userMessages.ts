@@ -35,6 +35,22 @@ export const createOrGetConversation = async (
     const conversationDoc = await getDoc(doc(db, "conversations", conversationId));
     
     if (conversationDoc.exists()) {
+      // Check if conversation was deleted by any user (unreadCount = -1)
+      const data = conversationDoc.data();
+      const isDeleted = data.unreadCount?.[userId1] === -1 || data.unreadCount?.[userId2] === -1;
+      
+      if (isDeleted) {
+        console.log("Conversation was deleted, resetting unreadCount...");
+        // Reset the unreadCount for both users
+        await updateDoc(doc(db, "conversations", conversationId), {
+          unreadCount: {
+            [userId1]: 0,
+            [userId2]: 0,
+          },
+          updatedAt: Timestamp.now(),
+        });
+      }
+      
       return conversationId;
     }
 
@@ -254,31 +270,52 @@ export const subscribeToUserConversations = (
   );
 
   return onSnapshot(q, async (snapshot) => {
+    console.log("Firebase onSnapshot tetiklendi, doc sayısı:", snapshot.docs.length);
     const conversations: Conversation[] = [];
 
-    for (const docSnap of snapshot.docs) {
+    try {
+      for (const docSnap of snapshot.docs) {
       const data = docSnap.data();
+      console.log("Processing conversation:", docSnap.id, data);
       
       // Skip conversations that are deleted by this user (unreadCount = -1)
       const userUnreadCount = data.unreadCount?.[userId];
       if (userUnreadCount === -1) {
+        console.log("Conversation deleted by user, skipping:", docSnap.id);
         continue; // Skip this conversation as it was deleted by the user
       }
       
       // Get the other participant's name
       const otherUserId = data.participants.find((id: string) => id !== userId);
-      const otherUserDoc = await getDoc(doc(db, "users", otherUserId));
-      const otherUserData = otherUserDoc.data();
+      console.log("Other user ID:", otherUserId);
       
-      conversations.push({
-        ...data,
-        id: docSnap.id,
-        createdAt: data.createdAt.toDate(),
-        updatedAt: data.updatedAt.toDate(),
-        lastMessageTime: data.lastMessageTime.toDate(),
-        otherUserName: otherUserData ? `${otherUserData.firstName} ${otherUserData.lastName}` : 'Kullanıcı',
-        otherUserId,
-      } as Conversation & { otherUserName: string; otherUserId: string });
+      if (!otherUserId) {
+        console.log("Other user ID bulunamadı, skipping conversation:", docSnap.id);
+        continue;
+      }
+      
+      try {
+        const otherUserDoc = await getDoc(doc(db, "users", otherUserId));
+        const otherUserData = otherUserDoc.data();
+        console.log("Other user data:", otherUserData);
+        
+        conversations.push({
+          ...data,
+          id: docSnap.id,
+          createdAt: data.createdAt.toDate(),
+          updatedAt: data.updatedAt.toDate(),
+          lastMessageTime: data.lastMessageTime.toDate(),
+          otherUserName: otherUserData ? `${otherUserData.firstName} ${otherUserData.lastName}` : 'Kullanıcı',
+          otherUserId,
+        } as Conversation & { otherUserName: string; otherUserId: string });
+        
+        console.log("Conversation başarıyla eklendi:", docSnap.id);
+      } catch (error) {
+        console.error("Other user data çekerken hata:", error);
+      }
+    }
+    } catch (error) {
+      console.error("onSnapshot içinde hata:", error);
     }
 
     // Sort conversations by lastMessageTime in memory
@@ -286,6 +323,9 @@ export const subscribeToUserConversations = (
       b.lastMessageTime.getTime() - a.lastMessageTime.getTime()
     );
     
+    console.log("Firebase conversation callback çağrılıyor, conversation sayısı:", sortedConversations.length);
     callback(sortedConversations);
+  }, (error) => {
+    console.error("Firebase subscription hatası:", error);
   });
 };

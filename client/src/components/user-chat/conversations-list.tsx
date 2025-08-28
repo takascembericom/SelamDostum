@@ -36,6 +36,7 @@ export function ConversationsList({ onSelectConversation, selectedConversationId
     if (!profile?.id) return;
 
     const unsubscribe = subscribeToUserConversations(profile.id, (newConversations) => {
+      console.log("Conversation subscription çalıştı, gelen data:", newConversations.length, newConversations);
       setConversations(newConversations as (Conversation & { otherUserName: string; otherUserId: string })[]);
       setLoading(false);
     });
