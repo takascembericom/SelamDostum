@@ -309,6 +309,12 @@ export default function UserProfile() {
   }
 
   const isOwnProfile = profile?.id === userId;
+  console.log("Profile Debug:", { 
+    currentUserId: profile?.id, 
+    profilePageUserId: userId, 
+    isOwnProfile,
+    userItemsCount: userItems?.length 
+  });
   // Use database values instead of client-side calculation
   const averageRating = user.averageRating || 0;
   const totalRatings = user.totalRatings || 0;
