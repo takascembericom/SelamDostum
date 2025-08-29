@@ -574,27 +574,6 @@ export default function AddItem() {
               Takas etmek istediğiniz ilanınızın bilgilerini ekleyin
             </p>
             
-            {/* İlan sayısı ve ödeme uyarısı */}
-            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm font-medium text-blue-900">
-                    Mevcut İlan Sayınız: {loadingListingCount ? "..." : userListingCount}
-                  </p>
-                  {userListingCount >= 1 && (
-                    <p className="text-xs text-blue-700 mt-1">
-                      ⚠️ İkinci ilan ve sonrası için 10 TL ödeme gereklidir
-                    </p>
-                  )}
-                </div>
-                {userListingCount === 0 && (
-                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                    İlk ilanınız ücretsiz!
-                  </span>
-                )}
-              </div>
-            </div>
-            
           </CardHeader>
           
           <CardContent>
