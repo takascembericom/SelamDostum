@@ -84,7 +84,7 @@ export function Header() {
                     </Button>
                   </Link>
                   
-                  <Link href="/blog" className="hidden lg:block">
+                  <Link href="/blog">
                     <Button 
                       variant="ghost" 
                       size="sm" 
@@ -413,6 +413,12 @@ export function Header() {
                     {unreadCount}
                   </Badge>
                 )}
+              </Button>
+            </Link>
+            <Link href="/blog">
+              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2 text-white hover:text-cyan-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105">
+                <Leaf className="h-5 w-5" />
+                <span className="text-xs">{t.nav.blog}</span>
               </Button>
             </Link>
             <DropdownMenu>
