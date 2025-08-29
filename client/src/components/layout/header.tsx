@@ -382,6 +382,139 @@ export function Header() {
         </div>
       </header>
 
+      {/* Mobile Bottom Navigation Bar */}
+      {user && (
+        <div className="fixed bottom-0 left-0 right-0 z-[100] sm:hidden bg-white border-t border-gray-200 shadow-lg">
+          <div className="flex justify-around items-center py-2">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2">
+                <Home className="h-5 w-5" />
+                <span className="text-xs">{t.nav.home}</span>
+              </Button>
+            </Link>
+            <Link href="/messages">
+              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2 relative">
+                <MessageCircle className="h-5 w-5" />
+                <span className="text-xs">{t.nav.messages}</span>
+                {unreadCount > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs bg-red-500 text-white rounded-full">
+                    {unreadCount}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2 relative">
+                  <Bell className="h-5 w-5" />
+                  <span className="text-xs">{t.nav.notifications}</span>
+                  {notificationUnreadCount > 0 && (
+                    <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs bg-red-500 text-white rounded-full">
+                      {notificationUnreadCount}
+                    </Badge>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80 mb-16">
+                <div className="p-3 border-b">
+                  <h3 className="font-semibold">{t.nav.notifications}</h3>
+                </div>
+                <div className="max-h-64 overflow-y-auto">
+                  {notifications.length === 0 ? (
+                    <div className="p-8 text-center text-gray-500">
+                      <Bell className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                      <p className="text-sm">{language === 'tr' ? 'Henüz bildiriminiz yok' : language === 'en' ? 'No notifications yet' : 'لا توجد إشعارات بعد'}</p>
+                    </div>
+                  ) : (
+                    <div className="divide-y">
+                      {notifications.map((notification) => (
+                        <div
+                          key={notification.id}
+                          className={`p-3 hover:bg-gray-50 cursor-pointer ${
+                            !notification.isRead ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                          }`}
+                          onClick={() => {
+                            if (!notification.isRead) {
+                              markNotificationAsRead(notification.id).catch(console.error);
+                            }
+                            if (notification.type === 'trade_offer' || 
+                                notification.type === 'trade_accepted' || 
+                                notification.type === 'trade_rejected') {
+                              window.location.href = '/profile?tab=trade-offers';
+                            }
+                          }}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0 mt-1">
+                              {notification.type === 'trade_offer' && (
+                                <ArrowRightLeft className="h-4 w-4 text-blue-500" />
+                              )}
+                              {notification.type === 'trade_accepted' && (
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                              )}
+                              {notification.type === 'trade_rejected' && (
+                                <XCircle className="h-4 w-4 text-red-500" />
+                              )}
+                              {notification.type === 'trade_completed' && (
+                                <Star className="h-4 w-4 text-yellow-500" />
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate">
+                                {notification.title}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                {notification.message}
+                              </p>
+                              <p className="text-xs text-gray-400 mt-1">
+                                {notification.createdAt.toLocaleDateString('tr-TR', {
+                                  day: '2-digit',
+                                  month: '2-digit',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            </div>
+                            {!notification.isRead && (
+                              <div className="flex-shrink-0">
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="p-3 border-t text-center">
+                  {notificationUnreadCount > 0 && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-xs mr-2"
+                      onClick={() => {
+                        if (profile?.id) {
+                          markAllNotificationsAsRead(profile.id).catch(console.error);
+                        }
+                      }}
+                    >
+                      {t.common.markAllRead}
+                    </Button>
+                  )}
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-xs"
+                    onClick={() => window.location.href = '/profile?tab=trade-offers'}
+                  >
+                    {t.common.viewAll}
+                  </Button>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      )}
 
       <LoginModal 
         open={showLoginModal} 
