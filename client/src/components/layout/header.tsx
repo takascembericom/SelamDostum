@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { LoginModal } from "@/components/auth/login-modal";
 import { RegisterModal } from "@/components/auth/register-modal";
-import { Plus, User, LogOut, Home, Shield, MessageCircle, Bell, Search, ArrowLeft, Mail, BellRing, FileSearch, ArrowRightLeft, CheckCircle, XCircle, Star, Globe } from "lucide-react";
+import { Plus, User, LogOut, Home, Shield, MessageCircle, Bell, Search, ArrowLeft, Mail, BellRing, FileSearch, ArrowRightLeft, CheckCircle, XCircle, Star, Globe, Leaf } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -81,6 +81,18 @@ export function Header() {
                     >
                       <Search className="h-4 w-4" />
                       <span className="hidden sm:inline">{t.nav.items}</span>
+                    </Button>
+                  </Link>
+                  
+                  <Link href="/blog" className="hidden lg:block">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="flex items-center gap-2 text-white hover:text-cyan-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
+                      data-testid="button-blog"
+                    >
+                      <Leaf className="h-4 w-4" />
+                      <span>{t.nav.blog}</span>
                     </Button>
                   </Link>
                   

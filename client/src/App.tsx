@@ -9,6 +9,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { LiveChat } from "@/components/live-chat";
 import { useAuth } from "@/hooks/useAuth";
+import { HelmetProvider } from "react-helmet-async";
 import Home from "@/pages/home";
 import Items from "@/pages/items";
 import ItemDetail from "@/pages/item-detail";
@@ -20,6 +21,8 @@ import AdminPanel from "@/pages/admin";
 import AdminLogin from "@/pages/admin-login";
 import NotFound from "@/pages/not-found";
 import EditItemPage from "@/pages/edit-item";
+import Blog from "@/pages/blog";
+import BlogDetail from "@/pages/blog-detail";
 import { NotificationPermissionBanner } from "@/components/notifications/notification-permission-banner";
 
 function Router() {
@@ -33,6 +36,8 @@ function Router() {
       <Route path="/user/:id" component={UserProfile} />
       <Route path="/add-item" component={AddItem} />
       <Route path="/messages" component={Messages} />
+      <Route path="/blog" component={Blog} />
+      <Route path="/blog/:slug" component={BlogDetail} />
       <Route path="/admin" component={AdminLogin} />
       <Route path="/admin-panel" component={AdminPanel} />
       <Route component={NotFound} />
@@ -59,11 +64,13 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <AuthProvider>
-          <AuthenticatedContent />
-        </AuthProvider>
-      </LanguageProvider>
+      <HelmetProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <AuthenticatedContent />
+          </AuthProvider>
+        </LanguageProvider>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }

@@ -7,7 +7,8 @@ export const translations = {
       addItem: "İlan Ekle",
       messages: "Mesajlar",
       admin: "Admin",
-      notifications: "Bildirimler"
+      notifications: "Bildirimler",
+      blog: "Blog"
     },
     auth: {
       login: "Giriş Yap",
@@ -331,7 +332,8 @@ export const translations = {
       addItem: "Add Item",
       messages: "Messages",
       admin: "Admin",
-      notifications: "Notifications"
+      notifications: "Notifications",
+      blog: "Blog"
     },
     auth: {
       login: "Login",
@@ -656,7 +658,8 @@ export const translations = {
       addItem: "إضافة عنصر",
       messages: "الرسائل",
       admin: "المسؤول",
-      notifications: "الإشعارات"
+      notifications: "الإشعارات",
+      blog: "مدونة"
     },
     auth: {
       login: "تسجيل الدخول",
