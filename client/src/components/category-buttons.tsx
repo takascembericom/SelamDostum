@@ -16,16 +16,16 @@ const CategoryButton = ({ emoji, title, description, href, dataTestId, isLoggedI
   // Giriş yapmamış kullanıcılar için sadece görsel
   if (!isLoggedIn) {
     return (
-      <Card className="border-0 opacity-80 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 text-white shadow-2xl animate-float backdrop-blur-sm">
+      <Card className="border-0 opacity-80 bg-gradient-to-br from-red-500 via-orange-500 to-red-600 text-white shadow-2xl animate-float backdrop-blur-sm">
         <CardContent className="p-6 text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-400/20 to-cyan-400/20 animate-pulse"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-red-400/30 to-orange-400/30 animate-pulse"></div>
           <div className="text-4xl mb-3 drop-shadow-2xl relative z-10">
             {emoji}
           </div>
           <h3 className="font-bold text-lg mb-2 text-white drop-shadow-lg relative z-10">
             {title}
           </h3>
-          <p className="text-cyan-100 text-sm relative z-10">
+          <p className="text-red-100 text-sm relative z-10">
             {description}
           </p>
         </CardContent>
@@ -36,16 +36,16 @@ const CategoryButton = ({ emoji, title, description, href, dataTestId, isLoggedI
   // Giriş yapmış kullanıcılar için tıklanabilir buton
   return (
     <Link href={href}>
-      <Card className="hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 cursor-pointer border-0 bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600 hover:from-pink-400 hover:via-fuchsia-500 hover:to-purple-600 text-white group animate-wave hover:animate-bounce shadow-xl backdrop-blur-sm relative overflow-hidden">
+      <Card className="hover:shadow-2xl hover:shadow-red-500/60 transition-all duration-300 cursor-pointer border-0 bg-gradient-to-br from-red-600 via-red-500 to-orange-600 hover:from-red-400 hover:via-orange-500 hover:to-red-500 text-white group animate-wave hover:animate-bounce shadow-xl backdrop-blur-sm relative overflow-hidden">
         <CardContent className="p-6 text-center relative z-10">
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/30 to-pink-400/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-400/40 to-red-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
           <div className="text-4xl mb-3 group-hover:scale-125 transition-transform duration-300 drop-shadow-2xl filter group-hover:brightness-125">
             {emoji}
           </div>
-          <h3 className="font-bold text-lg mb-2 text-white group-hover:text-cyan-100 drop-shadow-lg">
+          <h3 className="font-bold text-lg mb-2 text-white group-hover:text-orange-100 drop-shadow-lg">
             {title}
           </h3>
-          <p className="text-purple-100 text-sm group-hover:text-white">
+          <p className="text-red-100 text-sm group-hover:text-white">
             {description}
           </p>
         </CardContent>
@@ -126,8 +126,8 @@ export function CategoryButtons() {
         }
         
         @keyframes glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.3), 0 0 40px rgba(168, 85, 247, 0.2); }
-          50% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.4), 0 0 60px rgba(34, 197, 94, 0.3); }
+          0%, 100% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.4), 0 0 50px rgba(249, 115, 22, 0.3); }
+          50% { box-shadow: 0 0 35px rgba(220, 38, 38, 0.5), 0 0 70px rgba(234, 88, 12, 0.4); }
         }
         
         .animate-wave {
@@ -142,7 +142,7 @@ export function CategoryButtons() {
       <section className="py-12 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4 drop-shadow-lg">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-red-400 via-orange-400 to-red-500 bg-clip-text text-transparent mb-4 drop-shadow-lg">
               {t.common.categoriesTitle}
             </h2>
             <p className="text-lg text-gray-300">
