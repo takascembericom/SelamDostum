@@ -105,7 +105,7 @@ export default function BlogDetail() {
   if (!post) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Blog yazısı bulunamadı</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">{t.blog.notFound}</h1>
         <Link href="/blog">
           <Button>
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -176,7 +176,7 @@ export default function BlogDetail() {
           <Link href="/blog">
             <Button variant="ghost" className="text-green-600 hover:text-green-700 hover:bg-green-50">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              {language === 'tr' ? 'Blog\'a Dön' : language === 'en' ? 'Back to Blog' : 'العودة إلى المدونة'}
+              {t.blog.backToBlog}
             </Button>
           </Link>
         </div>
@@ -222,7 +222,7 @@ export default function BlogDetail() {
               className="border-green-300 text-green-700 hover:bg-green-50"
             >
               <Share2 className="h-4 w-4 mr-2" />
-              {language === 'tr' ? 'Paylaş' : language === 'en' ? 'Share' : 'شارك'}
+              {t.blog.share}
             </Button>
           </div>
         </header>
@@ -247,32 +247,22 @@ export default function BlogDetail() {
             <Globe className="h-8 w-8 text-blue-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            {language === 'tr' 
-              ? 'Hemen Takas Yapmaya Başla!' 
-              : language === 'en'
-              ? 'Start Trading Now!'
-              : 'ابدأ التداول الآن!'
-            }
+            {t.blog.startTradingNow}
           </h2>
           <p className="text-gray-600 mb-6">
-            {language === 'tr'
-              ? 'Kullanmadığın eşyaları paylaş, ihtiyacın olanları bul ve çevreye katkı sağla.'
-              : language === 'en'
-              ? 'Share items you don\'t use, find what you need and contribute to the environment.'
-              : 'شارك العناصر التي لا تستخدمها، واعثر على ما تحتاجه واساهم في البيئة.'
-            }
+            {t.blog.startTradingDesc}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/add-item">
               <Button className="bg-green-600 hover:bg-green-700 text-white">
                 <Leaf className="h-4 w-4 mr-2" />
-                {language === 'tr' ? 'İlan Ekle' : language === 'en' ? 'Add Item' : 'أضف عنصر'}
+                {t.blog.addItem}
               </Button>
             </Link>
             <Link href="/items">
               <Button variant="outline" className="border-green-300 text-green-700 hover:bg-green-50">
                 <Recycle className="h-4 w-4 mr-2" />
-                {language === 'tr' ? 'İlanları Gözat' : language === 'en' ? 'Browse Items' : 'تصفح العناصر'}
+                {t.blog.browseItems}
               </Button>
             </Link>
           </div>

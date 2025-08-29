@@ -208,7 +208,19 @@ export const translations = {
       electronicExample: "Çekmecede duran elektronik → İhtiyacın olan ev aletine takas et",
       readMore: "📖 Devamını Oku",
       startTrading: "Hemen Takas Et",
-      encouragement: "💚 Sen de çevreye katkı sağla, doğayı koru!"
+      encouragement: "💚 Sen de çevreye katkı sağla, doğayı koru!",
+      // Blog sayfa başlıkları ve açıklamaları
+      blogTitle: "Blog",
+      blogSubtitle: "Geri dönüşüm, sürdürülebilir yaşam ve çevre dostu alışkanlıklar hakkında değerli bilgiler",
+      environmentContribution: "Sen de Çevreye Katkı Sağla!",
+      environmentContributionDesc: "Kullanmadığın eşyaları takas ederek hem doğayı koru hem de ihtiyacın olan ürünlere sahip ol.",
+      addItem: "İlan Ekle",
+      browseItems: "İlanları Gözat",
+      backToBlog: "Blog'a Dön",
+      share: "Paylaş",
+      startTradingNow: "Hemen Takas Yapmaya Başla!",
+      startTradingDesc: "Kullanmadığın eşyaları paylaş, ihtiyacın olanları bul ve çevreye katkı sağla.",
+      notFound: "Blog yazısı bulunamadı"
     },
     home: {
       welcomeTitle: "Takas Çemberi'ne Hoş Geldiniz",
@@ -555,7 +567,19 @@ export const translations = {
       electronicExample: "Electronics in drawer → Trade for home appliance you need",
       readMore: "📖 Read More",
       startTrading: "Start Trading Now",
-      encouragement: "💚 You too contribute to the environment, protect nature!"
+      encouragement: "💚 You too contribute to the environment, protect nature!",
+      // Blog sayfa başlıkları ve açıklamaları
+      blogTitle: "Blog",
+      blogSubtitle: "Valuable insights on recycling, sustainable living and eco-friendly habits",
+      environmentContribution: "You Can Also Contribute to the Environment!",
+      environmentContributionDesc: "By trading items you don't use, both protect nature and get the products you need.",
+      addItem: "Add Item",
+      browseItems: "Browse Items",
+      backToBlog: "Back to Blog",
+      share: "Share",
+      startTradingNow: "Start Trading Now!",
+      startTradingDesc: "Share items you don't use, find what you need and contribute to the environment.",
+      notFound: "Blog post not found"
     },
     home: {
       welcomeTitle: "Welcome to Barter Circle",
@@ -903,7 +927,19 @@ export const translations = {
       electronicExample: "إلكترونيات في الدرج → استبدلها بجهاز منزلي تحتاجه",
       readMore: "📖 اقرأ المزيد",
       startTrading: "ابدأ التبادل الآن",
-      encouragement: "💚 أنت أيضاً ساهم في البيئة واحمِ الطبيعة!"
+      encouragement: "💚 أنت أيضاً ساهم في البيئة واحمِ الطبيعة!",
+      // Blog sayfa başlıkları ve açıklamaları
+      blogTitle: "مدونة",
+      blogSubtitle: "رؤى قيمة حول إعادة التدوير والعيش المستدام والعادات الصديقة للبيئة",
+      environmentContribution: "يمكنك أيضاً المساهمة في البيئة!",
+      environmentContributionDesc: "من خلال تبادل العناصر التي لا تستخدمها، احمِ الطبيعة واحصل على المنتجات التي تحتاجها.",
+      addItem: "أضف عنصر",
+      browseItems: "تصفح العناصر",
+      backToBlog: "العودة إلى المدونة",
+      share: "شارك",
+      startTradingNow: "ابدأ التداول الآن!",
+      startTradingDesc: "شارك العناصر التي لا تستخدمها، واعثر على ما تحتاجه واساهم في البيئة.",
+      notFound: "لم يتم العثور على المقال"
     },
     home: {
       welcomeTitle: "مرحباً بك في دائرة المقايضة",

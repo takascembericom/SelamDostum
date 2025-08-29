@@ -95,17 +95,12 @@ export default function Blog() {
           <div className="flex justify-center items-center gap-2 mb-4">
             <Leaf className="h-8 w-8 text-green-500" />
             <h1 className="text-4xl font-bold text-gray-900">
-              {language === 'tr' ? 'Blog' : language === 'en' ? 'Blog' : 'مدونة'}
+              {t.blog.blogTitle}
             </h1>
             <Recycle className="h-8 w-8 text-blue-500" />
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {language === 'tr' 
-              ? 'Geri dönüşüm, sürdürülebilir yaşam ve çevre dostu alışkanlıklar hakkında değerli bilgiler'
-              : language === 'en'
-              ? 'Valuable insights on recycling, sustainable living and eco-friendly habits'
-              : 'رؤى قيمة حول إعادة التدوير والعيش المستدام والعادات الصديقة للبيئة'
-            }
+            {t.blog.blogSubtitle}
           </p>
         </div>
 
@@ -144,7 +139,7 @@ export default function Blog() {
                     variant="outline" 
                     className="w-full group-hover:bg-green-50 group-hover:border-green-300 group-hover:text-green-700"
                   >
-                    {language === 'tr' ? 'Devamını Oku' : language === 'en' ? 'Read More' : 'اقرأ المزيد'}
+                    {t.blog.readMore}
                     <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
@@ -157,32 +152,22 @@ export default function Blog() {
         <div className="bg-gradient-to-r from-green-100 to-blue-100 rounded-2xl p-8 text-center">
           <Globe className="h-12 w-12 text-green-600 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            {language === 'tr' 
-              ? 'Sen de Çevreye Katkı Sağla!' 
-              : language === 'en'
-              ? 'You Can Also Contribute to the Environment!'
-              : 'يمكنك أيضاً المساهمة في البيئة!'
-            }
+            {t.blog.environmentContribution}
           </h2>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            {language === 'tr'
-              ? 'Kullanmadığın eşyaları takas ederek hem doğayı koru hem de ihtiyacın olan ürünlere sahip ol.'
-              : language === 'en'
-              ? 'By trading items you don\'t use, both protect nature and get the products you need.'
-              : 'من خلال تبادل العناصر التي لا تستخدمها، احمِ الطبيعة واحصل على المنتجات التي تحتاجها.'
-            }
+            {t.blog.environmentContributionDesc}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/add-item">
               <Button className="bg-green-600 hover:bg-green-700 text-white">
                 <Heart className="h-4 w-4 mr-2" />
-                {language === 'tr' ? 'İlan Ekle' : language === 'en' ? 'Add Item' : 'أضف عنصر'}
+                {t.blog.addItem}
               </Button>
             </Link>
             <Link href="/items">
               <Button variant="outline" className="border-green-300 text-green-700 hover:bg-green-50">
                 <Recycle className="h-4 w-4 mr-2" />
-                {language === 'tr' ? 'İlanları Gözat' : language === 'en' ? 'Browse Items' : 'تصفح العناصر'}
+                {t.blog.browseItems}
               </Button>
             </Link>
           </div>
