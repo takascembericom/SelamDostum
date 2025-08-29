@@ -207,7 +207,23 @@ export default function Home() {
       )}
 
       {/* How It Works */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-50">
+        <style>{`
+          @keyframes sweetPulse {
+            0%, 100% { 
+              background-color: rgba(239, 68, 68, 0.8);
+              box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+            }
+            50% { 
+              background-color: rgba(248, 113, 113, 0.9);
+              box-shadow: 0 0 45px rgba(248, 113, 113, 0.8);
+            }
+          }
+          .sweet-candy-red {
+            animation: sweetPulse 2s ease-in-out infinite;
+            background: linear-gradient(135deg, #ef4444, #f87171, #fca5a5);
+          }
+        `}</style>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-testid="title-how-it-works">
@@ -221,11 +237,19 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((step, index) => (
               <div key={index} className="text-center group" data-testid={`step-${index + 1}`}>
-                <div className={`w-20 h-20 ${step.color} rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform`}>
-                  {step.icon}
+                {/* Kutucuk şeklinde şeker kırmızısı arka plan */}
+                <div className="sweet-candy-red rounded-2xl p-8 mb-6 transform group-hover:scale-105 transition-all duration-300 shadow-2xl border-2 border-red-300/50">
+                  {/* İkon */}
+                  <div className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <div className="text-red-600">
+                      {step.icon}
+                    </div>
+                  </div>
+                  {/* Başlık */}
+                  <h3 className="text-xl font-bold text-white mb-3 drop-shadow-lg">{step.title}</h3>
+                  {/* Açıklama */}
+                  <p className="text-red-50 font-medium drop-shadow-md">{step.description}</p>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">{step.title}</h3>
-                <p className="text-gray-600">{step.description}</p>
               </div>
             ))}
           </div>
