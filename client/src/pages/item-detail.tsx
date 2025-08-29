@@ -16,6 +16,7 @@ import { TradeOfferModal } from "@/components/trade/trade-offer-modal";
 import { createOrGetConversation } from "@/lib/userMessages";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import { formatDisplayName } from "@/lib/userUtils";
 
 export default function ItemDetail() {
   const { id } = useParams<{ id: string }>();
@@ -225,7 +226,7 @@ export default function ItemDetail() {
                   </div>
                   <div>
                     <Link href={`/user/${item.ownerId}`} className="font-medium text-gray-900 hover:text-primary hover:underline" data-testid="owner-name">
-                      {item.ownerName}
+                      {formatDisplayName(item.ownerName)}
                     </Link>
                     <p className="text-sm text-gray-500">{t.items.itemOwner}</p>
                   </div>

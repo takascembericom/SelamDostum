@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { ArrowRight, Clock, CheckCircle, XCircle, Package, User, Trash2, Eye } from "lucide-react";
 import { CONDITION_LABELS, CATEGORY_LABELS } from "@shared/schema";
+import { formatDisplayName } from "@/lib/userUtils";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
@@ -144,7 +145,7 @@ export function TradeOffersList({ onAccept, onReject, onCancel }: TradeOffersLis
             data-testid={`profile-link-${offer.id}`}
           >
             <User className="h-3 w-3" />
-            {isReceived ? offer.fromUserName : offer.toUserName}
+            {formatDisplayName((isReceived ? offer.fromUserName : offer.toUserName) || 'Kullanıcı')}
           </button>
         </div>
       </CardHeader>

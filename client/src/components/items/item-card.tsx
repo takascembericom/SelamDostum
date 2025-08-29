@@ -6,6 +6,7 @@ import { MapPin, Star } from "lucide-react";
 import { CONDITION_LABELS, CATEGORY_LABELS } from "@shared/schema";
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { formatDisplayName } from "@/lib/userUtils";
 
 interface ItemCardProps {
   item: Item;
@@ -81,7 +82,7 @@ export function ItemCard({ item, onViewDetails }: ItemCardProps) {
           <div className="flex items-center space-x-2">
             <div className="w-6 h-6 bg-gray-300 rounded-full" data-testid={`avatar-item-${item.id}`}></div>
             <Link href={`/user/${item.ownerId}`} className="text-sm text-gray-600 hover:text-primary hover:underline" data-testid={`owner-item-${item.id}`}>
-              {item.ownerName}
+              {formatDisplayName(item.ownerName)}
             </Link>
           </div>
         </div>

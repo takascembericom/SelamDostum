@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { deleteConversationForUser } from "@/lib/userMessages";
+import { formatDisplayName } from "@/lib/userUtils";
 import { 
   MessageCircle, 
   User, 
@@ -203,7 +204,7 @@ export function ConversationsList({ onSelectConversation, selectedConversationId
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
                         <h4 className="font-medium text-gray-900 truncate">
-                          {conversation.otherUserName}
+                          {formatDisplayName(conversation.otherUserName)}
                         </h4>
                         <div className="flex items-center gap-2 flex-shrink-0">
                           {unreadCount > 0 && (

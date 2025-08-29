@@ -27,6 +27,7 @@ import { useLocation } from "wouter";
 import { ItemGrid } from "@/components/items/item-grid";
 import { CATEGORY_LABELS, CONDITION_LABELS } from "@shared/schema";
 import { Edit, Eye } from "lucide-react";
+import { formatDisplayName } from "@/lib/userUtils";
 
 export default function UserProfile() {
   const { id: userId } = useParams<{ id: string }>();
@@ -150,7 +151,7 @@ export default function UserProfile() {
           ...data,
           id: docSnap.id,
           createdAt: data.createdAt.toDate(),
-          raterName: raterData ? `${raterData.firstName} ${raterData.lastName}` : 'Kullanıcı',
+          raterName: raterData ? formatDisplayName(`${raterData.firstName} ${raterData.lastName}`) : 'Kullanıcı',
         } as Rating & { raterName: string });
       }
 
@@ -339,7 +340,7 @@ export default function UserProfile() {
                 </AvatarFallback>
               </Avatar>
               <CardTitle className="text-xl">
-                {user.firstName} {user.lastName}
+                {formatDisplayName(`${user.firstName} ${user.lastName}`)}
               </CardTitle>
               
               {/* Rating Display */}
