@@ -67,8 +67,7 @@ export function Header() {
                       className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                       data-testid="button-home"
                     >
-                      <ArrowLeft className="h-4 w-4 sm:hidden" />
-                      <Home className="h-4 w-4 hidden sm:block" />
+                      <Home className="h-4 w-4" />
                       <span className="hidden sm:inline">{t.nav.home}</span>
                     </Button>
                   </Link>
@@ -80,8 +79,7 @@ export function Header() {
                       className="flex items-center gap-2 text-green-600 hover:text-green-700 hover:bg-green-50"
                       data-testid="button-browse"
                     >
-                      <FileSearch className="h-4 w-4 sm:hidden" />
-                      <Search className="h-4 w-4 hidden sm:block" />
+                      <Search className="h-4 w-4" />
                       <span className="hidden sm:inline">{t.nav.items}</span>
                     </Button>
                   </Link>
