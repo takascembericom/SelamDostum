@@ -51,25 +51,33 @@ export default function Home() {
       icon: <UserPlus className="h-8 w-8" />,
       title: `1. ${t.home.step1Title}`,
       description: t.home.step1Description,
-      color: "bg-primary/10 text-primary"
+      gradientClass: "from-blue-500 to-purple-600",
+      iconBg: "bg-blue-100",
+      iconColor: "text-blue-600"
     },
     {
       icon: <Plus className="h-8 w-8" />,
       title: `2. ${t.home.step2Title}`,
       description: t.home.step2Description,
-      color: "bg-secondary/10 text-secondary"
+      gradientClass: "from-emerald-500 to-cyan-600",
+      iconBg: "bg-emerald-100",
+      iconColor: "text-emerald-600"
     },
     {
       icon: <Search className="h-8 w-8" />,
       title: `3. ${t.home.step3Title}`,
       description: t.home.step3Description,
-      color: "bg-accent/10 text-accent"
+      gradientClass: "from-orange-500 to-red-600",
+      iconBg: "bg-orange-100",
+      iconColor: "text-orange-600"
     },
     {
       icon: <div className="text-2xl">🤝</div>,
       title: `4. ${t.home.step4Title}`,
       description: t.home.step4Description,
-      color: "bg-green-500/10 text-green-500"
+      gradientClass: "from-purple-500 to-pink-600",
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600"
     }
   ];
 
@@ -209,19 +217,18 @@ export default function Home() {
       {/* How It Works */}
       <section className="py-20 bg-gray-50">
         <style>{`
-          @keyframes sweetPulse {
+          @keyframes modernPulse {
             0%, 100% { 
-              background-color: rgba(239, 68, 68, 0.8);
-              box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+              transform: translateY(0px);
+              box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             }
             50% { 
-              background-color: rgba(248, 113, 113, 0.9);
-              box-shadow: 0 0 45px rgba(248, 113, 113, 0.8);
+              transform: translateY(-5px);
+              box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             }
           }
-          .sweet-candy-red {
-            animation: sweetPulse 2s ease-in-out infinite;
-            background: linear-gradient(135deg, #ef4444, #f87171, #fca5a5);
+          .modern-gradient-card {
+            animation: modernPulse 3s ease-in-out infinite;
           }
         `}</style>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -237,18 +244,18 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((step, index) => (
               <div key={index} className="text-center group" data-testid={`step-${index + 1}`}>
-                {/* Kutucuk şeklinde şeker kırmızısı arka plan */}
-                <div className="sweet-candy-red rounded-2xl p-8 mb-6 transform group-hover:scale-105 transition-all duration-300 shadow-2xl border-2 border-red-300/50">
+                {/* Modern gradient kutucuk */}
+                <div className={`modern-gradient-card bg-gradient-to-br ${step.gradientClass} rounded-2xl p-8 mb-6 transform group-hover:scale-105 transition-all duration-500 shadow-2xl`}>
                   {/* İkon */}
-                  <div className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <div className="text-red-600">
+                  <div className={`w-16 h-16 ${step.iconBg} backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                    <div className={step.iconColor}>
                       {step.icon}
                     </div>
                   </div>
                   {/* Başlık */}
                   <h3 className="text-xl font-bold text-white mb-3 drop-shadow-lg">{step.title}</h3>
                   {/* Açıklama */}
-                  <p className="text-red-50 font-medium drop-shadow-md">{step.description}</p>
+                  <p className="text-white/90 font-medium drop-shadow-md">{step.description}</p>
                 </div>
               </div>
             ))}
