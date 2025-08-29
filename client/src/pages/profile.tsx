@@ -736,8 +736,8 @@ export default function Profile() {
                 <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-4">
                   <span className="text-orange-400 text-2xl">⏳</span>
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-2">Bekleyen ilan yok</h3>
-                <p className="text-gray-500 mb-4">Yeni eklediğiniz ilanlar admin onayından sonra burada görünür</p>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">{t.profile.noPendingItems}</h3>
+                <p className="text-gray-500 mb-4">{t.profile.noPendingItemsDesc}</p>
                 <Button asChild>
                   <Link href="/add-item">
                     <Plus className="h-4 w-4 mr-2" />
