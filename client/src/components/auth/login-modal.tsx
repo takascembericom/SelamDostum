@@ -21,7 +21,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Eye, EyeOff, Globe } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email("Geçerli e-posta giriniz"),
@@ -49,7 +55,7 @@ export function LoginModal({ open, onClose, onSwitchToRegister }: LoginModalProp
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -140,9 +146,43 @@ export function LoginModal({ open, onClose, onSwitchToRegister }: LoginModalProp
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md" data-testid="modal-login">
         <DialogHeader>
-          <DialogTitle data-testid="title-login">
-            {showResetPassword ? "Şifre Sıfırla" : "Giriş Yap"}
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle data-testid="title-login">
+              {showResetPassword ? t.auth.resetPassword : t.auth.login}
+            </DialogTitle>
+            
+            {/* Dil Seçici */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" data-testid="button-language-login">
+                  <Globe className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem 
+                  onClick={() => setLanguage('tr')}
+                  className={language === 'tr' ? 'bg-blue-50' : ''}
+                  data-testid="language-tr-login"
+                >
+                  🇹🇷 Türkçe
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setLanguage('en')}
+                  className={language === 'en' ? 'bg-blue-50' : ''}
+                  data-testid="language-en-login"
+                >
+                  🇺🇸 English
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setLanguage('ar')}
+                  className={language === 'ar' ? 'bg-blue-50' : ''}
+                  data-testid="language-ar-login"
+                >
+                  🇸🇦 العربية
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </DialogHeader>
 
         {showResetPassword ? (

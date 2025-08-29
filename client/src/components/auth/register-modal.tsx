@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { registerUser, signInWithGoogle } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Dialog,
   DialogContent,
@@ -20,8 +21,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Globe } from "lucide-react";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "En az 2 karakter"),
@@ -46,6 +53,7 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
+  const { language, setLanguage, t } = useLanguage();
 
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -107,7 +115,41 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto" data-testid="modal-register">
         <DialogHeader>
-          <DialogTitle data-testid="title-register">Kayıt Ol</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle data-testid="title-register">{t.auth.register}</DialogTitle>
+            
+            {/* Dil Seçici */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" data-testid="button-language-register">
+                  <Globe className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem 
+                  onClick={() => setLanguage('tr')}
+                  className={language === 'tr' ? 'bg-blue-50' : ''}
+                  data-testid="language-tr-register"
+                >
+                  🇹🇷 Türkçe
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setLanguage('en')}
+                  className={language === 'en' ? 'bg-blue-50' : ''}
+                  data-testid="language-en-register"
+                >
+                  🇺🇸 English
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setLanguage('ar')}
+                  className={language === 'ar' ? 'bg-blue-50' : ''}
+                  data-testid="language-ar-register"
+                >
+                  🇸🇦 العربية
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </DialogHeader>
 
         <Form {...form}>
