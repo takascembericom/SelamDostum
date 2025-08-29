@@ -292,7 +292,10 @@ export const translations = {
       noRecentItems: "Henüz ilan bulunmuyor",
       loginToSeeMore: "Daha fazla görmek için giriş yapın",
       stepsSubtitle: "4 adımda takas yapın",
-      recentItemsCount: "Yeni eklenen"
+      recentItemsCount: "Yeni eklenen",
+      ctaDescription: "Ücretsiz kayıt ol ve binlerce ilan arasından seç. İlk takas özel indirimli!",
+      addFirstItem: "İlk İlanını Ekle",
+      itemsText: "ilan"
     },
     categories: {
       all: "Tümü",
@@ -613,7 +616,10 @@ export const translations = {
       noRecentItems: "No items found yet", 
       loginToSeeMore: "Login to see more",
       stepsSubtitle: "Trade in 4 easy steps",
-      recentItemsCount: "Recently added"
+      recentItemsCount: "Recently added",
+      ctaDescription: "Register for free and choose from thousands of listings. First trade with special discount!",
+      addFirstItem: "Add Your First Item",
+      itemsText: "items"
     },
     categories: {
       all: "All",
@@ -935,7 +941,10 @@ export const translations = {
       noRecentItems: "لم يتم العثور على عناصر بعد",
       loginToSeeMore: "سجل الدخول لترى المزيد",
       stepsSubtitle: "التبادل في 4 خطوات سهلة",
-      recentItemsCount: "تم إضافة مؤخراً"
+      recentItemsCount: "تم إضافة مؤخراً",
+      ctaDescription: "سجل مجاناً واختر من آلاف الإعلانات. أول تبادل بخصم خاص!",
+      addFirstItem: "أضف عنصرك الأول",
+      itemsText: "عناصر"
     },
     categories: {
       all: "الكل",

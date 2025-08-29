@@ -121,11 +121,7 @@ export default function Home() {
             {t.home.welcomeSubtitle}
           </p>
           <p className="text-sm sm:text-base md:text-lg mb-8 max-w-xl mx-auto opacity-90 px-4" data-testid="description-hero">
-            {t.common.language === 'English' ? 
-              'Exchange unused items for what you need. Eco-friendly, economic & social trading platform.' : 
-             t.common.language === 'العربية' ? 
-              'استبدل العناصر غير المستخدمة بما تحتاجه. منصة تداول صديقة للبيئة واقتصادية واجتماعية.' :
-              'Kullanmadığınız eşyalarınızı başkalarının ihtiyaç duyduğu ürünlerle değiştirin. Çevreye duyarlı, ekonomik ve sosyal bir takas platformu.'}
+            {t.home.heroDescription}
           </p>
         </div>
       </section>
@@ -140,8 +136,7 @@ export default function Home() {
                   📦 {t.home.recentItems}
                 </h2>
                 <p className="text-xl text-gray-600">
-                  {t.home.recentItemsCount} {latestItems.length} {t.common.language === 'English' ? 'items' : 
-                   t.common.language === 'العربية' ? 'عناصر' : 'ilan'}
+                  {t.home.recentItemsCount} {latestItems.length} {t.home.itemsText}
                 </p>
               </div>
               <Button 
@@ -290,9 +285,7 @@ export default function Home() {
             {t.home.getStarted}
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            {t.common.language === 'English' ? 'Register for free and choose from thousands of listings. First trade with special discount!' : 
-             t.common.language === 'العربية' ? 'سجل مجاناً واختر من آلاف الإعلانات. أول تبادل بخصم خاص!' :
-             'Ücretsiz kayıt ol ve binlerce ilan arasından seç. İlk takas özel indirimli!'}
+            {t.home.ctaDescription}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {!user ? (
@@ -312,9 +305,7 @@ export default function Home() {
               >
                 <Link href="/add-item">
                   <Plus className="h-5 w-5 mr-2" />
-                  {t.common.language === 'English' ? 'Add Your First Item' : 
-                   t.common.language === 'العربية' ? 'أضف عنصرك الأول' :
-                   'İlk İlanını Ekle'}
+                  {t.home.addFirstItem}
                 </Link>
               </Button>
             )}
