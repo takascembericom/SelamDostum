@@ -413,12 +413,12 @@ export default function Profile() {
                 <DialogTrigger asChild>
                   <Button variant="outline" size="sm" data-testid="button-change-photo">
                     <Camera className="h-4 w-4 mr-2" />
-                    Fotoğraf Değiştir
+                    {t.profile.changePhoto}
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Profil Fotoğrafı Değiştir</DialogTitle>
+                    <DialogTitle>{t.profile.changePhoto}</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
@@ -456,7 +456,7 @@ export default function Profile() {
                 </div>
                 <div className="flex items-center gap-1">
                   <Package className="h-4 w-4" />
-                  <span data-testid="text-user-items-count">{activeItems.length} aktif ilan</span>
+                  <span data-testid="text-user-items-count">{activeItems.length} {t.profile.activeItem}</span>
                 </div>
                 {!user.emailVerified && (
                   <Badge variant="outline" className="text-yellow-600 border-yellow-300">
@@ -471,12 +471,12 @@ export default function Profile() {
                 <DialogTrigger asChild>
                   <Button variant="outline" data-testid="button-change-password">
                     <Lock className="h-4 w-4 mr-2" />
-                    Şifre Değiştir
+                    {t.profile.changePassword}
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Şifre Değiştir</DialogTitle>
+                    <DialogTitle>{t.profile.changePassword}</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
@@ -526,7 +526,7 @@ export default function Profile() {
               <Button asChild data-testid="button-add-item">
                 <Link href="/add-item">
                   <Plus className="h-4 w-4 mr-2" />
-                  İlan Ekle
+                  {t.nav.addItem}
                 </Link>
               </Button>
             </div>
@@ -542,7 +542,7 @@ export default function Profile() {
                   <p className="text-2xl font-bold text-primary" data-testid="stat-active-items">
                     {activeItems.length}
                   </p>
-                  <p className="text-gray-600">Aktif İlan</p>
+                  <p className="text-gray-600">{t.profile.activeItem}</p>
                 </div>
                 <Package className="h-8 w-8 text-primary" />
               </div>
@@ -556,7 +556,7 @@ export default function Profile() {
                   <p className="text-2xl font-bold text-green-600" data-testid="stat-completed-trades">
                     {tradedItems.length}
                   </p>
-                  <p className="text-gray-600">Tamamlanan Takas</p>
+                  <p className="text-gray-600">{t.profile.completedTrade}</p>
                 </div>
                 <Star className="h-8 w-8 text-green-600" />
               </div>
@@ -571,7 +571,7 @@ export default function Profile() {
                     {profile?.averageRating?.toFixed(1) || "0.0"}
                   </p>
                   <p className="text-gray-600">
-                    Ortalama Puan ({profile?.totalRatings || 0} değerlendirme)
+                    {t.profile.averageRating} ({profile?.totalRatings || 0} {t.profile.evaluation})
                   </p>
                 </div>
                 <Star className="h-8 w-8 text-yellow-500 fill-current" />
@@ -593,7 +593,7 @@ export default function Profile() {
                 }`}
                 data-testid="tab-pending-items"
               >
-                Bekleyen İlanlarım ({pendingItems.length})
+                {t.profile.pendingItems} ({pendingItems.length})
               </button>
               <button
                 onClick={() => setSelectedTab('active-items')}
@@ -604,7 +604,7 @@ export default function Profile() {
                 }`}
                 data-testid="tab-active-items"
               >
-                Aktif İlanlarım ({activeItems.length})
+                {t.profile.activeItems} ({activeItems.length})
               </button>
               <button
                 onClick={() => setSelectedTab('trade-offers')}
@@ -616,7 +616,7 @@ export default function Profile() {
                 data-testid="tab-trade-offers"
               >
                 <ArrowRightLeft className="h-4 w-4 inline mr-1" />
-                Takas Teklifleri
+                {t.profile.tradeOffers}
               </button>
               <button
                 onClick={() => setSelectedTab('messages')}
@@ -628,7 +628,7 @@ export default function Profile() {
                 data-testid="tab-messages"
               >
                 <MessageCircle className="h-4 w-4 inline mr-1" />
-                Mesajlarım
+                {t.profile.messages}
               </button>
               <button
                 onClick={() => setSelectedTab('rejected-items')}
@@ -639,7 +639,7 @@ export default function Profile() {
                 }`}
                 data-testid="tab-rejected-items"
               >
-                Reddedilen İlanlarım ({rejectedItems.length})
+                {t.profile.rejectedItems} ({rejectedItems.length})
               </button>
               <button
                 onClick={() => setSelectedTab('expired-items')}
@@ -650,7 +650,7 @@ export default function Profile() {
                 }`}
                 data-testid="tab-expired-items"
               >
-                Süresi Dolan İlanlarım ({expiredItems.length})
+                {t.profile.expiredItems} ({expiredItems.length})
               </button>
             </nav>
           </div>
@@ -662,17 +662,17 @@ export default function Profile() {
             {itemsLoading ? (
               <div className="text-center py-16">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                <p className="text-gray-600">Bekleyen ilanlarınız yükleniyor...</p>
+                <p className="text-gray-600">{t.profile.loadingPendingItems}</p>
               </div>
             ) : pendingItems.length > 0 ? (
               <div className="space-y-4">
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
                   <div className="flex items-center gap-2">
                     <span className="text-orange-600 text-sm">⏳</span>
-                    <span className="text-orange-800 font-medium">Bu ilanlar admin onayı bekliyor</span>
+                    <span className="text-orange-800 font-medium">{t.profile.pendingInfo}</span>
                   </div>
                   <p className="text-orange-700 text-sm mt-1">
-                    İlanlarınız admin tarafından incelendikten sonra yayınlanacak.
+                    {t.profile.pendingInfoDesc}
                   </p>
                 </div>
                 
@@ -686,8 +686,8 @@ export default function Profile() {
                     />
                     <span className="text-sm text-gray-600">
                       {selectedItems.size > 0 
-                        ? `${selectedItems.size} ilan seçildi` 
-                        : "Tümünü seç"}
+                        ? `${selectedItems.size} ${t.profile.itemsSelected}` 
+                        : t.profile.selectAll}
                     </span>
                   </div>
                   {selectedItems.size > 0 && (
@@ -699,7 +699,7 @@ export default function Profile() {
                       data-testid="button-bulk-delete-pending"
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
-                      {bulkActionLoading ? "Siliniyor..." : "Seçilenleri Sil"}
+                      {bulkActionLoading ? t.profile.deleting : t.profile.deleteSelected}
                     </Button>
                   )}
                 </div>
@@ -741,7 +741,7 @@ export default function Profile() {
                 <Button asChild>
                   <Link href="/add-item">
                     <Plus className="h-4 w-4 mr-2" />
-                    İlan Ekle
+                    {t.nav.addItem}
                   </Link>
                 </Button>
               </div>
@@ -768,8 +768,8 @@ export default function Profile() {
                     />
                     <span className="text-sm text-gray-600">
                       {selectedItems.size > 0 
-                        ? `${selectedItems.size} ilan seçildi` 
-                        : "Tümünü seç"}
+                        ? `${selectedItems.size} ${t.profile.itemsSelected}` 
+                        : t.profile.selectAll}
                     </span>
                   </div>
                   {selectedItems.size > 0 && (
@@ -781,7 +781,7 @@ export default function Profile() {
                       data-testid="button-bulk-delete-active"
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
-                      {bulkActionLoading ? "Siliniyor..." : "Seçilenleri Sil"}
+                      {bulkActionLoading ? t.profile.deleting : t.profile.deleteSelected}
                     </Button>
                   )}
                 </div>
@@ -804,7 +804,7 @@ export default function Profile() {
                             <div className="flex gap-2 mt-2">
                               <Badge variant="outline">{item.category}</Badge>
                               <Badge variant="outline">{item.condition}</Badge>
-                              <Badge variant="default">Aktif</Badge>
+                              <Badge variant="default">{t.profile.statusActive}</Badge>
                             </div>
                           </div>
                           <div className="flex flex-col gap-2">
@@ -814,14 +814,14 @@ export default function Profile() {
                               variant="default"
                               data-testid={`button-edit-${item.id}`}
                             >
-                              ✏️ Düzenle
+                              ✏️ {t.profile.edit}
                             </Button>
                             <Button
                               onClick={() => setLocation(`/item/${item.id}`)}
                               size="sm"
                               variant="outline"
                             >
-                              👁️ Görüntüle
+                              👁️ {t.profile.view}
                             </Button>
                           </div>
                         </div>
@@ -835,12 +835,12 @@ export default function Profile() {
                 <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                   <Package className="h-12 w-12 text-gray-400" />
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-2">Henüz aktif ilan yok</h3>
-                <p className="text-gray-500 mb-4">İlk ilanınızı ekleyin ve takas yapmaya başlayın!</p>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">{t.profile.noActiveItems}</h3>
+                <p className="text-gray-500 mb-4">{t.profile.noActiveItemsDesc}</p>
                 <Button asChild>
                   <Link href="/add-item">
                     <Plus className="h-4 w-4 mr-2" />
-                    İlan Ekle
+                    {t.nav.addItem}
                   </Link>
                 </Button>
               </div>
@@ -853,17 +853,17 @@ export default function Profile() {
             {itemsLoading ? (
               <div className="text-center py-16">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                <p className="text-gray-600">Reddedilen ilanlar yükleniyor...</p>
+                <p className="text-gray-600">{t.profile.loadingRejectedItems}</p>
               </div>
             ) : rejectedItems.length > 0 ? (
               <div className="space-y-4">
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                   <div className="flex items-center gap-2">
                     <span className="text-red-600 text-sm">❌</span>
-                    <span className="text-red-800 font-medium">Bu ilanlar admin tarafından reddedildi</span>
+                    <span className="text-red-800 font-medium">{t.profile.rejectedInfo}</span>
                   </div>
                   <p className="text-red-700 text-sm mt-1">
-                    İlanlarınız uygun olmadığı için yayınlanmadı. Yeni ilan ekleyebilirsiniz.
+                    {t.profile.rejectedInfoDesc}
                   </p>
                 </div>
                 
@@ -877,8 +877,8 @@ export default function Profile() {
                     />
                     <span className="text-sm text-gray-600">
                       {selectedItems.size > 0 
-                        ? `${selectedItems.size} ilan seçildi` 
-                        : "Tümünü seç"}
+                        ? `${selectedItems.size} ${t.profile.itemsSelected}` 
+                        : t.profile.selectAll}
                     </span>
                   </div>
                   {selectedItems.size > 0 && (
@@ -890,7 +890,7 @@ export default function Profile() {
                       data-testid="button-bulk-delete-rejected"
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
-                      {bulkActionLoading ? "Siliniyor..." : "Seçilenleri Sil"}
+                      {bulkActionLoading ? t.profile.deleting : t.profile.deleteSelected}
                     </Button>
                   )}
                 </div>
@@ -913,7 +913,7 @@ export default function Profile() {
                             <div className="flex gap-2 mt-2">
                               <Badge variant="outline">{item.category}</Badge>
                               <Badge variant="outline">{item.condition}</Badge>
-                              <Badge variant="destructive">Reddedildi</Badge>
+                              <Badge variant="destructive">{t.profile.statusRejected}</Badge>
                             </div>
                           </div>
                           <div className="flex gap-2">
@@ -923,14 +923,14 @@ export default function Profile() {
                               variant="default"
                               data-testid={`button-edit-${item.id}`}
                             >
-                              ✏️ Düzenle
+                              ✏️ {t.profile.edit}
                             </Button>
                             <Button
                               onClick={() => setLocation(`/item/${item.id}`)}
                               size="sm"
                               variant="outline"
                             >
-                              👁️ Görüntüle
+                              👁️ {t.profile.view}
                             </Button>
                           </div>
                         </div>
@@ -944,8 +944,8 @@ export default function Profile() {
                 <div className="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-4">
                   <span className="text-red-400 text-2xl">❌</span>
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-2">Reddedilen ilan yok</h3>
-                <p className="text-gray-500 mb-4">İlanlarınız henüz reddedilmemiş</p>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">{t.profile.noRejectedItems}</h3>
+                <p className="text-gray-500 mb-4">{t.profile.noRejectedItemsDesc}</p>
               </div>
             )}
           </div>
@@ -956,17 +956,17 @@ export default function Profile() {
             {itemsLoading ? (
               <div className="text-center py-16">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                <p className="text-gray-600">Süresi dolan ilanlar yükleniyor...</p>
+                <p className="text-gray-600">{t.profile.loadingExpiredItems}</p>
               </div>
             ) : expiredItems.length > 0 ? (
               <div className="space-y-4">
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
                   <div className="flex items-center gap-2">
                     <span className="text-orange-600 text-sm">⏰</span>
-                    <span className="text-orange-800 font-medium">Bu ilanların süresi dolmuş</span>
+                    <span className="text-orange-800 font-medium">{t.profile.expiredInfo}</span>
                   </div>
                   <p className="text-orange-700 text-sm mt-1">
-                    İlanlarınızı tekrar yayına almak için ödeme yapabilir veya silebilirsiniz.
+                    {t.profile.expiredInfoDesc}
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -986,8 +986,8 @@ export default function Profile() {
                 <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                   <span className="text-gray-400 text-2xl">⏰</span>
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-2">Süresi dolan ilan yok</h3>
-                <p className="text-gray-500">30 günden eski ilanlarınız burada görünür</p>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">{t.profile.noExpiredItems}</h3>
+                <p className="text-gray-500">{t.profile.noExpiredItemsDesc}</p>
               </div>
             )}
           </div>

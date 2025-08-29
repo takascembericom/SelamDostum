@@ -36,7 +36,7 @@ export const translations = {
     profile: {
       myProfile: "Profilim",
       myItems: "İlanlarım",
-      tradeOffers: "Teklifler",
+      tradeOffers: "Takas Teklifleri",
       ratings: "Değerlendirmeler",
       editProfile: "Profili Düzenle",
       profileUpdated: "Profil güncellendi",
@@ -45,7 +45,48 @@ export const translations = {
       itemCount: "İlan Sayısı",
       rating: "Değerlendirme",
       noItemsYet: "Henüz ilan yok",
-      noRatingsYet: "Henüz değerlendirme yok"
+      noRatingsYet: "Henüz değerlendirme yok",
+      changePhoto: "Fotoğraf Değiştir",
+      changePassword: "Şifre Değiştir",
+      activeItem: "Aktif İlan",
+      completedTrade: "Tamamlanan Takas",
+      averageRating: "Ortalama Puan",
+      evaluation: "değerlendirme",
+      pendingItems: "Bekleyen İlanlarım",
+      activeItems: "Aktif İlanlarım",
+      messages: "Mesajlarım",
+      rejectedItems: "Reddedilen İlanlarım",
+      expiredItems: "Süresi Dolan İlanlarım",
+      noPendingItems: "Bekleyen ilan yok",
+      noPendingItemsDesc: "Yeni eklediğiniz ilanlar admin onayından sonra burada görünür",
+      // Empty states
+      noActiveItems: "Henüz aktif ilan yok",
+      noActiveItemsDesc: "İlk ilanınızı ekleyin ve takas yapmaya başlayın!",
+      noRejectedItems: "Reddedilen ilan yok",
+      noRejectedItemsDesc: "İlanlarınız henüz reddedilmemiş",
+      noExpiredItems: "Süresi dolan ilan yok",
+      noExpiredItemsDesc: "30 günden eski ilanlarınız burada görünür",
+      // Loading messages
+      loadingPendingItems: "Bekleyen ilanlarınız yükleniyorŏ",
+      loadingRejectedItems: "Reddedilen ilanlar yükleniyorŏ",
+      loadingExpiredItems: "Süresi dolan ilanlar yükleniyorŏ",
+      // Info messages
+      pendingInfo: "Bu ilanlar admin onayı bekliyor",
+      pendingInfoDesc: "İlanlarınız admin tarafından incelendikten sonra yayınlanacak.",
+      rejectedInfo: "Bu ilanlar admin tarafından reddedildi",
+      rejectedInfoDesc: "İlanlarınız uygun olmadığı için yayınlanmadı. Yeni ilan ekleyebilirsiniz.",
+      expiredInfo: "Bu ilanların süresi dolmuş",
+      expiredInfoDesc: "İlanlarınızı tekrar yayına almak için ödeme yapabilir veya silebilirsiniz.",
+      // Button texts
+      edit: "Düzenle",
+      view: "Görüntüle",
+      selectAll: "Tümünü seç",
+      deleteSelected: "Seçilenleri Sil",
+      deleting: "Siliniyor...",
+      itemsSelected: "ilan seçildi",
+      // Status badges
+      statusActive: "Aktif",
+      statusRejected: "Reddedildi"
     },
     items: {
       title: "Başlık",
