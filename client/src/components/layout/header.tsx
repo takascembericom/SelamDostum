@@ -48,10 +48,10 @@ export function Header() {
 
   return (
     <>
-      <header className="bg-white shadow-sm sticky top-0 z-40">
+      <header className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-500 shadow-lg sticky top-0 z-40 backdrop-blur-md">
         {/* Mobile Floating Add Item Button - Removed per user request */}
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="flex justify-between items-center h-24">
             <div className="flex items-center">
               {/* Header left side empty as requested */}
@@ -64,7 +64,7 @@ export function Header() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                      className="flex items-center gap-2 text-white hover:text-yellow-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
                       data-testid="button-home"
                     >
                       <Home className="h-4 w-4" />
@@ -76,7 +76,7 @@ export function Header() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="flex items-center gap-2 text-green-600 hover:text-green-700 hover:bg-green-50"
+                      className="flex items-center gap-2 text-white hover:text-green-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
                       data-testid="button-browse"
                     >
                       <Search className="h-4 w-4" />
@@ -88,7 +88,7 @@ export function Header() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 bg-white/10 border-white/30 text-white hover:bg-white hover:text-purple-600 rounded-xl transition-all duration-300 transform hover:scale-105 font-semibold shadow-lg"
                       data-testid="button-add-item"
                     >
                       <Plus className="h-4 w-4" />
@@ -101,7 +101,7 @@ export function Header() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="flex items-center gap-2 relative text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                      className="flex items-center gap-2 relative text-white hover:text-pink-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
                       data-testid="button-messages"
                     >
                       <MessageCircle className="h-4 w-4" />
@@ -124,7 +124,7 @@ export function Header() {
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex items-center gap-2 relative"
+                          className="flex items-center gap-2 relative text-white hover:text-orange-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
                           data-testid="button-notifications"
                         >
                           <Bell className="h-4 w-4" />
@@ -242,7 +242,7 @@ export function Header() {
                   {/* Language Selector - Mobilde de görünür */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" data-testid="button-language">
+                      <Button variant="ghost" size="sm" className="text-white hover:text-cyan-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm" data-testid="button-language">
                         <Globe className="h-4 w-4 sm:mr-2" />
                         <span className="hidden sm:inline">{t.common.language}</span>
                       </Button>
@@ -276,7 +276,7 @@ export function Header() {
                   <div className="sm:hidden">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" data-testid="button-profile-mobile-header">
+                        <Button variant="ghost" size="sm" className="text-white hover:text-pink-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm" data-testid="button-profile-mobile-header">
                           <User className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -301,7 +301,7 @@ export function Header() {
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="hidden sm:flex items-center gap-2"
+                        className="hidden sm:flex items-center gap-2 text-white hover:text-pink-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
                         data-testid="button-user-menu"
                       >
                         <User className="h-4 w-4" />
@@ -329,7 +329,7 @@ export function Header() {
                   {/* Dil Seçici - Giriş yapmamış kullanıcılar için */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" data-testid="button-language-guest">
+                      <Button variant="ghost" size="sm" className="text-white hover:text-cyan-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm" data-testid="button-language-guest">
                         <Globe className="h-4 w-4 mr-2" />
                         <span className="hidden sm:inline">{t.common.language}</span>
                       </Button>
@@ -361,12 +361,14 @@ export function Header() {
                   
                   <Button 
                     variant="ghost" 
+                    className="text-white hover:text-yellow-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm font-medium"
                     onClick={() => setShowLoginModal(true)}
                     data-testid="button-login"
                   >
                     {t.auth.login}
                   </Button>
                   <Button 
+                    className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-purple-600 rounded-xl transition-all duration-300 transform hover:scale-105 font-semibold shadow-lg"
                     onClick={() => setShowRegisterModal(true)}
                     data-testid="button-register"
                   >
@@ -382,16 +384,16 @@ export function Header() {
 
       {/* Mobile Bottom Navigation Bar */}
       {user && (
-        <div className="fixed bottom-0 left-0 right-0 z-[100] sm:hidden bg-white border-t border-gray-200 shadow-lg">
+        <div className="fixed bottom-0 left-0 right-0 z-[100] sm:hidden bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-2xl backdrop-blur-md border-t border-white/20">
           <div className="flex justify-around items-center py-2">
             <Link href="/">
-              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2">
+              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2 text-white hover:text-yellow-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105">
                 <Home className="h-5 w-5" />
                 <span className="text-xs">{t.nav.home}</span>
               </Button>
             </Link>
             <Link href="/messages">
-              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2 relative">
+              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2 relative text-white hover:text-green-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105">
                 <MessageCircle className="h-5 w-5" />
                 <span className="text-xs">{t.nav.messages}</span>
                 {unreadCount > 0 && (
@@ -403,7 +405,7 @@ export function Header() {
             </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2 relative">
+                <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2 relative text-white hover:text-orange-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105">
                   <Bell className="h-5 w-5" />
                   <span className="text-xs">{t.nav.notifications}</span>
                   {notificationUnreadCount > 0 && (
@@ -413,7 +415,7 @@ export function Header() {
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80 mb-16">
+              <DropdownMenuContent align="end" className="w-80 mb-16 bg-white/95 backdrop-blur-md shadow-2xl border border-white/20 rounded-2xl">
                 <div className="p-3 border-b">
                   <h3 className="font-semibold">{t.nav.notifications}</h3>
                 </div>
