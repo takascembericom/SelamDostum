@@ -622,7 +622,6 @@ export default function AddItem() {
                             type="file"
                             accept="image/jpeg,image/jpg,image/png,image/webp"
                             multiple
-                            capture="environment"
                             onChange={handleImageUpload}
                             className="hidden"
                             data-testid="input-image-upload"
