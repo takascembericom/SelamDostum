@@ -190,7 +190,7 @@ export const translations = {
     home: {
       welcomeTitle: "Takas Çemberi'ne Hoş Geldiniz",
       welcomeSubtitle: "Sürdürülebilir bir gelecek için eşyalarınızı takas edin",
-      heroDescription: "Kullanmadığınız eşyalarınızı başkalarının ihtiyaç duyduğu ürünlerle değiştirin. Çevreye duyarlı, ekonomik ve sosyal bir takas platformu.",
+      heroDescription: "Burada alışveriş yerine paylaşım... Harcama yerine kazanım... Tüketim yerine üretim var...",
       getStarted: "Hemen Başla",
       howItWorks: "Nasıl Çalışır?",
       step1Title: "Hesap Oluştur",
@@ -514,7 +514,7 @@ export const translations = {
     home: {
       welcomeTitle: "Welcome to Barter Circle",
       welcomeSubtitle: "Trade your items for a sustainable future",
-      heroDescription: "Exchange your unused items with products that others need. An environmentally conscious, economical and social trading platform.",
+      heroDescription: "Here is sharing instead of shopping... Gain instead of spending... Production instead of consumption...",
       getStarted: "Get Started",
       howItWorks: "How It Works?",
       step1Title: "Create Account",
@@ -839,7 +839,7 @@ export const translations = {
     home: {
       welcomeTitle: "مرحباً بك في دائرة المقايضة",
       welcomeSubtitle: "تبادل العناصر من أجل مستقبل مستدام",
-      heroDescription: "تبادل العناصر غير المستخدمة مع المنتجات التي يحتاجها الآخرون. منصة تجارية واعية بيئياً واقتصادياً واجتماعياً.",
+      heroDescription: "هنا التقاسم بدلاً من التسوق... الكسب بدلاً من الإنفاق... الإنتاج بدلاً من الاستهلاك...",
       getStarted: "ابدأ الآن",
       howItWorks: "كيف يعمل؟",
       step1Title: "إنشاء حساب",
