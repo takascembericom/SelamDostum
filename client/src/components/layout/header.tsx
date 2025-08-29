@@ -304,6 +304,39 @@ export function Header() {
                 </>
               ) : (
                 <>
+                  {/* Dil Seçici - Giriş yapmamış kullanıcılar için */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" data-testid="button-language-guest">
+                        <Globe className="h-4 w-4 mr-2" />
+                        <span className="hidden sm:inline">{t.common.language}</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem 
+                        onClick={() => setLanguage('tr')}
+                        className={language === 'tr' ? 'bg-blue-50' : ''}
+                        data-testid="language-tr-guest"
+                      >
+                        🇹🇷 Türkçe
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => setLanguage('en')}
+                        className={language === 'en' ? 'bg-blue-50' : ''}
+                        data-testid="language-en-guest"
+                      >
+                        🇺🇸 English
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => setLanguage('ar')}
+                        className={language === 'ar' ? 'bg-blue-50' : ''}
+                        data-testid="language-ar-guest"
+                      >
+                        🇸🇦 العربية
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  
                   <Button 
                     variant="ghost" 
                     onClick={() => setShowLoginModal(true)}
