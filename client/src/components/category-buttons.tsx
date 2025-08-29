@@ -3,14 +3,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-// Import generated category icons
-import teknolojikIcon from "@assets/generated_images/teknolojik_ürünler_ikonu_73ac75c9.png";
-import beyazEsyaIcon from "@assets/generated_images/beyaz_eşya_ikonu_5c4b9c4e.png";
-import mobilyaIcon from "@assets/generated_images/mobilya_ikonu_8cede8c4.png";
-import arabaIcon from "@assets/generated_images/araba_yedek_parça_ikonu_dbb3157f.png";
-import oyuncakIcon from "@assets/generated_images/oyuncak_ikonu_0ec396ba.png";
-import tasinmazIcon from "@assets/generated_images/taşınmazlar_ikonu_8bd46d93.png";
-import kitapIcon from "@assets/generated_images/kitap_ikonu_a8cc965e.png";
+// Import realistic category icons
+import teknolojikIcon from "@assets/generated_images/gerçekçi_teknoloji_ikonu_28fd7186.png";
+import beyazEsyaIcon from "@assets/generated_images/gerçekçi_beyaz_eşya_ikonu_95d2b5c3.png";
+import mobilyaIcon from "@assets/generated_images/gerçekçi_mobilya_ikonu_47e8c53a.png";
+import arabaIcon from "@assets/generated_images/gerçekçi_araba_ikonu_d53970a9.png";
+import oyuncakIcon from "@assets/generated_images/gerçekçi_oyuncak_ikonu_5b63c4bc.png";
+import tasinmazIcon from "@assets/generated_images/gerçekçi_taşınmaz_ikonu_da4f855a.png";
+import kitapIcon from "@assets/generated_images/gerçekçi_kitap_ikonu_0a9bbbb2.png";
 
 interface CategoryButtonProps {
   iconSrc: string;
@@ -35,7 +35,7 @@ const CategoryButton = ({ iconSrc, title, description, href, dataTestId, isLogge
               alt={title}
               className="w-full h-full object-contain filter brightness-110 drop-shadow-lg group-hover:brightness-125 transition-all duration-300 animate-pulse"
             />
-            <div className="absolute inset-0 bg-gradient-to-br from-red-400/30 to-transparent rounded-lg"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-lg"></div>
           </div>
           <h3 className="font-bold text-lg mb-2 text-white drop-shadow-md">
             {title}
@@ -60,12 +60,12 @@ const CategoryButton = ({ iconSrc, title, description, href, dataTestId, isLogge
             <img 
               src={iconSrc} 
               alt={title}
-              className="w-full h-full object-contain filter brightness-125 drop-shadow-2xl group-hover:brightness-150 transition-all duration-500 animate-bounce"
+              className="w-full h-full object-contain filter brightness-110 drop-shadow-2xl group-hover:brightness-125 transition-all duration-500 animate-bounce"
               style={{
-                filter: "brightness(1.25) contrast(1.1) saturate(1.2) drop-shadow(0 0 20px rgba(239, 68, 68, 0.6))"
+                filter: "brightness(1.1) contrast(1.05) saturate(1.1) drop-shadow(0 0 15px rgba(0, 0, 0, 0.3))"
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-br from-red-300/40 to-transparent rounded-lg group-hover:from-red-200/60 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-lg group-hover:from-white/50 transition-all duration-300"></div>
           </div>
           <h3 className="font-bold text-lg mb-2 text-white group-hover:text-red-50 drop-shadow-lg">
             {title}
