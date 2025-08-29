@@ -60,7 +60,8 @@ export function Header() {
             <div className="flex items-center space-x-4">
               {user ? (
                 <>
-                  <Link href="/">
+                  {/* Home button - Hidden on mobile */}
+                  <Link href="/" className="hidden sm:block">
                     <Button 
                       variant="ghost" 
                       size="sm" 
