@@ -28,7 +28,7 @@ export function ItemCard({ item, onViewDetails }: ItemCardProps) {
           <img
             src={item.images[0]}
             alt={item.title}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-48 sm:h-56 lg:h-64 xl:h-72 object-cover group-hover:scale-105 transition-transform duration-300"
             data-testid={`img-item-${item.id}`}
           />
         )}
