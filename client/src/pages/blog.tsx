@@ -19,26 +19,44 @@ interface BlogPost {
 }
 
 // Blog yazıları veritabanı
-const blogPosts: BlogPost[] = [
-  {
-    id: "1",
-    title: "Geri Dönüşüm Neden Bu Kadar Önemli?",
-    slug: "geri-donusum-neden-onemli",
-    excerpt: "Doğayı korumanın en etkili yollarından biri olan geri dönüşümün önemini keşfedin. Takas yaparak hem çevreyi koruyun hem de ekonomiye katkı sağlayın.",
-    content: "", // Bu blog detay sayfasında doldurulacak
-    publishedAt: "2024-01-15",
-    readTime: "5 dakika",
-    tags: ["Geri Dönüşüm", "Çevre", "Sürdürülebilirlik", "Takas"],
-    seoKeywords: [
-      "geri dönüşüm", "çevre dostu yaşam", "sürdürülebilirlik", "takas", 
-      "atık yönetimi", "yeşil yaşam", "doğa koruma", "ekonomik fayda",
-      "sıfır atık", "plastik geri dönüşüm", "metal geri dönüşüm", "elektronik atık"
-    ]
-  }
-];
+function getBlogPosts(t: any): BlogPost[] {
+  return [
+    {
+      id: "1",
+      title: t.blog.recyclingTitle,
+      slug: "geri-donusum-neden-onemli",
+      excerpt: t.blog.recyclingSubtitle,
+      content: "", // Bu blog detay sayfasında doldurulacak
+      publishedAt: "2024-01-15",
+      readTime: "5 dakika",
+      tags: ["Geri Dönüşüm", "Çevre", "Sürdürülebilirlik", "Takas"],
+      seoKeywords: [
+        "geri dönüşüm", "çevre dostu yaşam", "sürdürülebilirlik", "takas", 
+        "atık yönetimi", "yeşil yaşam", "doğa koruma", "ekonomik fayda",
+        "sıfır atık", "plastik geri dönüşüm", "metal geri dönüşüm", "elektronik atık"
+      ]
+    },
+    {
+      id: "2",
+      title: t.blog.nationalCapitalTitle,
+      slug: "milli-sermaye-nedir",
+      excerpt: t.blog.nationalCapitalExcerpt,
+      content: "", // Bu blog detay sayfasında doldurulacak
+      publishedAt: "2024-01-20",
+      readTime: "7 dakika",
+      tags: ["Ekonomi", "Milli Sermaye", "Tasarruf", "İsraf"],
+      seoKeywords: [
+        "milli sermaye", "ekonomi", "yerli üretim", "tasarruf", "israf", 
+        "doğal kaynaklar", "insan kaynağı", "ekonomik kalkınma", "bağımsızlık",
+        "ithalat", "ihracat", "beyin göçü", "ar-ge", "teknoloji", "yatırım"
+      ]
+    }
+  ];
+}
 
 export default function Blog() {
   const { language, t } = useLanguage();
+  const blogPosts = getBlogPosts(t);
 
   return (
     <>
@@ -50,7 +68,7 @@ export default function Blog() {
         />
         <meta 
           name="keywords" 
-          content="geri dönüşüm blog, çevre dostu yaşam, sürdürülebilirlik, takas rehberi, yeşil yaşam, atık yönetimi, doğa koruma, sıfır atık, plastik geri dönüşüm, metal geri dönüşüm, elektronik atık, ekonomik fayda, çevre bilinci"
+          content="geri dönüşüm blog, çevre dostu yaşam, sürdürülebilirlik, takas rehberi, yeşil yaşam, atık yönetimi, doğa koruma, sıfır atık, plastik geri dönüşüm, metal geri dönüşüm, elektronik atık, ekonomik fayda, çevre bilinci, milli sermaye, ekonomi, yerli üretim, tasarruf, israf, doğal kaynaklar, insan kaynağı, ekonomik kalkınma, bağımsızlık, ithalat, ihracat, beyin göçü, ar-ge, teknoloji, yatırım, ekonomik bağımsızlık, milli ekonomi, kaynak yönetimi, sürdürülebilir ekonomi"
         />
         
         {/* Open Graph Tags */}

@@ -20,45 +20,46 @@ interface BlogPost {
 }
 
 // Blog yazıları veritabanı
-const blogPosts: BlogPost[] = [
-  {
-    id: "1",
-    title: "Geri Dönüşüm Neden Bu Kadar Önemli?",
-    slug: "geri-donusum-neden-onemli",
-    excerpt: "Doğayı korumanın en etkili yollarından biri olan geri dönüşümün önemini keşfedin. Takas yaparak hem çevreyi koruyun hem de ekonomiye katkı sağlayın.",
-    content: `# Geri Dönüşüm Neden Bu Kadar Önemli? 🌍♻️
+function getBlogPosts(t: any): BlogPost[] {
+  return [
+    {
+      id: "1",
+      title: t.blog.recyclingTitle,
+      slug: "geri-donusum-neden-onemli",
+      excerpt: t.blog.recyclingSubtitle,
+      content: `# ${t.blog.recyclingTitle} 🌍♻️
 
 Hepimizin evinde, iş yerinde ya da çevremizde artık kullanmadığımız pek çok eşya var. Bu eşyaların çoğu ya çöpe gidiyor ya da köşede unutuluyor. Oysa geri dönüşüm sayesinde hem doğayı koruyabilir, hem de milli ekonomiye katkı sağlayabiliriz.
 
-## 1. Doğayı Korumak İçin
+## 1. ${t.blog.protectNatureTitle}
 
-Her yıl tonlarca plastik, cam, metal ve elektronik atık doğaya bırakılıyor. Bu atıkların yok olması yüzlerce yıl sürebiliyor. Örneğin:
+${t.blog.protectNatureDesc}
 
-* **Plastik şişe:** 400 yıl
-* **Alüminyum kutu:** 80-100 yıl
-* **Cam şişe:** Doğada neredeyse hiç yok olmuyor
+* **${t.blog.plasticBottle}**
+* **${t.blog.aluminumCan}**
+* **${t.blog.glassBottle}**
 
 Geri dönüşüm, bu materyallerin yeniden kullanılmasını sağlayarak doğanın yükünü hafifletir.
 
-## 2. Ekonomiye Katkı Sağlamak
+## 2. ${t.blog.economyTitle}
 
-Kullanmadığımız eşyalar çöp olmak zorunda değil. Onları yeniden değerlendirmek, başka ihtiyaçlarla buluşturmak mümkün. Böylece:
+${t.blog.economyDesc}
 
-* Yeni ürün üretiminde kullanılan ham madde ihtiyacı azalır.
-* Enerji tüketimi büyük ölçüde düşer.
-* Ülke ekonomisine ciddi katkı sağlanır.
+* ${t.blog.rawMaterial}
+* ${t.blog.energyConsumption}
+* ${t.blog.economicContribution}
 
 ## 3. Çevre Dostu Yaşam Tarzı
 
 Geri dönüşüm sadece doğayı korumak değil, aynı zamanda yaşam tarzımızı da dönüştürmektir. Paylaşım kültürü, ihtiyaç fazlasını değerlendirme ve sıfır atık bilinci hayatımıza değer katar.
 
-## 4. Geri Dönüşümün En Kolay Yolu: Takas
+## 4. ${t.blog.easiestWayTitle}
 
-Artık kullanmadığınız eşyaları çöpe atmak yerine ihtiyacı olanlarla paylaşabilirsiniz. Takas sayesinde hem siz kazanırsınız hem de ürünler çöpe gitmez.
+${t.blog.easiestWayDesc}
 
-* Kullanmadığınız telefon → Fotoğraf makinesiyle değiştir
-* Fazla mobilya → Yeni bir bisiklete dönüştür
-* Çekmecede duran elektronik → İhtiyacın olan ev aletine takas et
+* ${t.blog.phoneExample}
+* ${t.blog.furnitureExample}
+* ${t.blog.electronicExample}
 
 İşte bu kadar basit!
 
@@ -67,18 +68,78 @@ Artık kullanmadığınız eşyaları çöpe atmak yerine ihtiyacı olanlarla pa
 ### Sonuç
 
 Geri dönüşüm; doğayı korumanın, israfı önlemenin ve geleceğe daha temiz bir dünya bırakmanın en etkili yollarından biridir. Sen de bugün bir adım atarak kullanmadığın eşyaları takas etmeyi deneyebilirsin. 🌱`,
-    publishedAt: "2024-01-15",
-    readTime: "5 dakika",
-    tags: ["Geri Dönüşüm", "Çevre", "Sürdürülebilirlik", "Takas"],
-    seoKeywords: [
-      "geri dönüşüm", "çevre dostu yaşam", "sürdürülebilirlik", "takas", 
-      "atık yönetimi", "yeşil yaşam", "doğa koruma", "ekonomik fayda",
-      "sıfır atık", "plastik geri dönüşüm", "metal geri dönüşüm", "elektronik atık",
-      "doğa koruma", "çevre bilinci", "sürdürülebilir yaşam", "yeşil teknoloji"
-    ],
-    author: "Takas Çemberi Editörü"
-  }
-];
+      publishedAt: "2024-01-15",
+      readTime: "5 dakika",
+      tags: ["Geri Dönüşüm", "Çevre", "Sürdürülebilirlik", "Takas"],
+      seoKeywords: [
+        "geri dönüşüm", "çevre dostu yaşam", "sürdürülebilirlik", "takas", 
+        "atık yönetimi", "yeşil yaşam", "doğa koruma", "ekonomik fayda",
+        "sıfır atık", "plastik geri dönüşüm", "metal geri dönüşüm", "elektronik atık",
+        "doğa koruma", "çevre bilinci", "sürdürülebilir yaşam", "yeşil teknoloji"
+      ],
+      author: "Takas Çemberi Editörü"
+    },
+    {
+      id: "2",
+      title: t.blog.nationalCapitalTitle,
+      slug: "milli-sermaye-nedir",
+      excerpt: t.blog.nationalCapitalExcerpt,
+      content: `# ${t.blog.nationalCapitalTitle} 💰🇹🇷
+
+Milli sermaye, bir ülkenin sahip olduğu **maddi ve manevi tüm kaynakların toplamı**dır. Kısaca; ülkenin üretim gücü, doğal zenginlikleri, insan kaynağı, bilgi birikimi ve ekonomik değerleri milli sermayeyi oluşturur.
+
+## Milli Sermaye Nasıl Oluşur?
+
+Milli sermaye tek bir kaynaktan değil, pek çok farklı faktörün birleşiminden ortaya çıkar:
+
+* **Doğal Kaynaklar:** Madenler, tarım alanları, su kaynakları.
+* **Üretim ve Sanayi:** Fabrikalar, işletmeler, teknolojik yatırımlar.
+* **İnsan Kaynağı:** Eğitimli ve üretken iş gücü.
+* **Tasarruf ve Yatırımlar:** Bireylerin ve devletin birikimleri.
+* **Bilgi ve Teknoloji:** Yenilikçi fikirler, yazılım, AR-GE çalışmaları.
+
+Kısacası, hem devletin hem de halkın elindeki tüm değerler milli sermayeyi besler.
+
+## Milli Sermaye Nasıl Tükenir?
+
+Bir ülkenin sermayesini kaybetmesi, geleceğini de riske atar. Milli sermayenin tükenmesine yol açan başlıca nedenler:
+
+* **İsraf:** Kullanılabilir ürünlerin çöpe gitmesi.
+* **İthalata Aşırı Bağımlılık:** Yerli üretim yerine sürekli dışarıdan almak.
+* **Doğal Kaynakların Tahribatı:** Ormanların yok edilmesi, su kaynaklarının kirlenmesi.
+* **Beyin Göçü:** Eğitimli insanların başka ülkelere gitmesi.
+* **Borçlanma ve Dışa Bağımlılık:** Ekonominin dış kaynaklara teslim olması.
+
+## Neden Korumalıyız?
+
+Milli sermaye, bir ülkenin bağımsızlığının teminatıdır. Ne kadar güçlü bir sermayemiz olursa, o kadar az dışa bağımlı oluruz. Geri dönüşüm, yerli üretimi desteklemek, tasarruf yapmak ve bilgiyi korumak milli sermayemizi güçlendirir.
+
+## Takas ve Milli Sermaye
+
+Kullanmadığımız eşyaları takas etmek, aslında milli sermayeyi koruma yollarından biridir:
+
+* **İsrafı engelleriz:** Çöpe giden eşyalar yerine ihtiyaç sahipleriyle buluşturuz.
+* **Yerli değeri koruruz:** İthalat yerine mevcut kaynaklarımızı değerlendiririz.
+* **Ekonomik döngüyü güçlendiririz:** Para harcamak yerine değiş-tokuş yaparız.
+
+---
+
+### Sonuç
+
+Milli sermaye sadece para değildir; doğamız, insanımız, kültürümüz ve üretim gücümüzdür. Eğer israf etmez, bilinçli tüketir ve paylaşım kültürünü geliştirirsek milli sermayemizi koruyabiliriz. 🌱`,
+      publishedAt: "2024-01-20",
+      readTime: "7 dakika",
+      tags: ["Ekonomi", "Milli Sermaye", "Tasarruf", "İsraf"],
+      seoKeywords: [
+        "milli sermaye", "ekonomi", "yerli üretim", "tasarruf", "israf", 
+        "doğal kaynaklar", "insan kaynağı", "ekonomik kalkınma", "bağımsızlık",
+        "ithalat", "ihracat", "beyin göçü", "ar-ge", "teknoloji", "yatırım",
+        "ekonomik bağımsızlık", "milli ekonomi", "kaynak yönetimi", "sürdürülebilir ekonomi"
+      ],
+      author: "Takas Çemberi Editörü"
+    }
+  ];
+}
 
 // Markdown-style content'i HTML'e çeviren basit parser
 function parseMarkdownContent(content: string) {
@@ -99,6 +160,7 @@ export default function BlogDetail() {
   const params = useParams();
   const { language, t } = useLanguage();
   const slug = params.slug;
+  const blogPosts = getBlogPosts(t);
   
   const post = blogPosts.find(p => p.slug === slug);
   

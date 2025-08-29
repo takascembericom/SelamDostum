@@ -220,7 +220,10 @@ export const translations = {
       share: "Paylaş",
       startTradingNow: "Hemen Takas Yapmaya Başla!",
       startTradingDesc: "Kullanmadığın eşyaları paylaş, ihtiyacın olanları bul ve çevreye katkı sağla.",
-      notFound: "Blog yazısı bulunamadı"
+      notFound: "Blog yazısı bulunamadı",
+      // Yeni blog yazısı çevirileri
+      nationalCapitalTitle: "Milli Sermaye Nedir? Nasıl Oluşur ve Nasıl Tükenir?",
+      nationalCapitalExcerpt: "Ülkemizin maddi ve manevi tüm kaynaklarını oluşturan milli sermayenin önemini keşfedin. İsrafı engelleyerek ve bilinçli tüketerek milli sermayemizi nasıl koruyabiliriz?"
     },
     home: {
       welcomeTitle: "Takas Çemberi'ne Hoş Geldiniz",
@@ -579,7 +582,10 @@ export const translations = {
       share: "Share",
       startTradingNow: "Start Trading Now!",
       startTradingDesc: "Share items you don't use, find what you need and contribute to the environment.",
-      notFound: "Blog post not found"
+      notFound: "Blog post not found",
+      // Yeni blog yazısı çevirileri
+      nationalCapitalTitle: "What is National Capital? How is it Formed and How is it Consumed?",
+      nationalCapitalExcerpt: "Discover the importance of national capital, which constitutes all the material and spiritual resources of our country. How can we protect our national capital by preventing waste and conscious consumption?"
     },
     home: {
       welcomeTitle: "Welcome to Barter Circle",
@@ -939,7 +945,10 @@ export const translations = {
       share: "شارك",
       startTradingNow: "ابدأ التداول الآن!",
       startTradingDesc: "شارك العناصر التي لا تستخدمها، واعثر على ما تحتاجه واساهم في البيئة.",
-      notFound: "لم يتم العثور على المقال"
+      notFound: "لم يتم العثور على المقال",
+      // Yeni blog yazısı çevirileri
+      nationalCapitalTitle: "ما هو رأس المال الوطني؟ كيف يتكون وكيف يستهلك؟",
+      nationalCapitalExcerpt: "اكتشف أهمية رأس المال الوطني الذي يشكل جميع موارد بلدنا المادية والمعنوية. كيف يمكننا حماية رأس مالنا الوطني من خلال منع الهدر والاستهلاك الواعي؟"
     },
     home: {
       welcomeTitle: "مرحباً بك في دائرة المقايضة",
