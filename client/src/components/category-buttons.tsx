@@ -3,8 +3,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+// Import generated category icons
+import teknolojikIcon from "@assets/generated_images/teknolojik_ürünler_ikonu_73ac75c9.png";
+import beyazEsyaIcon from "@assets/generated_images/beyaz_eşya_ikonu_5c4b9c4e.png";
+import mobilyaIcon from "@assets/generated_images/mobilya_ikonu_8cede8c4.png";
+import arabaIcon from "@assets/generated_images/araba_yedek_parça_ikonu_dbb3157f.png";
+import oyuncakIcon from "@assets/generated_images/oyuncak_ikonu_0ec396ba.png";
+import tasinmazIcon from "@assets/generated_images/taşınmazlar_ikonu_8bd46d93.png";
+import kitapIcon from "@assets/generated_images/kitap_ikonu_a8cc965e.png";
+
 interface CategoryButtonProps {
-  emoji: string;
+  iconSrc: string;
   title: string;
   description: string;
   href: string;
@@ -12,7 +21,7 @@ interface CategoryButtonProps {
   isLoggedIn: boolean;
 }
 
-const CategoryButton = ({ emoji, title, description, href, dataTestId, isLoggedIn }: CategoryButtonProps) => {
+const CategoryButton = ({ iconSrc, title, description, href, dataTestId, isLoggedIn }: CategoryButtonProps) => {
   // Giriş yapmamış kullanıcılar için sadece görsel
   if (!isLoggedIn) {
     return (
@@ -20,8 +29,13 @@ const CategoryButton = ({ emoji, title, description, href, dataTestId, isLoggedI
         <div className="absolute inset-0 bg-gradient-to-r from-red-300/30 to-rose-400/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div className="absolute -inset-0.5 bg-gradient-to-r from-red-400 to-rose-600 rounded-lg opacity-20 blur-sm group-hover:opacity-40 transition-opacity duration-300"></div>
         <CardContent className="p-6 text-center relative z-10">
-          <div className="text-4xl mb-3 filter brightness-110 drop-shadow-lg">
-            {emoji}
+          <div className="w-16 h-16 mx-auto mb-4 relative">
+            <img 
+              src={iconSrc} 
+              alt={title}
+              className="w-full h-full object-contain filter brightness-110 drop-shadow-lg group-hover:brightness-125 transition-all duration-300 animate-pulse"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-red-400/30 to-transparent rounded-lg"></div>
           </div>
           <h3 className="font-bold text-lg mb-2 text-white drop-shadow-md">
             {title}
@@ -37,13 +51,21 @@ const CategoryButton = ({ emoji, title, description, href, dataTestId, isLoggedI
   // Giriş yapmış kullanıcılar için tıklanabilir buton
   return (
     <Link href={href}>
-      <Card className="border-0 bg-gradient-to-br from-red-400/95 via-rose-500/95 to-red-600/95 backdrop-blur-lg hover:backdrop-blur-xl text-white group shadow-2xl hover:shadow-red-500/60 transition-all duration-300 cursor-pointer relative overflow-hidden">
+      <Card className="border-0 bg-gradient-to-br from-red-400/95 via-rose-500/95 to-red-600/95 backdrop-blur-lg hover:backdrop-blur-xl text-white group shadow-2xl hover:shadow-red-500/60 transition-all duration-500 cursor-pointer relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-300/40 to-rose-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div className="absolute -inset-0.5 bg-gradient-to-r from-red-400 via-rose-500 to-red-600 rounded-lg opacity-30 blur-sm group-hover:opacity-60 transition-opacity duration-300 animate-pulse"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50"></div>
         <CardContent className="p-6 text-center relative z-10">
-          <div className="text-4xl mb-3 group-hover:scale-125 transition-transform duration-300 filter brightness-125 drop-shadow-2xl group-hover:brightness-150">
-            {emoji}
+          <div className="w-16 h-16 mx-auto mb-4 relative group-hover:scale-125 transition-transform duration-500">
+            <img 
+              src={iconSrc} 
+              alt={title}
+              className="w-full h-full object-contain filter brightness-125 drop-shadow-2xl group-hover:brightness-150 transition-all duration-500 animate-bounce"
+              style={{
+                filter: "brightness(1.25) contrast(1.1) saturate(1.2) drop-shadow(0 0 20px rgba(239, 68, 68, 0.6))"
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-red-300/40 to-transparent rounded-lg group-hover:from-red-200/60 transition-all duration-300"></div>
           </div>
           <h3 className="font-bold text-lg mb-2 text-white group-hover:text-red-50 drop-shadow-lg">
             {title}
@@ -63,49 +85,49 @@ export function CategoryButtons() {
   
   const categories = [
     {
-      emoji: "📱",
+      iconSrc: teknolojikIcon,
       title: t.categories.teknolojik_urunler,
       description: t.common.teknolojikDesc,
       href: "/items?category=teknolojik_urunler",
       dataTestId: "category-teknolojik-urunler"
     },
     {
-      emoji: "🏠",
+      iconSrc: beyazEsyaIcon,
       title: t.categories.beyaz_esya,
       description: t.common.beyazEsyaDesc,
       href: "/items?category=beyaz_esya",
       dataTestId: "category-beyaz-esya"
     },
     {
-      emoji: "🪑",
+      iconSrc: mobilyaIcon,
       title: t.categories.mobilya,
       description: t.common.mobilyaDesc,
       href: "/items?category=mobilya",
       dataTestId: "category-mobilya"
     },
     {
-      emoji: "🚗",
+      iconSrc: arabaIcon,
       title: t.categories.araba_group,
       description: t.common.arabaDesc,
       href: "/items?category=araba_group",
       dataTestId: "category-araba-group"
     },
     {
-      emoji: "🧸",
+      iconSrc: oyuncakIcon,
       title: t.categories.oyuncak,
       description: t.common.oyuncakDesc,
       href: "/items?category=oyuncak",
       dataTestId: "category-oyuncak"
     },
     {
-      emoji: "🏡",
+      iconSrc: tasinmazIcon,
       title: t.categories.tasinmazlar,
       description: t.common.tasinmazDesc,
       href: "/items?category=tasinmazlar",
       dataTestId: "category-tasinmazlar"
     },
     {
-      emoji: "📚",
+      iconSrc: kitapIcon,
       title: t.categories.kitap,
       description: t.common.kitapDesc,
       href: "/items?category=kitap",
@@ -158,7 +180,7 @@ export function CategoryButtons() {
                 }}
               >
                 <CategoryButton
-                  emoji={category.emoji}
+                  iconSrc={category.iconSrc}
                   title={category.title}
                   description={category.description}
                   href={category.href}
