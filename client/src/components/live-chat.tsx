@@ -179,7 +179,7 @@ export function LiveChat() {
     <>
       {/* Chat Bubble */}
       {!isOpen && (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-20 sm:bottom-6 right-6 z-50">
           <Button
             onClick={() => setIsOpen(true)}
             className="w-16 h-16 rounded-full shadow-lg hover:scale-105 transition-transform bg-blue-600 hover:bg-blue-700"
@@ -201,7 +201,7 @@ export function LiveChat() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-80 max-w-[calc(100vw-2rem)]">
+        <div className="fixed bottom-20 sm:bottom-6 right-6 z-50 w-80 max-w-[calc(100vw-2rem)]">
           <Card className="flex flex-col shadow-2xl max-h-[500px]">
             <CardHeader className="flex-row items-center justify-between space-y-0 pb-2 bg-blue-600 text-white rounded-t-lg">
               <div className="flex items-center gap-2">
