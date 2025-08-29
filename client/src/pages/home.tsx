@@ -288,14 +288,14 @@ export default function Home() {
                   <span className="text-2xl">♻️</span>
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-                  Geri Dönüşüm Neden Bu Kadar Önemli?
+                  {t.blog.recyclingTitle}
                 </h2>
                 <div className="p-3 bg-blue-100 rounded-full">
                   <span className="text-2xl">🌱</span>
                 </div>
               </div>
               <p className="text-xl text-gray-600 mb-6">
-                Doğayı korumanın en etkili yollarından biri olan geri dönüşümün önemini keşfedin. Takas yaparak hem çevreyi koruyun hem de ekonomiye katkı sağlayın.
+                {t.blog.recyclingSubtitle}
               </p>
             </div>
             
@@ -304,21 +304,21 @@ export default function Home() {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                    🌍 Doğayı Korumak İçin
+                    {t.blog.protectNatureTitle}
                   </h3>
-                  <p className="mb-4">Her yıl tonlarca plastik, cam, metal ve elektronik atık doğaya bırakılıyor. Bu atıkların yok olması yüzlerce yıl sürebiliyor.</p>
+                  <p className="mb-4">{t.blog.protectNatureDesc}</p>
                   <ul className="space-y-2 mb-6">
                     <li className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span><strong>Plastik şişe:</strong> 400 yıl</span>
+                      <span><strong>{t.blog.plasticBottle}</strong></span>
                     </li>
                     <li className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span><strong>Alüminyum kutu:</strong> 80-100 yıl</span>
+                      <span><strong>{t.blog.aluminumCan}</strong></span>
                     </li>
                     <li className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span><strong>Cam şişe:</strong> Neredeyse hiç yok olmuyor</span>
+                      <span><strong>{t.blog.glassBottle}</strong></span>
                     </li>
                   </ul>
                 </div>
@@ -326,21 +326,21 @@ export default function Home() {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                    💰 Ekonomiye Katkı Sağlamak
+                    {t.blog.economyTitle}
                   </h3>
-                  <p className="mb-4">Kullanmadığımız eşyalar çöp olmak zorunda değil. Onları yeniden değerlendirmek mümkün:</p>
+                  <p className="mb-4">{t.blog.economyDesc}</p>
                   <ul className="space-y-2 mb-6">
                     <li className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span>Ham madde ihtiyacı azalır</span>
+                      <span>{t.blog.rawMaterial}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span>Enerji tüketimi büyük ölçüde düşer</span>
+                      <span>{t.blog.energyConsumption}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span>Ülke ekonomisine ciddi katkı sağlanır</span>
+                      <span>{t.blog.economicContribution}</span>
                     </li>
                   </ul>
                 </div>
@@ -349,21 +349,21 @@ export default function Home() {
               <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 mt-8">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                   <span className="text-2xl">🔄</span>
-                  Geri Dönüşümün En Kolay Yolu: Takas
+                  {t.blog.easiestWayTitle}
                 </h3>
-                <p className="mb-4">Artık kullanmadığınız eşyaları çöpe atmak yerine ihtiyacı olanlarla paylaşabilirsiniz:</p>
+                <p className="mb-4">{t.blog.easiestWayDesc}</p>
                 <div className="grid sm:grid-cols-3 gap-4 text-sm">
                   <div className="text-center p-4 bg-white rounded-lg">
                     <div className="text-2xl mb-2">📱</div>
-                    <p>Kullanmadığınız telefon → <strong>Fotoğraf makinesiyle değiştir</strong></p>
+                    <p>{t.blog.phoneExample}</p>
                   </div>
                   <div className="text-center p-4 bg-white rounded-lg">
                     <div className="text-2xl mb-2">🪑</div>
-                    <p>Fazla mobilya → <strong>Yeni bir bisiklete dönüştür</strong></p>
+                    <p>{t.blog.furnitureExample}</p>
                   </div>
                   <div className="text-center p-4 bg-white rounded-lg">
                     <div className="text-2xl mb-2">🔌</div>
-                    <p>Çekmecede duran elektronik → <strong>İhtiyacın olan ev aletine takas et</strong></p>
+                    <p>{t.blog.electronicExample}</p>
                   </div>
                 </div>
               </div>
@@ -373,19 +373,18 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold text-lg">
                   <Link href="/blog/geri-donusum-neden-onemli">
-                    <span className="mr-2">📖</span>
-                    Devamını Oku
+                    {t.blog.readMore}
                   </Link>
                 </Button>
                 <Button asChild variant="outline" className="border-green-300 text-green-700 hover:bg-green-50 px-8 py-3 rounded-xl font-semibold text-lg">
                   <Link href="/add-item">
                     <Plus className="h-5 w-5 mr-2" />
-                    Hemen Takas Et
+                    {t.blog.startTrading}
                   </Link>
                 </Button>
               </div>
               <p className="text-sm text-gray-500 mt-4">
-                💚 Sen de çevreye katkı sağla, doğayı koru!
+                {t.blog.encouragement}
               </p>
             </div>
           </div>
