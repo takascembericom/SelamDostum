@@ -85,18 +85,6 @@ export function Header() {
                     </Button>
                   </Link>
                   
-                  <Link href="/blog">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="flex items-center gap-2 text-white hover:text-cyan-300 hover:bg-white/20 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
-                      data-testid="button-blog"
-                    >
-                      <Leaf className="h-4 w-4" />
-                      <span>{t.nav.blog}</span>
-                    </Button>
-                  </Link>
-                  
                   <Link href="/add-item">
                     <Button 
                       variant="outline" 
