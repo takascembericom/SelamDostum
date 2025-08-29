@@ -3,6 +3,7 @@ import {
   doc, 
   addDoc, 
   updateDoc, 
+  deleteDoc,
   query, 
   where, 
   orderBy, 
@@ -89,7 +90,6 @@ export const createTradeOffer = async (tradeOfferData: InsertTradeOffer): Promis
 // Get trade offers sent by a user
 export const getSentTradeOffers = async (userId: string): Promise<TradeOfferWithItems[]> => {
   try {
-    console.log("Fetching sent trade offers for user:", userId);
     // Simplified query without orderBy to avoid index requirement
     const q = query(
       collection(db, "tradeOffers"),
@@ -98,11 +98,9 @@ export const getSentTradeOffers = async (userId: string): Promise<TradeOfferWith
 
     const querySnapshot = await getDocs(q);
     const tradeOffers: TradeOfferWithItems[] = [];
-    console.log("Found", querySnapshot.docs.length, "sent trade offers");
 
     for (const docSnap of querySnapshot.docs) {
       const data = docSnap.data();
-      console.log("Processing sent offer:", docSnap.id, data);
       const tradeOffer: TradeOfferWithItems = {
         ...data,
         id: docSnap.id,
@@ -118,7 +116,6 @@ export const getSentTradeOffers = async (userId: string): Promise<TradeOfferWith
     // Sort by date in code since we can't use orderBy without index
     tradeOffers.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-    console.log("Returning", tradeOffers.length, "enriched sent offers");
     return tradeOffers;
   } catch (error: any) {
     console.error("Error fetching sent trade offers:", error);
@@ -129,7 +126,6 @@ export const getSentTradeOffers = async (userId: string): Promise<TradeOfferWith
 // Get trade offers received by a user
 export const getReceivedTradeOffers = async (userId: string): Promise<TradeOfferWithItems[]> => {
   try {
-    console.log("Fetching received trade offers for user:", userId);
     // Simplified query without orderBy to avoid index requirement
     const q = query(
       collection(db, "tradeOffers"),
@@ -138,11 +134,9 @@ export const getReceivedTradeOffers = async (userId: string): Promise<TradeOffer
 
     const querySnapshot = await getDocs(q);
     const tradeOffers: TradeOfferWithItems[] = [];
-    console.log("Found", querySnapshot.docs.length, "received trade offers");
 
     for (const docSnap of querySnapshot.docs) {
       const data = docSnap.data();
-      console.log("Processing received offer:", docSnap.id, data);
       const tradeOffer: TradeOfferWithItems = {
         ...data,
         id: docSnap.id,
@@ -158,7 +152,6 @@ export const getReceivedTradeOffers = async (userId: string): Promise<TradeOffer
     // Sort by date in code since we can't use orderBy without index
     tradeOffers.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-    console.log("Returning", tradeOffers.length, "enriched received offers");
     return tradeOffers;
   } catch (error: any) {
     console.error("Error fetching received trade offers:", error);
@@ -231,8 +224,6 @@ export const updateTradeOfferStatus = async (
 // Helper function to enrich trade offer with item details
 const enrichTradeOfferWithItemDetails = async (tradeOffer: TradeOfferWithItems): Promise<void> => {
   try {
-    console.log("Enriching trade offer:", tradeOffer.id, "fromUser:", tradeOffer.fromUserId, "toUser:", tradeOffer.toUserId);
-
     // Get fromItem details
     const fromItemDoc = await getDoc(doc(db, "items", tradeOffer.fromItemId));
     if (fromItemDoc.exists()) {
@@ -244,9 +235,6 @@ const enrichTradeOfferWithItemDetails = async (tradeOffer: TradeOfferWithItems):
         category: fromItemData.category,
         condition: fromItemData.condition,
       };
-      console.log("From item found:", fromItemData.title);
-    } else {
-      console.log("From item not found:", tradeOffer.fromItemId);
     }
 
     // Get toItem details
@@ -260,9 +248,6 @@ const enrichTradeOfferWithItemDetails = async (tradeOffer: TradeOfferWithItems):
         category: toItemData.category,
         condition: toItemData.condition,
       };
-      console.log("To item found:", toItemData.title);
-    } else {
-      console.log("To item not found:", tradeOffer.toItemId);
     }
 
     // Get user names - try Firebase Auth users collection first
@@ -273,9 +258,7 @@ const enrichTradeOfferWithItemDetails = async (tradeOffer: TradeOfferWithItems):
         tradeOffer.fromUserName = fromUserData.firstName && fromUserData.lastName ? 
           `${fromUserData.firstName} ${fromUserData.lastName}` : 
           fromUserData.email || fromUserData.username || "Kullanıcı";
-        console.log("From user found:", tradeOffer.fromUserName);
       } else {
-        console.log("From user not found in users collection:", tradeOffer.fromUserId);
         tradeOffer.fromUserName = "Bilinmeyen Kullanıcı";
       }
     } catch (userError) {
@@ -290,28 +273,27 @@ const enrichTradeOfferWithItemDetails = async (tradeOffer: TradeOfferWithItems):
         tradeOffer.toUserName = toUserData.firstName && toUserData.lastName ? 
           `${toUserData.firstName} ${toUserData.lastName}` : 
           toUserData.email || toUserData.username || "Kullanıcı";
-        console.log("To user found:", tradeOffer.toUserName);
       } else {
-        console.log("To user not found in users collection:", tradeOffer.toUserId);
         tradeOffer.toUserName = "Bilinmeyen Kullanıcı";
       }
     } catch (userError) {
       console.error("Error fetching to user:", userError);
       tradeOffer.toUserName = "Bilinmeyen Kullanıcı";
     }
-
-    console.log("Trade offer enriched successfully:", {
-      id: tradeOffer.id,
-      fromUserName: tradeOffer.fromUserName,
-      toUserName: tradeOffer.toUserName,
-      fromItem: tradeOffer.fromItem?.title,
-      toItem: tradeOffer.toItem?.title
-    });
   } catch (error) {
     console.error("Error enriching trade offer:", error);
     // Set fallback values
     tradeOffer.fromUserName = tradeOffer.fromUserName || "Bilinmeyen Kullanıcı";
     tradeOffer.toUserName = tradeOffer.toUserName || "Bilinmeyen Kullanıcı";
+  }
+};
+
+// Delete a trade offer (for rejected offers)
+export const deleteTradeOffer = async (tradeOfferId: string): Promise<void> => {
+  try {
+    await deleteDoc(doc(db, "tradeOffers", tradeOfferId));
+  } catch (error: any) {
+    throw new Error(error.message || "Takas teklifi silinemedi");
   }
 };
 

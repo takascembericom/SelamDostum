@@ -1,14 +1,18 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getSentTradeOffers, getReceivedTradeOffers, TradeOfferWithItems } from "@/lib/tradeOffers";
+import { getSentTradeOffers, getReceivedTradeOffers, deleteTradeOffer, TradeOfferWithItems } from "@/lib/tradeOffers";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { ArrowRight, Clock, CheckCircle, XCircle, Package } from "lucide-react";
+import { ArrowRight, Clock, CheckCircle, XCircle, Package, User, Trash2, Eye } from "lucide-react";
 import { CONDITION_LABELS, CATEGORY_LABELS } from "@shared/schema";
+import { useLocation } from "wouter";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface TradeOffersListProps {
   onAccept?: (tradeOfferId: string) => void;
@@ -19,6 +23,31 @@ interface TradeOffersListProps {
 export function TradeOffersList({ onAccept, onReject, onCancel }: TradeOffersListProps) {
   const { profile } = useAuth();
   const [activeTab, setActiveTab] = useState("received");
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
+
+  const navigate = (path: string) => {
+    setLocation(path);
+  };
+
+  // Delete rejected offer mutation
+  const deleteOfferMutation = useMutation({
+    mutationFn: deleteTradeOffer,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["trade-offers"] });
+      toast({
+        title: "Başarılı",
+        description: "Takas teklifi silindi",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
 
   // Fetch received trade offers
   const { data: receivedOffers = [], isLoading: isLoadingReceived } = useQuery({
@@ -102,9 +131,19 @@ export function TradeOffersList({ onAccept, onReject, onCancel }: TradeOffersLis
             </Badge>
           </div>
         </div>
-        <p className="text-sm text-gray-500">
-          {formatDate(offer.createdAt)} - {isReceived ? offer.fromUserName : offer.toUserName}
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-gray-500">
+            {formatDate(offer.createdAt)}
+          </p>
+          <button 
+            onClick={() => navigate(`/profile/${isReceived ? offer.fromUserId : offer.toUserId}`)}
+            className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
+            data-testid={`profile-link-${offer.id}`}
+          >
+            <User className="h-3 w-3" />
+            {isReceived ? offer.fromUserName : offer.toUserName}
+          </button>
+        </div>
       </CardHeader>
       
       <CardContent>
@@ -115,7 +154,11 @@ export function TradeOffersList({ onAccept, onReject, onCancel }: TradeOffersLis
               {isReceived ? "Teklif Edilen" : "Sizin Eşyanız"}
             </p>
             {offer.fromItem && (
-              <div className="border rounded-lg p-3">
+              <div 
+                className="border rounded-lg p-3 hover:bg-gray-50 cursor-pointer transition-colors"
+                onClick={() => navigate(`/item/${offer.fromItemId}`)}
+                data-testid={`from-item-link-${offer.id}`}
+              >
                 <div className="flex gap-3">
                   <img
                     src={offer.fromItem.images[0]}
@@ -123,7 +166,10 @@ export function TradeOffersList({ onAccept, onReject, onCancel }: TradeOffersLis
                     className="w-16 h-16 object-cover rounded-lg"
                   />
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-sm truncate">{offer.fromItem.title}</h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-medium text-sm truncate">{offer.fromItem.title}</h4>
+                      <Eye className="h-3 w-3 text-gray-400" />
+                    </div>
                     <div className="flex gap-1 mt-1">
                       <Badge variant="outline" className="text-xs">
                         {CONDITION_LABELS[offer.fromItem.condition as keyof typeof CONDITION_LABELS]}
@@ -146,7 +192,11 @@ export function TradeOffersList({ onAccept, onReject, onCancel }: TradeOffersLis
               {isReceived ? "Sizin Eşyanız" : "İstenen Eşya"}
             </p>
             {offer.toItem && (
-              <div className="border rounded-lg p-3">
+              <div 
+                className="border rounded-lg p-3 hover:bg-gray-50 cursor-pointer transition-colors"
+                onClick={() => navigate(`/item/${offer.toItemId}`)}
+                data-testid={`to-item-link-${offer.id}`}
+              >
                 <div className="flex gap-3">
                   <img
                     src={offer.toItem.images[0]}
@@ -154,7 +204,10 @@ export function TradeOffersList({ onAccept, onReject, onCancel }: TradeOffersLis
                     className="w-16 h-16 object-cover rounded-lg"
                   />
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-sm truncate">{offer.toItem.title}</h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-medium text-sm truncate">{offer.toItem.title}</h4>
+                      <Eye className="h-3 w-3 text-gray-400" />
+                    </div>
                     <div className="flex gap-1 mt-1">
                       <Badge variant="outline" className="text-xs">
                         {CONDITION_LABELS[offer.toItem.condition as keyof typeof CONDITION_LABELS]}
@@ -217,6 +270,26 @@ export function TradeOffersList({ onAccept, onReject, onCancel }: TradeOffersLis
                   İptal Et
                 </Button>
               )}
+            </div>
+          </>
+        )}
+
+        {/* Delete button for rejected offers */}
+        {(offer.status === "reddedildi" || offer.status === "iptal_edildi") && (
+          <>
+            <Separator className="my-4" />
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => deleteOfferMutation.mutate(offer.id)}
+                disabled={deleteOfferMutation.isPending}
+                className="text-red-600 border-red-200 hover:bg-red-50"
+                data-testid={`delete-offer-${offer.id}`}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                {deleteOfferMutation.isPending ? "Siliniyor..." : "Sil"}
+              </Button>
             </div>
           </>
         )}
