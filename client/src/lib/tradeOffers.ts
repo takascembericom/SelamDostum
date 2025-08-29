@@ -291,8 +291,11 @@ const enrichTradeOfferWithItemDetails = async (tradeOffer: TradeOfferWithItems):
 // Delete a trade offer (for rejected offers)
 export const deleteTradeOffer = async (tradeOfferId: string): Promise<void> => {
   try {
+    console.log("Deleting trade offer:", tradeOfferId);
     await deleteDoc(doc(db, "tradeOffers", tradeOfferId));
+    console.log("Trade offer deleted successfully:", tradeOfferId);
   } catch (error: any) {
+    console.error("Error deleting trade offer:", error);
     throw new Error(error.message || "Takas teklifi silinemedi");
   }
 };

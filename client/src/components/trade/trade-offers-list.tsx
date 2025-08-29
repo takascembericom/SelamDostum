@@ -34,10 +34,13 @@ export function TradeOffersList({ onAccept, onReject, onCancel }: TradeOffersLis
   const deleteOfferMutation = useMutation({
     mutationFn: deleteTradeOffer,
     onSuccess: () => {
+      // Invalidate both received and sent offers queries
+      queryClient.invalidateQueries({ queryKey: ["trade-offers", "received", profile?.id] });
+      queryClient.invalidateQueries({ queryKey: ["trade-offers", "sent", profile?.id] });
       queryClient.invalidateQueries({ queryKey: ["trade-offers"] });
       toast({
         title: "Başarılı",
-        description: "Takas teklifi silindi",
+        description: "Takas teklifi kalıcı olarak silindi",
       });
     },
     onError: (error: Error) => {
