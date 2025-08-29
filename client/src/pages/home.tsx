@@ -278,37 +278,116 @@ export default function Home() {
       </section>
 
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-green-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6" data-testid="title-cta">
-            {t.home.getStarted}
-          </h2>
-          <p className="text-xl mb-8 opacity-90">
-            {t.home.ctaDescription}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {!user ? (
-              <Button 
-                onClick={() => setShowRegisterModal(true)}
-                className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg"
-                data-testid="button-cta-register"
-              >
-                <UserPlus className="h-5 w-5 mr-2" />
-                {t.auth.register}
-              </Button>
-            ) : (
-              <Button 
-                className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg"
-                asChild
-                data-testid="button-cta-add-item"
-              >
-                <Link href="/add-item">
-                  <Plus className="h-5 w-5 mr-2" />
-                  {t.home.addFirstItem}
-                </Link>
-              </Button>
-            )}
+      {/* Blog Section */}
+      <section className="py-20 bg-gradient-to-r from-green-100 to-blue-100">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+            <div className="text-center mb-8">
+              <div className="flex justify-center items-center gap-3 mb-4">
+                <div className="p-3 bg-green-100 rounded-full">
+                  <span className="text-2xl">♻️</span>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                  Geri Dönüşüm Neden Bu Kadar Önemli?
+                </h2>
+                <div className="p-3 bg-blue-100 rounded-full">
+                  <span className="text-2xl">🌱</span>
+                </div>
+              </div>
+              <p className="text-xl text-gray-600 mb-6">
+                Doğayı korumanın en etkili yollarından biri olan geri dönüşümün önemini keşfedin. Takas yaparak hem çevreyi koruyun hem de ekonomiye katkı sağlayın.
+              </p>
+            </div>
+            
+            <div className="prose prose-lg max-w-none text-gray-700 mb-8">
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    🌍 Doğayı Korumak İçin
+                  </h3>
+                  <p className="mb-4">Her yıl tonlarca plastik, cam, metal ve elektronik atık doğaya bırakılıyor. Bu atıkların yok olması yüzlerce yıl sürebiliyor.</p>
+                  <ul className="space-y-2 mb-6">
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span><strong>Plastik şişe:</strong> 400 yıl</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span><strong>Alüminyum kutu:</strong> 80-100 yıl</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span><strong>Cam şişe:</strong> Neredeyse hiç yok olmuyor</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    💰 Ekonomiye Katkı Sağlamak
+                  </h3>
+                  <p className="mb-4">Kullanmadığımız eşyalar çöp olmak zorunda değil. Onları yeniden değerlendirmek mümkün:</p>
+                  <ul className="space-y-2 mb-6">
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span>Ham madde ihtiyacı azalır</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span>Enerji tüketimi büyük ölçüde düşer</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span>Ülke ekonomisine ciddi katkı sağlanır</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 mt-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <span className="text-2xl">🔄</span>
+                  Geri Dönüşümün En Kolay Yolu: Takas
+                </h3>
+                <p className="mb-4">Artık kullanmadığınız eşyaları çöpe atmak yerine ihtiyacı olanlarla paylaşabilirsiniz:</p>
+                <div className="grid sm:grid-cols-3 gap-4 text-sm">
+                  <div className="text-center p-4 bg-white rounded-lg">
+                    <div className="text-2xl mb-2">📱</div>
+                    <p>Kullanmadığınız telefon → <strong>Fotoğraf makinesiyle değiştir</strong></p>
+                  </div>
+                  <div className="text-center p-4 bg-white rounded-lg">
+                    <div className="text-2xl mb-2">🪑</div>
+                    <p>Fazla mobilya → <strong>Yeni bir bisiklete dönüştür</strong></p>
+                  </div>
+                  <div className="text-center p-4 bg-white rounded-lg">
+                    <div className="text-2xl mb-2">🔌</div>
+                    <p>Çekmecede duran elektronik → <strong>İhtiyacın olan ev aletine takas et</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button asChild className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold text-lg">
+                  <Link href="/blog/geri-donusum-neden-onemli">
+                    <span className="mr-2">📖</span>
+                    Devamını Oku
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="border-green-300 text-green-700 hover:bg-green-50 px-8 py-3 rounded-xl font-semibold text-lg">
+                  <Link href="/add-item">
+                    <Plus className="h-5 w-5 mr-2" />
+                    Hemen Takas Et
+                  </Link>
+                </Button>
+              </div>
+              <p className="text-sm text-gray-500 mt-4">
+                💚 Sen de çevreye katkı sağla, doğayı koru!
+              </p>
+            </div>
           </div>
         </div>
       </section>
