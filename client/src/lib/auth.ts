@@ -1,6 +1,8 @@
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut,
   sendEmailVerification,
   sendPasswordResetEmail,
@@ -103,6 +105,77 @@ export const sendPasswordReset = async (email: string) => {
       throw new Error("Bu e-posta adresi ile kayıtlı bir kullanıcı bulunamadı.");
     }
     throw new Error(error.message || "Şifre sıfırlama e-postası gönderilemedi");
+  }
+};
+
+// Google ile giriş için yardımcı fonksiyon - displayName'i firstName/lastName'e ayırır
+const parseDisplayName = (displayName: string | null): { firstName: string; lastName: string } => {
+  if (!displayName) {
+    return { firstName: 'Kullanıcı', lastName: '' };
+  }
+  
+  const nameParts = displayName.trim().split(' ');
+  if (nameParts.length === 1) {
+    return { firstName: nameParts[0], lastName: '' };
+  }
+  
+  const firstName = nameParts[0];
+  const lastName = nameParts.slice(1).join(' ');
+  return { firstName, lastName };
+};
+
+// Google ile giriş fonksiyonu
+export const signInWithGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    provider.addScope('email');
+    provider.addScope('profile');
+    
+    const result = await signInWithPopup(auth, provider);
+    const firebaseUser = result.user;
+    
+    // Kullanıcının veritabanında olup olmadığını kontrol et
+    const userDocRef = doc(db, "users", firebaseUser.uid);
+    const userDocSnap = await getDoc(userDocRef);
+    
+    if (!userDocSnap.exists()) {
+      // Yeni kullanıcı - Firestore'da profil oluştur
+      const { firstName, lastName } = parseDisplayName(firebaseUser.displayName);
+      
+      const userDoc: User = {
+        id: firebaseUser.uid,
+        email: firebaseUser.email!,
+        username: firebaseUser.email!.split('@')[0], // Email'den username oluştur
+        firstName,
+        lastName,
+        phone: '', // Google'dan telefon gelmiyor, boş bırak
+        emailVerified: firebaseUser.emailVerified,
+        createdAt: new Date(),
+        totalListings: 0,
+        averageRating: 0,
+        totalRatings: 0,
+        isAdmin: false,
+      };
+      
+      await setDoc(userDocRef, userDoc);
+      return userDoc;
+    } else {
+      // Mevcut kullanıcı - sadece giriş yap
+      return userDocSnap.data() as User;
+    }
+  } catch (error: any) {
+    // Google giriş hatalarını Türkçe'ye çevir
+    if (error.code === 'auth/popup-closed-by-user') {
+      throw new Error('Google giriş penceresi kapatıldı.');
+    }
+    if (error.code === 'auth/popup-blocked') {
+      throw new Error('Popup engellendi. Lütfen popup engelleyicinizi devre dışı bırakın.');
+    }
+    if (error.code === 'auth/cancelled-popup-request') {
+      throw new Error('Giriş işlemi iptal edildi.');
+    }
+    
+    throw new Error(error.message || 'Google ile giriş başarısız oldu');
   }
 };
 
