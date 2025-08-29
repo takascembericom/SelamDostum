@@ -99,16 +99,15 @@ export function Header() {
                     </Button>
                   </Link>
                   
-                  <Link href="/messages">
+                  <Link href="/messages" className="hidden lg:block">
                     <Button 
                       variant="ghost" 
                       size="sm" 
                       className="flex items-center gap-2 relative text-purple-600 hover:text-purple-700 hover:bg-purple-50"
                       data-testid="button-messages"
                     >
-                      <Mail className="h-4 w-4 sm:hidden" />
-                      <MessageCircle className="h-4 w-4 hidden sm:block" />
-                      <span className="hidden sm:inline">{t.nav.messages}</span>
+                      <MessageCircle className="h-4 w-4" />
+                      <span>{t.nav.messages}</span>
                       {unreadCount > 0 && (
                         <Badge 
                           variant="destructive" 
@@ -120,28 +119,28 @@ export function Header() {
                     </Button>
                   </Link>
                   
-                  {/* Notifications */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="flex items-center gap-2 relative"
-                        data-testid="button-notifications"
-                      >
-                        <BellRing className="h-4 w-4 sm:hidden" />
-                        <Bell className="h-4 w-4 hidden sm:block" />
-                        <span className="hidden sm:inline">{t.nav.notifications}</span>
-                        {notificationUnreadCount > 0 && (
-                          <Badge 
-                            variant="destructive" 
-                            className="absolute -top-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-xs p-0 min-w-0"
-                          >
-                            {notificationUnreadCount > 99 ? '99+' : notificationUnreadCount}
-                          </Badge>
-                        )}
-                      </Button>
-                    </DropdownMenuTrigger>
+                  {/* Notifications - Sadece Desktop */}
+                  <div className="hidden lg:block">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="flex items-center gap-2 relative"
+                          data-testid="button-notifications"
+                        >
+                          <Bell className="h-4 w-4" />
+                          <span>{t.nav.notifications}</span>
+                          {notificationUnreadCount > 0 && (
+                            <Badge 
+                              variant="destructive" 
+                              className="absolute -top-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-xs p-0 min-w-0"
+                            >
+                              {notificationUnreadCount > 99 ? '99+' : notificationUnreadCount}
+                            </Badge>
+                          )}
+                        </Button>
+                      </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-80">
                       <div className="p-3 border-b">
                         <h3 className="font-semibold">{t.nav.notifications}</h3>
@@ -239,7 +238,8 @@ export function Header() {
                         </Button>
                       </div>
                     </DropdownMenuContent>
-                  </DropdownMenu>
+                    </DropdownMenu>
+                  </div>
                   
                   {/* Language Selector - Mobilde de görünür */}
                   <DropdownMenu>
@@ -274,23 +274,28 @@ export function Header() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   
-                  {/* Mobilde Profil ikonu */}
-                  <Link href="/profile" className="sm:hidden">
-                    <Button variant="ghost" size="sm" data-testid="button-profile-mobile-header">
-                      <User className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                  
-                  {/* Mobilde Çıkış ikonu */}
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="sm:hidden"
-                    onClick={handleLogout}
-                    data-testid="button-logout-mobile-header"
-                  >
-                    <LogOut className="h-4 w-4" />
-                  </Button>
+                  {/* Mobilde Profil Dropdown Menüsü */}
+                  <div className="sm:hidden">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" data-testid="button-profile-mobile-header">
+                          <User className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <Link href="/profile" data-testid="link-profile-mobile">
+                            <User className="h-4 w-4 mr-2" />
+                            {t.nav.profile}
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout} data-testid="button-logout-mobile">
+                          <LogOut className="h-4 w-4 mr-2" />
+                          {t.auth.logout}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
 
                   {/* Desktop Kullanıcı Menüsü */}
                   <DropdownMenu>
@@ -377,41 +382,6 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobile Bottom Navigation Bar */}
-      {user && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 sm:hidden bg-white border-t border-gray-200 shadow-lg">
-          <div className="flex justify-around items-center py-2">
-            <Link href="/">
-              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2">
-                <Home className="h-5 w-5" />
-                <span className="text-xs">{t.nav.home}</span>
-              </Button>
-            </Link>
-            <Link href="/messages">
-              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2 relative">
-                <MessageCircle className="h-5 w-5" />
-                <span className="text-xs">{t.nav.messages}</span>
-                {unreadCount > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs bg-red-500 text-white rounded-full">
-                    {unreadCount}
-                  </Badge>
-                )}
-              </Button>
-            </Link>
-            <div className="relative">
-              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2">
-                <Bell className="h-5 w-5" />
-                <span className="text-xs">{t.nav.notifications}</span>
-                {notificationUnreadCount > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs bg-red-500 text-white rounded-full">
-                    {notificationUnreadCount}
-                  </Badge>
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <LoginModal 
         open={showLoginModal} 
