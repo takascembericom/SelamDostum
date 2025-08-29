@@ -191,7 +191,7 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
                 <FormItem>
                   <FormLabel>Kullanıcı Adı</FormLabel>
                   <FormControl>
-                    <Input placeholder="kullaniciadi" {...field} data-testid="input-username" />
+                    <Input placeholder="kullanici_adi" {...field} data-testid="input-username" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

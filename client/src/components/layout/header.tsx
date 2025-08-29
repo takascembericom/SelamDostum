@@ -284,7 +284,7 @@ export function Header() {
                       >
                         <User className="h-4 w-4" />
                         <span className="hidden sm:inline">
-                          {profile?.firstName || user.email}
+                          {profile?.firstName ? `${profile.firstName} ${profile.lastName || ''}`.trim() : user.email}
                         </span>
                       </Button>
                     </DropdownMenuTrigger>
