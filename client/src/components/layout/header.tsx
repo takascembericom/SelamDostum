@@ -241,11 +241,11 @@ export function Header() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   
-                  {/* Language Selector */}
+                  {/* Language Selector - Mobilde de görünür */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm" data-testid="button-language">
-                        <Globe className="h-4 w-4 mr-2" />
+                        <Globe className="h-4 w-4 sm:mr-2" />
                         <span className="hidden sm:inline">{t.common.language}</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -274,6 +274,25 @@ export function Header() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   
+                  {/* Mobilde Profil ikonu */}
+                  <Link href="/profile" className="sm:hidden">
+                    <Button variant="ghost" size="sm" data-testid="button-profile-mobile-header">
+                      <User className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  
+                  {/* Mobilde Çıkış ikonu */}
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="sm:hidden"
+                    onClick={handleLogout}
+                    data-testid="button-logout-mobile-header"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+
+                  {/* Desktop Kullanıcı Menüsü */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button 
@@ -358,28 +377,39 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobile Bottom Left Floating Buttons */}
+      {/* Mobile Bottom Navigation Bar */}
       {user && (
-        <div className="fixed bottom-4 left-4 z-50 sm:hidden flex flex-col gap-2">
-          <Link href="/profile">
-            <Button
-              variant="default"
-              size="sm"
-              className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg"
-              data-testid="button-profile-mobile"
-            >
-              <User className="h-5 w-5" />
-            </Button>
-          </Link>
-          <Button
-            variant="default"
-            size="sm"
-            className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg"
-            onClick={handleLogout}
-            data-testid="button-logout-mobile"
-          >
-            <LogOut className="h-5 w-5" />
-          </Button>
+        <div className="fixed bottom-0 left-0 right-0 z-50 sm:hidden bg-white border-t border-gray-200 shadow-lg">
+          <div className="flex justify-around items-center py-2">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2">
+                <Home className="h-5 w-5" />
+                <span className="text-xs">{t.nav.home}</span>
+              </Button>
+            </Link>
+            <Link href="/messages">
+              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2 relative">
+                <MessageCircle className="h-5 w-5" />
+                <span className="text-xs">{t.nav.messages}</span>
+                {unreadCount > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs bg-red-500 text-white rounded-full">
+                    {unreadCount}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
+            <div className="relative">
+              <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 px-3 py-2">
+                <Bell className="h-5 w-5" />
+                <span className="text-xs">{t.nav.notifications}</span>
+                {notificationUnreadCount > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs bg-red-500 text-white rounded-full">
+                    {notificationUnreadCount}
+                  </Badge>
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
       )}
 
