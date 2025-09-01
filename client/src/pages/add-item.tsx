@@ -1014,9 +1014,9 @@ export default function AddItem() {
                         {t.common.uploading}...
                       </>
                     ) : loadingListingCount ? (
-                      {t.addItem.submitButton}
+                      t.addItem.submitButton
                     ) : (
-                      {t.addItem.submitButton}
+                      t.addItem.submitButton
                     )}
                   </Button>
                   <Button 
