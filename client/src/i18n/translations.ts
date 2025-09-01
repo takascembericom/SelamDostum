@@ -232,15 +232,11 @@ export const translations = {
       heroTexts: [
         {
           title: "Takas Çemberi'ne Hoş Geldiniz",
-          subtitle: "Kullanıcılar yalnızca kendilerine ait veya takas hakkına sahip oldukları ürünleri paylaşabilir. Kapora, ön ödeme veya kullanıcılar arası para transferi kesinlikle yasaktır, takasçemberi platformu sorumlu değildir."
+          subtitle: "Kullanıcılar yalnızca kendilerine ait veya takas hakkına sahip oldukları ürünleri paylaşabilir. Kapora, ön ödeme veya kullanıcılar arası para transferi kesinlikle yasaktır. Kullanıcıların birbirlerine yaptığı ödemelerden takas çemberi sorumlu değildir. Platform, şüpheli veya kural dışı ilanları kaldırma hakkını saklı tutar."
         },
         {
-          title: "Takas Çemberi'ne Hoş Geldiniz",
-          subtitle: "Sürdürülebilir bir gelecek için eşyalarınızı takas edin"
-        },
-        {
-          title: "Burada alışveriş yerine paylaşım...",
-          subtitle: "Harcama yerine kazanım... Tüketim yerine değişim var..."
+          title: "Takas Çemberi'ne Hoş Geldiniz", 
+          subtitle: "Burada alışveriş yerine paylaşım... Harcama yerine kazanım... Tüketim yerine üretim var..."
         }
       ],
       getStarted: "Hemen Başla",
@@ -667,15 +663,11 @@ export const translations = {
       heroTexts: [
         {
           title: "Welcome to Barter Circle",
-          subtitle: "Users can only share products that belong to them or that they have the right to trade. Deposits, advance payments or money transfers between users are strictly prohibited, Barter Circle platform is not responsible."
+          subtitle: "Users can only share products that belong to them or that they have the right to trade. Deposits, advance payments or money transfers between users are strictly prohibited. Barter Circle is not responsible for payments made between users. Platform reserves the right to remove suspicious or non-compliant listings."
         },
         {
           title: "Welcome to Barter Circle",
-          subtitle: "Trade your items for a sustainable future"
-        },
-        {
-          title: "Here is sharing instead of shopping...",
-          subtitle: "Gain instead of spending... Exchange instead of consumption..."
+          subtitle: "Here is sharing instead of shopping... Gain instead of spending... Production instead of consumption..."
         }
       ],
       getStarted: "Get Started",
@@ -1103,15 +1095,11 @@ export const translations = {
       heroTexts: [
         {
           title: "مرحباً بك في دائرة المقايضة",
-          subtitle: "يمكن للمستخدمين مشاركة المنتجات التي تخصهم فقط أو التي لديهم حق في تداولها. الودائع أو الدفعات المقدمة أو التحويلات المالية بين المستخدمين محظورة تماماً، دائرة المقايضة غير مسؤولة."
+          subtitle: "يمكن للمستخدمين مشاركة المنتجات التي تخصهم فقط أو التي لديهم حق في تداولها. الودائع أو الدفعات المقدمة أو التحويلات المالية بين المستخدمين محظورة تماماً. دائرة المقايضة غير مسؤولة عن المدفوعات التي يقوم بها المستخدمون لبعضهم البعض. المنصة تحتفظ بحق إزالة الإعلانات المشبوهة أو غير المتوافقة."
         },
         {
           title: "مرحباً بك في دائرة المقايضة",
-          subtitle: "تبادل العناصر من أجل مستقبل مستدام"
-        },
-        {
-          title: "هنا التقاسم بدلاً من التسوق...",
-          subtitle: "الكسب بدلاً من الإنفاق... التبادل بدلاً من الاستهلاك..."
+          subtitle: "هنا التقاسم بدلاً من التسوق... الكسب بدلاً من الإنفاق... الإنتاج بدلاً من الاستهلاك..."
         }
       ],
       getStarted: "ابدأ الآن",
