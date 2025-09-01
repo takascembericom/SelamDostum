@@ -237,6 +237,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Kullanıcıları listele endpoint'i - admin için
+  app.get("/api/admin/users", async (req, res) => {
+    try {
+      const { db } = await import("../client/src/lib/firebase");
+      const { collection, getDocs, orderBy, query } = await import("firebase/firestore");
+      
+      const usersQuery = query(
+        collection(db, 'users'),
+        orderBy('createdAt', 'desc')
+      );
+      
+      const usersSnapshot = await getDocs(usersQuery);
+      const users = usersSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
+          // Hassas bilgileri çıkar (password hash vs.)
+          password: undefined,
+        };
+      });
+      
+      res.json(users);
+    } catch (error: any) {
+      console.error("Users fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch users" });
+    }
+  });
+
+  // Admin'den kullanıcıya özel mesaj gönderme endpoint'i
+  app.post("/api/admin/send-message", async (req, res) => {
+    try {
+      const { userId, message, title } = req.body;
+      
+      if (!userId || !message || !title) {
+        return res.status(400).json({ error: "userId, message and title are required" });
+      }
+
+      const { db } = await import("../client/src/lib/firebase");
+      const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
+      
+      // Bildirim oluştur
+      await addDoc(collection(db, 'notifications'), {
+        userId: userId,
+        type: 'admin_message',
+        title: title,
+        message: message,
+        isRead: false,
+        createdAt: serverTimestamp(),
+        data: {
+          fromAdmin: true
+        }
+      });
+      
+      res.json({ success: true, message: "Message sent successfully" });
+    } catch (error: any) {
+      console.error("Send message error:", error);
+      res.status(500).json({ error: "Failed to send message" });
+    }
+  });
+
   // put other application routes here
   // prefix all routes with /api
 

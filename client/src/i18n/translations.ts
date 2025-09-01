@@ -460,6 +460,28 @@ export const translations = {
       cancelButton: "❌ İptal",
       acceptCheckbox: "✅ Kabul ediyorum",
       loading: "Kayıt oluşturuluyor..."
+    },
+    admin: {
+      panel: "Admin Panel",
+      users: "Kullanıcılar",
+      userManagement: "Kullanıcı Yönetimi",
+      searchUsers: "Kullanıcı ara...",
+      sendMessage: "Mesaj Gönder",
+      messageTitle: "Mesaj Başlığı",
+      messageContent: "Mesaj İçeriği",
+      enterMessageTitle: "Mesaj başlığı girin",
+      enterMessageContent: "Mesaj içeriğini girin",
+      send: "Gönder",
+      messageSent: "Mesaj başarıyla gönderildi",
+      messageError: "Mesaj gönderilirken hata oluştu",
+      userName: "Kullanıcı Adı",
+      email: "E-posta",
+      joinDate: "Katılma Tarihi",
+      actions: "İşlemler",
+      noUsersFound: "Kullanıcı bulunamadı",
+      loadingUsers: "Kullanıcılar yükleniyor...",
+      viewProfile: "Profil Görüntüle",
+      close: "Kapat"
     }
   },
   en: {
@@ -924,6 +946,28 @@ export const translations = {
       cancelButton: "❌ Cancel",
       acceptCheckbox: "✅ I accept",
       loading: "Creating account..."
+    },
+    admin: {
+      panel: "Admin Panel",
+      users: "Users",
+      userManagement: "User Management",
+      searchUsers: "Search users...",
+      sendMessage: "Send Message",
+      messageTitle: "Message Title",
+      messageContent: "Message Content",
+      enterMessageTitle: "Enter message title",
+      enterMessageContent: "Enter message content",
+      send: "Send",
+      messageSent: "Message sent successfully",
+      messageError: "Error sending message",
+      userName: "User Name",
+      email: "Email",
+      joinDate: "Join Date",
+      actions: "Actions",
+      noUsersFound: "No users found",
+      loadingUsers: "Loading users...",
+      viewProfile: "View Profile",
+      close: "Close"
     }
   },
   ar: {
@@ -1388,6 +1432,28 @@ export const translations = {
       cancelButton: "❌ إلغاء",
       acceptCheckbox: "✅ أوافق",
       loading: "جاري إنشاء الحساب..."
+    },
+    admin: {
+      panel: "لوحة الإدارة",
+      users: "المستخدمون",
+      userManagement: "إدارة المستخدمين",
+      searchUsers: "البحث عن المستخدمين...",
+      sendMessage: "إرسال رسالة",
+      messageTitle: "عنوان الرسالة",
+      messageContent: "محتوى الرسالة",
+      enterMessageTitle: "أدخل عنوان الرسالة",
+      enterMessageContent: "أدخل محتوى الرسالة",
+      send: "إرسال",
+      messageSent: "تم إرسال الرسالة بنجاح",
+      messageError: "خطأ في إرسال الرسالة",
+      userName: "اسم المستخدم",
+      email: "البريد الإلكتروني",
+      joinDate: "تاريخ الانضمام",
+      actions: "الإجراءات",
+      noUsersFound: "لم يتم العثور على مستخدمين",
+      loadingUsers: "جاري تحميل المستخدمين...",
+      viewProfile: "عرض الملف الشخصي",
+      close: "إغلاق"
     }
   }
 };

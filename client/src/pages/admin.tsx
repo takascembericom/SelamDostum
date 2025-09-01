@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminChat } from "@/components/admin-chat";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, X, Eye, MessageCircle, LogOut, Shield, Settings, Key, Trash2 } from "lucide-react";
+import { Check, X, Eye, MessageCircle, LogOut, Shield, Settings, Key, Trash2, Users, Send } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LiveChat } from "@/components/live-chat";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -30,6 +31,13 @@ export default function AdminPanel() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordLoading, setPasswordLoading] = useState(false);
+  
+  // User management state
+  const [userSearchTerm, setUserSearchTerm] = useState("");
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [messageTitle, setMessageTitle] = useState("");
+  const [messageContent, setMessageContent] = useState("");
+  const [sendingMessage, setSendingMessage] = useState(false);
   
   // Check admin authentication
   const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
@@ -101,6 +109,68 @@ export default function AdminPanel() {
     },
     enabled: true,
   });
+
+  // Fetch users for admin management
+  const { data: users = [], isLoading: usersLoading } = useQuery({
+    queryKey: ['admin-users'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/users');
+      if (!response.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      return response.json();
+    },
+  });
+
+  // Filter users based on search term
+  const filteredUsers = users.filter((user: any) => 
+    user.name?.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
+    user.email?.toLowerCase().includes(userSearchTerm.toLowerCase())
+  );
+
+  // Send message function
+  const sendMessageToUser = async () => {
+    if (!selectedUser || !messageTitle.trim() || !messageContent.trim()) {
+      toast({
+        title: "Hata",
+        description: "Lütfen tüm alanları doldurun",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSendingMessage(true);
+    try {
+      const response = await fetch('/api/admin/send-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: selectedUser.id,
+          title: messageTitle,
+          message: messageContent,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to send message');
+
+      toast({
+        title: "Başarılı",
+        description: "Mesaj başarıyla gönderildi",
+      });
+
+      setMessageTitle("");
+      setMessageContent("");
+      setSelectedUser(null);
+    } catch (error) {
+      toast({
+        title: "Hata",
+        description: "Mesaj gönderilirken hata oluştu",
+        variant: "destructive",
+      });
+    } finally {
+      setSendingMessage(false);
+    }
+  };
 
   // Fetch rejected items
   const { data: rejectedItems = [], isLoading: rejectedLoading } = useQuery({
@@ -483,7 +553,7 @@ export default function AdminPanel() {
           </div>
 
           <Tabs defaultValue="pending" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="pending" className="flex items-center gap-2">
                 <MessageCircle className="h-4 w-4" />
                 Bekleyen İlanlar ({pendingItems.length})
@@ -495,6 +565,10 @@ export default function AdminPanel() {
               <TabsTrigger value="rejected" className="flex items-center gap-2">
                 <X className="h-4 w-4" />
                 Reddedilen İlanlar ({rejectedItems.length})
+              </TabsTrigger>
+              <TabsTrigger value="users" className="flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Kullanıcılar
               </TabsTrigger>
               <TabsTrigger value="chat" className="flex items-center gap-2">
                 <MessageCircle className="h-4 w-4" />
@@ -647,6 +721,124 @@ export default function AdminPanel() {
                     <ItemCard key={item.id} item={item} showCheckbox={true} />
                   ))}
                 </>
+              )}
+            </TabsContent>
+
+            <TabsContent value="users" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    Kullanıcı Yönetimi
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Search Bar */}
+                  <div className="w-full max-w-md">
+                    <Input
+                      placeholder="Kullanıcı ara..."
+                      value={userSearchTerm}
+                      onChange={(e) => setUserSearchTerm(e.target.value)}
+                      data-testid="input-search-users"
+                    />
+                  </div>
+
+                  {/* Users List */}
+                  {usersLoading ? (
+                    <div className="text-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                      <p className="text-gray-600">Kullanıcılar yükleniyor...</p>
+                    </div>
+                  ) : filteredUsers.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600">
+                        {userSearchTerm ? "Kullanıcı bulunamadı" : "Henüz kullanıcı yok"}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {filteredUsers.map((user: any) => (
+                        <div
+                          key={user.id}
+                          className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                          data-testid={`user-card-${user.id}`}
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                              <Users className="h-5 w-5 text-primary" />
+                            </div>
+                            <div>
+                              <p className="font-medium">{user.name || user.email}</p>
+                              <p className="text-sm text-gray-600">{user.email}</p>
+                              <p className="text-xs text-gray-500">
+                                Katılma: {user.createdAt ? new Date(user.createdAt).toLocaleDateString('tr-TR') : 'N/A'}
+                              </p>
+                            </div>
+                          </div>
+                          <Button
+                            onClick={() => setSelectedUser(user)}
+                            size="sm"
+                            data-testid={`button-message-${user.id}`}
+                          >
+                            <Send className="h-4 w-4 mr-2" />
+                            Mesaj Gönder
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Message Modal */}
+              {selectedUser && (
+                <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        {selectedUser.name || selectedUser.email} adlı kullanıcıya mesaj gönder
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Mesaj Başlığı</label>
+                        <Input
+                          placeholder="Mesaj başlığı girin"
+                          value={messageTitle}
+                          onChange={(e) => setMessageTitle(e.target.value)}
+                          data-testid="input-message-title"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Mesaj İçeriği</label>
+                        <Textarea
+                          placeholder="Mesaj içeriğini girin"
+                          value={messageContent}
+                          onChange={(e) => setMessageContent(e.target.value)}
+                          rows={4}
+                          data-testid="textarea-message-content"
+                        />
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setSelectedUser(null)}
+                          data-testid="button-cancel-message"
+                        >
+                          İptal
+                        </Button>
+                        <Button
+                          onClick={sendMessageToUser}
+                          disabled={sendingMessage}
+                          data-testid="button-send-message"
+                        >
+                          {sendingMessage ? "Gönderiliyor..." : "Gönder"}
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               )}
             </TabsContent>
 
