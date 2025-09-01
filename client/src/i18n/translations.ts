@@ -359,6 +359,65 @@ export const translations = {
       orta: "Orta",
       cok_iyi: "Çok İyi",
       kusurlu: "Kusurlu"
+    },
+    terms: {
+      title: "📜 Kullanım Şartları ve Gizlilik Politikası",
+      usageTermsTitle: "📜 Takas Çemberi Kullanım Şartları",
+      privacyPolicyTitle: "🔒 Gizlilik Politikası",
+      generalProvisionsTitle: "1. Genel Hükümler",
+      generalProvisions: [
+        "Takas Çemberi, üyelerinin ihtiyaç fazlası ürünlerini ücretsiz veya belirlenen şartlarda takas etmelerine imkân sağlayan bir dijital platformdur.",
+        "Platforma üye olan her kullanıcı, bu kullanım şartlarını okumuş ve kabul etmiş sayılır."
+      ],
+      membershipSecurityTitle: "2. Üyelik ve Hesap Güvenliği",
+      membershipSecurity: [
+        "Üyeler, kayıt sırasında doğru ve güncel bilgiler vermekle yükümlüdür.",
+        "Hesap güvenliğinden kullanıcı sorumludur. Kullanıcı adı ve şifrenin üçüncü kişilerle paylaşılmasından doğacak sorumluluk kullanıcıya aittir."
+      ],
+      adsSharesTitle: "3. İlan ve Paylaşımlar",
+      adsShares: [
+        "Kullanıcılar yalnızca kendilerine ait veya takas hakkına sahip oldukları ürünleri paylaşabilir.",
+        "Kapora, ön ödeme veya kullanıcılar arası para transferi kesinlikle yasaktır.",
+        "Platform, şüpheli veya kural dışı ilanları kaldırma hakkını saklı tutar."
+      ],
+      liabilityDisclaimerTitle: "4. Sorumluluk Reddi",
+      liabilityDisclaimer: [
+        "Takas Çemberi, kullanıcılar arasında gerçekleşen takas işlemlerinin tarafı değildir.",
+        "Ürün kalitesi, teslimi veya takas sonrası yaşanabilecek anlaşmazlıklardan kullanıcılar sorumludur."
+      ],
+      serviceLimitsTitle: "5. Hizmetin Sınırları",
+      serviceLimits: [
+        "Takas Çemberi, hizmeti dilediği zaman değiştirme, askıya alma veya sonlandırma hakkını saklı tutar."
+      ],
+      dataCollectionTitle: "1. Kişisel Verilerin Toplanması",
+      dataCollection: [
+        "Üyelik sırasında ad, e-posta ve iletişim bilgileri gibi temel veriler talep edilmektedir.",
+        "Bu bilgiler yalnızca kullanıcı deneyimini iyileştirmek ve güvenli bir platform sağlamak amacıyla kullanılmaktadır."
+      ],
+      dataUsageTitle: "2. Verilerin Kullanımı",
+      dataUsage: [
+        "Kullanıcı bilgileri üçüncü kişilerle kesinlikle paylaşılmaz.",
+        "Ancak yasal zorunluluk halinde resmi makamlarla paylaşılabilir."
+      ],
+      cookiesTitle: "3. Çerezler (Cookies)",
+      cookies: [
+        "Platform, kullanıcı deneyimini artırmak için çerezlerden faydalanabilir.",
+        "Dileyen kullanıcı tarayıcı ayarlarından çerezleri kapatabilir."
+      ],
+      securityTitle: "4. Güvenlik",
+      security: [
+        "Kullanıcı verilerinin korunması için gerekli teknik ve idari önlemler alınmaktadır."
+      ],
+      rightsTitle: "5. Haklarınız",
+      rights: [
+        "Kullanıcılar, kişisel verilerinin silinmesini, güncellenmesini veya düzeltilmesini talep edebilir.",
+        "Bu talepler için iletişim bölümünden bizimle irtibat kurulabilir."
+      ],
+      acceptText: "Yukarıdaki Kullanım Şartları ve Gizlilik Politikası'nı okudum, anladım ve kabul ediyorum.",
+      acceptButton: "✅ Kabul Et & Kayıt Ol",
+      cancelButton: "❌ İptal",
+      acceptCheckbox: "✅ Kabul ediyorum",
+      loading: "Kayıt oluşturuluyor..."
     }
   },
   en: {
@@ -722,6 +781,65 @@ export const translations = {
       orta: "Fair",
       cok_iyi: "Very Good",
       kusurlu: "Damaged"
+    },
+    terms: {
+      title: "📜 Terms of Use and Privacy Policy",
+      usageTermsTitle: "📜 Takas Çemberi Terms of Use",
+      privacyPolicyTitle: "🔒 Privacy Policy",
+      generalProvisionsTitle: "1. General Provisions",
+      generalProvisions: [
+        "Takas Çemberi is a digital platform that allows its members to exchange their surplus products for free or under specified terms.",
+        "Every user who becomes a member of the platform is deemed to have read and accepted these terms of use."
+      ],
+      membershipSecurityTitle: "2. Membership and Account Security",
+      membershipSecurity: [
+        "Members are obliged to provide accurate and up-to-date information during registration.",
+        "Users are responsible for account security. Users are responsible for any liability arising from sharing usernames and passwords with third parties."
+      ],
+      adsSharesTitle: "3. Listings and Shares",
+      adsShares: [
+        "Users can only share products that belong to them or that they have the right to trade.",
+        "Deposits, advance payments or money transfers between users are strictly prohibited.",
+        "The platform reserves the right to remove suspicious or non-compliant listings."
+      ],
+      liabilityDisclaimerTitle: "4. Disclaimer of Liability",
+      liabilityDisclaimer: [
+        "Takas Çemberi is not a party to trading transactions between users.",
+        "Users are responsible for product quality, delivery or disputes that may arise after trading."
+      ],
+      serviceLimitsTitle: "5. Service Limitations",
+      serviceLimits: [
+        "Takas Çemberi reserves the right to change, suspend or terminate the service at any time."
+      ],
+      dataCollectionTitle: "1. Personal Data Collection",
+      dataCollection: [
+        "Basic data such as name, email and contact information are requested during membership.",
+        "This information is used only to improve user experience and provide a secure platform."
+      ],
+      dataUsageTitle: "2. Data Usage",
+      dataUsage: [
+        "User information is never shared with third parties.",
+        "However, it may be shared with official authorities in case of legal obligation."
+      ],
+      cookiesTitle: "3. Cookies",
+      cookies: [
+        "The platform may use cookies to enhance user experience.",
+        "Users who wish can turn off cookies from their browser settings."
+      ],
+      securityTitle: "4. Security",
+      security: [
+        "Necessary technical and administrative measures are taken to protect user data."
+      ],
+      rightsTitle: "5. Your Rights",
+      rights: [
+        "Users can request deletion, updating or correction of their personal data.",
+        "For these requests, you can contact us through the contact section."
+      ],
+      acceptText: "I have read, understood and accept the above Terms of Use and Privacy Policy.",
+      acceptButton: "✅ Accept & Register",
+      cancelButton: "❌ Cancel",
+      acceptCheckbox: "✅ I accept",
+      loading: "Creating account..."
     }
   },
   ar: {
@@ -1085,6 +1203,65 @@ export const translations = {
       orta: "متوسط",
       cok_iyi: "جيد جداً",
       kusurlu: "معطوب"
+    },
+    terms: {
+      title: "📜 شروط الاستخدام وسياسة الخصوصية",
+      usageTermsTitle: "📜 شروط استخدام تاكاس تشمبري",
+      privacyPolicyTitle: "🔒 سياسة الخصوصية",
+      generalProvisionsTitle: "1. أحكام عامة",
+      generalProvisions: [
+        "تاكاس تشمبري هي منصة رقمية تتيح لأعضائها تبادل منتجاتهم الفائضة مجاناً أو وفقاً لشروط محددة.",
+        "كل مستخدم يصبح عضواً في المنصة يُعتبر أنه قرأ ووافق على شروط الاستخدام هذه."
+      ],
+      membershipSecurityTitle: "2. العضوية وأمان الحساب",
+      membershipSecurity: [
+        "الأعضاء ملزمون بتقديم معلومات دقيقة ومحدثة أثناء التسجيل.",
+        "المستخدمون مسؤولون عن أمان الحساب. المستخدمون مسؤولون عن أي مسؤولية تنشأ من مشاركة أسماء المستخدمين وكلمات المرور مع أطراف ثالثة."
+      ],
+      adsSharesTitle: "3. الإعلانات والمشاركات",
+      adsShares: [
+        "يمكن للمستخدمين مشاركة المنتجات التي تخصهم فقط أو التي لديهم حق في تداولها.",
+        "الودائع أو الدفعات المقدمة أو التحويلات المالية بين المستخدمين محظورة تماماً.",
+        "المنصة تحتفظ بحق إزالة الإعلانات المشبوهة أو غير المتوافقة."
+      ],
+      liabilityDisclaimerTitle: "4. إخلاء المسؤولية",
+      liabilityDisclaimer: [
+        "تاكاس تشمبري ليس طرفاً في معاملات التداول بين المستخدمين.",
+        "المستخدمون مسؤولون عن جودة المنتج والتسليم أو النزاعات التي قد تنشأ بعد التداول."
+      ],
+      serviceLimitsTitle: "5. قيود الخدمة",
+      serviceLimits: [
+        "تاكاس تشمبري تحتفظ بحق تغيير أو تعليق أو إنهاء الخدمة في أي وقت."
+      ],
+      dataCollectionTitle: "1. جمع البيانات الشخصية",
+      dataCollection: [
+        "يتم طلب البيانات الأساسية مثل الاسم والبريد الإلكتروني ومعلومات الاتصال أثناء العضوية.",
+        "هذه المعلومات تُستخدم فقط لتحسين تجربة المستخدم وتوفير منصة آمنة."
+      ],
+      dataUsageTitle: "2. استخدام البيانات",
+      dataUsage: [
+        "معلومات المستخدم لا تُشارك أبداً مع أطراف ثالثة.",
+        "ومع ذلك، قد تُشارك مع السلطات الرسمية في حالة الالتزام القانوني."
+      ],
+      cookiesTitle: "3. ملفات تعريف الارتباط",
+      cookies: [
+        "قد تستخدم المنصة ملفات تعريف الارتباط لتحسين تجربة المستخدم.",
+        "المستخدمون الذين يرغبون يمكنهم إيقاف ملفات تعريف الارتباط من إعدادات المتصفح."
+      ],
+      securityTitle: "4. الأمان",
+      security: [
+        "يتم اتخاذ التدابير التقنية والإدارية اللازمة لحماية بيانات المستخدم."
+      ],
+      rightsTitle: "5. حقوقك",
+      rights: [
+        "يمكن للمستخدمين طلب حذف أو تحديث أو تصحيح بياناتهم الشخصية.",
+        "لهذه الطلبات، يمكنكم التواصل معنا من خلال قسم الاتصال."
+      ],
+      acceptText: "لقد قرأت وفهمت ووافقت على شروط الاستخدام وسياسة الخصوصية أعلاه.",
+      acceptButton: "✅ قبول والتسجيل",
+      cancelButton: "❌ إلغاء",
+      acceptCheckbox: "✅ أوافق",
+      loading: "جاري إنشاء الحساب..."
     }
   }
 };

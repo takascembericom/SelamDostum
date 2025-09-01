@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface TermsModalProps {
   open: boolean;
@@ -19,6 +20,7 @@ interface TermsModalProps {
 
 export function TermsModal({ open, onClose, onAccept, loading = false }: TermsModalProps) {
   const [accepted, setAccepted] = useState(false);
+  const { t } = useLanguage();
 
   const handleClose = () => {
     setAccepted(false);
@@ -36,7 +38,7 @@ export function TermsModal({ open, onClose, onAccept, loading = false }: TermsMo
       <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col" data-testid="modal-terms">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-center" data-testid="title-terms">
-            📜 Kullanım Şartları ve Gizlilik Politikası
+            {t.terms.title}
           </DialogTitle>
         </DialogHeader>
 
@@ -45,46 +47,62 @@ export function TermsModal({ open, onClose, onAccept, loading = false }: TermsMo
             
             {/* Kullanım Şartları */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-primary">📜 Takas Çemberi Kullanım Şartları</h2>
+              <h2 className="text-lg font-semibold text-primary">{t.terms.usageTermsTitle}</h2>
               
               <div className="space-y-3">
                 <div>
-                  <h3 className="font-medium mb-2">1. Genel Hükümler</h3>
+                  <h3 className="font-medium mb-2">{t.terms.generalProvisionsTitle}</h3>
                   <ul className="list-disc list-inside space-y-1 ml-2 text-gray-700">
-                    <li>Takas Çemberi, üyelerinin ihtiyaç fazlası ürünlerini ücretsiz veya belirlenen şartlarda takas etmelerine imkân sağlayan bir dijital platformdur.</li>
-                    <li>Platforma üye olan her kullanıcı, bu kullanım şartlarını okumuş ve kabul etmiş sayılır.</li>
+                    {t.terms.generalProvisions.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-medium mb-2">2. Üyelik ve Hesap Güvenliği</h3>
+                  <h3 className="font-medium mb-2">{t.terms.membershipSecurityTitle}</h3>
                   <ul className="list-disc list-inside space-y-1 ml-2 text-gray-700">
-                    <li>Üyeler, kayıt sırasında doğru ve güncel bilgiler vermekle yükümlüdür.</li>
-                    <li>Hesap güvenliğinden kullanıcı sorumludur. Kullanıcı adı ve şifrenin üçüncü kişilerle paylaşılmasından doğacak sorumluluk kullanıcıya aittir.</li>
+                    {t.terms.membershipSecurity.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-medium mb-2">3. İlan ve Paylaşımlar</h3>
+                  <h3 className="font-medium mb-2">{t.terms.adsSharesTitle}</h3>
                   <ul className="list-disc list-inside space-y-1 ml-2 text-gray-700">
-                    <li>Kullanıcılar yalnızca kendilerine ait veya takas hakkına sahip oldukları ürünleri paylaşabilir.</li>
-                    <li>Kapora, ön ödeme veya kullanıcılar arası para transferi <strong>kesinlikle yasaktır</strong>.</li>
-                    <li>Platform, şüpheli veya kural dışı ilanları kaldırma hakkını saklı tutar.</li>
+                    {t.terms.adsShares.map((item, index) => (
+                      <li key={index}>
+                        {index === 1 ? (
+                          <span dangerouslySetInnerHTML={{
+                            __html: item
+                              .replace(/kesinlikle yasaktır/g, '<strong>kesinlikle yasaktır</strong>')
+                              .replace(/strictly prohibited/g, '<strong>strictly prohibited</strong>')
+                              .replace(/محظورة تماماً/g, '<strong>محظورة تماماً</strong>')
+                          }} />
+                        ) : (
+                          item
+                        )}
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-medium mb-2">4. Sorumluluk Reddi</h3>
+                  <h3 className="font-medium mb-2">{t.terms.liabilityDisclaimerTitle}</h3>
                   <ul className="list-disc list-inside space-y-1 ml-2 text-gray-700">
-                    <li>Takas Çemberi, kullanıcılar arasında gerçekleşen takas işlemlerinin tarafı değildir.</li>
-                    <li>Ürün kalitesi, teslimi veya takas sonrası yaşanabilecek anlaşmazlıklardan kullanıcılar sorumludur.</li>
+                    {t.terms.liabilityDisclaimer.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-medium mb-2">5. Hizmetin Sınırları</h3>
+                  <h3 className="font-medium mb-2">{t.terms.serviceLimitsTitle}</h3>
                   <ul className="list-disc list-inside space-y-1 ml-2 text-gray-700">
-                    <li>Takas Çemberi, hizmeti dilediği zaman değiştirme, askıya alma veya sonlandırma hakkını saklı tutar.</li>
+                    {t.terms.serviceLimits.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -92,45 +110,62 @@ export function TermsModal({ open, onClose, onAccept, loading = false }: TermsMo
 
             {/* Gizlilik Politikası */}
             <div className="space-y-4 border-t pt-6">
-              <h2 className="text-lg font-semibold text-primary">🔒 Gizlilik Politikası</h2>
+              <h2 className="text-lg font-semibold text-primary">{t.terms.privacyPolicyTitle}</h2>
               
               <div className="space-y-3">
                 <div>
-                  <h3 className="font-medium mb-2">1. Kişisel Verilerin Toplanması</h3>
+                  <h3 className="font-medium mb-2">{t.terms.dataCollectionTitle}</h3>
                   <ul className="list-disc list-inside space-y-1 ml-2 text-gray-700">
-                    <li>Üyelik sırasında ad, e-posta ve iletişim bilgileri gibi temel veriler talep edilmektedir.</li>
-                    <li>Bu bilgiler yalnızca kullanıcı deneyimini iyileştirmek ve güvenli bir platform sağlamak amacıyla kullanılmaktadır.</li>
+                    {t.terms.dataCollection.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-medium mb-2">2. Verilerin Kullanımı</h3>
+                  <h3 className="font-medium mb-2">{t.terms.dataUsageTitle}</h3>
                   <ul className="list-disc list-inside space-y-1 ml-2 text-gray-700">
-                    <li>Kullanıcı bilgileri üçüncü kişilerle <strong>kesinlikle paylaşılmaz</strong>.</li>
-                    <li>Ancak yasal zorunluluk halinde resmi makamlarla paylaşılabilir.</li>
+                    {t.terms.dataUsage.map((item, index) => (
+                      <li key={index}>
+                        {index === 0 ? (
+                          <span dangerouslySetInnerHTML={{
+                            __html: item
+                              .replace(/kesinlikle paylaşılmaz/g, '<strong>kesinlikle paylaşılmaz</strong>')
+                              .replace(/never shared/g, '<strong>never shared</strong>')
+                              .replace(/لا تُشارك أبداً/g, '<strong>لا تُشارك أبداً</strong>')
+                          }} />
+                        ) : (
+                          item
+                        )}
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-medium mb-2">3. Çerezler (Cookies)</h3>
+                  <h3 className="font-medium mb-2">{t.terms.cookiesTitle}</h3>
                   <ul className="list-disc list-inside space-y-1 ml-2 text-gray-700">
-                    <li>Platform, kullanıcı deneyimini artırmak için çerezlerden faydalanabilir.</li>
-                    <li>Dileyen kullanıcı tarayıcı ayarlarından çerezleri kapatabilir.</li>
+                    {t.terms.cookies.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-medium mb-2">4. Güvenlik</h3>
+                  <h3 className="font-medium mb-2">{t.terms.securityTitle}</h3>
                   <ul className="list-disc list-inside space-y-1 ml-2 text-gray-700">
-                    <li>Kullanıcı verilerinin korunması için gerekli teknik ve idari önlemler alınmaktadır.</li>
+                    {t.terms.security.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-medium mb-2">5. Haklarınız</h3>
+                  <h3 className="font-medium mb-2">{t.terms.rightsTitle}</h3>
                   <ul className="list-disc list-inside space-y-1 ml-2 text-gray-700">
-                    <li>Kullanıcılar, kişisel verilerinin silinmesini, güncellenmesini veya düzeltilmesini talep edebilir.</li>
-                    <li>Bu talepler için iletişim bölümünden bizimle irtibat kurulabilir.</li>
+                    {t.terms.rights.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -151,7 +186,7 @@ export function TermsModal({ open, onClose, onAccept, loading = false }: TermsMo
               htmlFor="accept-terms-modal" 
               className="text-sm font-medium leading-5 cursor-pointer"
             >
-              ✅ Yukarıdaki <strong>Kullanım Şartları</strong> ve <strong>Gizlilik Politikası</strong>'nı okudum, anladım ve kabul ediyorum.
+              {t.terms.acceptText}
             </label>
           </div>
 
@@ -164,7 +199,7 @@ export function TermsModal({ open, onClose, onAccept, loading = false }: TermsMo
               disabled={loading}
               data-testid="button-cancel-terms"
             >
-              ❌ İptal
+              {t.terms.cancelButton}
             </Button>
             <Button 
               onClick={handleAccept}
@@ -172,7 +207,7 @@ export function TermsModal({ open, onClose, onAccept, loading = false }: TermsMo
               className="flex-1 bg-green-600 hover:bg-green-700"
               data-testid="button-accept-terms"
             >
-              {loading ? "Kayıt oluşturuluyor..." : "✅ Kabul Et & Kayıt Ol"}
+              {loading ? t.terms.loading : t.terms.acceptButton}
             </Button>
           </div>
         </DialogFooter>
