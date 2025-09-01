@@ -51,6 +51,9 @@ export default function AdminPanel() {
   const [broadcastType, setBroadcastType] = useState("info");
   const [sendingBroadcast, setSendingBroadcast] = useState(false);
   
+  // Active tab state
+  const [activeTab, setActiveTab] = useState("pending");
+  
   // Check admin authentication
   const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
   
@@ -625,16 +628,28 @@ export default function AdminPanel() {
                 <Shield className="h-6 w-6 text-blue-600" />
                 <h1 className="text-xl font-bold text-gray-900">Admin Paneli</h1>
               </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleLogout}
-                className="flex items-center gap-2"
-                data-testid="button-admin-logout"
-              >
-                <LogOut className="h-4 w-4" />
-                Çıkış Yap
-              </Button>
+              <div className="flex items-center gap-3">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setActiveTab("settings")}
+                  className={`flex items-center gap-2 ${activeTab === 'settings' ? 'bg-gray-100' : ''}`}
+                  data-testid="button-admin-settings"
+                >
+                  <Settings className="h-4 w-4" />
+                  Ayarlar
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleLogout}
+                  className="flex items-center gap-2"
+                  data-testid="button-admin-logout"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Çıkış Yap
+                </Button>
+              </div>
             </div>
           </div>
         </header>
@@ -644,8 +659,8 @@ export default function AdminPanel() {
             <p className="text-gray-600 mt-2">İlanları yönetin ve onaylayın</p>
           </div>
 
-          <Tabs defaultValue="pending" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="pending" className="flex items-center gap-2">
                 <MessageCircle className="h-4 w-4" />
                 Bekleyen İlanlar ({pendingItems.length})
@@ -669,10 +684,6 @@ export default function AdminPanel() {
               <TabsTrigger value="broadcast" className="flex items-center gap-2">
                 <Megaphone className="h-4 w-4" />
                 Toplu Bildirim
-              </TabsTrigger>
-              <TabsTrigger value="settings" className="flex items-center gap-2">
-                <Settings className="h-4 w-4" />
-                Ayarlar
               </TabsTrigger>
             </TabsList>
 
