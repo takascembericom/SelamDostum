@@ -130,7 +130,7 @@ export default function Home() {
             <img 
               src={logoImage} 
               alt="Takas Çemberi Logo" 
-              className="h-24 md:h-32 w-auto mx-auto mb-6"
+              className="h-32 md:h-48 lg:h-56 w-auto mx-auto mb-6"
             />
           </div>
           
