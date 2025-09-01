@@ -35,14 +35,15 @@ export function TermsModal({ open, onClose, onAccept, loading = false }: TermsMo
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-3xl max-h-[95vh] flex flex-col" data-testid="modal-terms">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-4xl w-[90vw] max-h-[90vh] flex flex-col" data-testid="modal-terms">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle className="text-xl font-semibold text-center" data-testid="title-terms">
             {t.terms.title}
           </DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 max-h-[75vh] pr-4" data-testid="scroll-terms">
+        <ScrollArea className="flex-1 min-h-0" data-testid="scroll-terms">
+          <div className="pr-4 pb-4">
           <div className="space-y-6 text-sm">
             
             {/* Kullanım Şartları */}
