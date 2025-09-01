@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminChat } from "@/components/admin-chat";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, X, Eye, MessageCircle, LogOut, Shield, Settings, Key, Trash2, Users, Send } from "lucide-react";
+import { Check, X, Eye, MessageCircle, LogOut, Shield, Settings, Key, Trash2, Users, Send, User, Phone, MapPin, Calendar, Package } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LiveChat } from "@/components/live-chat";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -38,6 +38,11 @@ export default function AdminPanel() {
   const [messageTitle, setMessageTitle] = useState("");
   const [messageContent, setMessageContent] = useState("");
   const [sendingMessage, setSendingMessage] = useState(false);
+  
+  // User profile viewing state
+  const [viewingUserProfile, setViewingUserProfile] = useState<any>(null);
+  const [profileUserItems, setProfileUserItems] = useState<any[]>([]);
+  const [loadingProfileItems, setLoadingProfileItems] = useState(false);
   
   // Check admin authentication
   const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
@@ -170,6 +175,35 @@ export default function AdminPanel() {
     } finally {
       setSendingMessage(false);
     }
+  };
+
+  // View user profile function
+  const viewUserProfile = async (user: any) => {
+    setViewingUserProfile(user);
+    setLoadingProfileItems(true);
+    
+    try {
+      // Fetch user's items
+      const itemsResponse = await fetch(`/api/admin/users/${user.id}/items`);
+      if (itemsResponse.ok) {
+        const items = await itemsResponse.json();
+        setProfileUserItems(items);
+      } else {
+        setProfileUserItems([]);
+      }
+    } catch (error) {
+      console.error("Error fetching user items:", error);
+      setProfileUserItems([]);
+    } finally {
+      setLoadingProfileItems(false);
+    }
+  };
+
+  // Close user profile modal
+  const closeUserProfile = () => {
+    setViewingUserProfile(null);
+    setProfileUserItems([]);
+    setLoadingProfileItems(false);
   };
 
   // Fetch rejected items
@@ -776,14 +810,25 @@ export default function AdminPanel() {
                               </p>
                             </div>
                           </div>
-                          <Button
-                            onClick={() => setSelectedUser(user)}
-                            size="sm"
-                            data-testid={`button-message-${user.id}`}
-                          >
-                            <Send className="h-4 w-4 mr-2" />
-                            Mesaj Gönder
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={() => viewUserProfile(user)}
+                              size="sm"
+                              variant="outline"
+                              data-testid={`button-view-profile-${user.id}`}
+                            >
+                              <User className="h-4 w-4 mr-2" />
+                              Profil Görüntüle
+                            </Button>
+                            <Button
+                              onClick={() => setSelectedUser(user)}
+                              size="sm"
+                              data-testid={`button-message-${user.id}`}
+                            >
+                              <Send className="h-4 w-4 mr-2" />
+                              Mesaj Gönder
+                            </Button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -834,6 +879,146 @@ export default function AdminPanel() {
                           data-testid="button-send-message"
                         >
                           {sendingMessage ? "Gönderiliyor..." : "Gönder"}
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
+
+              {/* User Profile Modal */}
+              {viewingUserProfile && (
+                <Dialog open={!!viewingUserProfile} onOpenChange={closeUserProfile}>
+                  <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="flex items-center gap-2">
+                        <User className="h-5 w-5" />
+                        Kullanıcı Profili: {viewingUserProfile.name || viewingUserProfile.email}
+                      </DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-6">
+                      {/* Basic User Information */}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            <User className="h-5 w-5" />
+                            Kullanıcı Bilgileri
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <User className="h-4 w-4 text-gray-500" />
+                              <span className="font-medium">Ad Soyad:</span>
+                              <span>{viewingUserProfile.name || 'Belirtilmemiş'}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <MessageCircle className="h-4 w-4 text-gray-500" />
+                              <span className="font-medium">E-posta:</span>
+                              <span>{viewingUserProfile.email}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Phone className="h-4 w-4 text-gray-500" />
+                              <span className="font-medium">Telefon:</span>
+                              <span>{viewingUserProfile.phone || 'Belirtilmemiş'}</span>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4 text-gray-500" />
+                              <span className="font-medium">Katılma Tarihi:</span>
+                              <span>
+                                {viewingUserProfile.createdAt 
+                                  ? new Date(viewingUserProfile.createdAt).toLocaleDateString('tr-TR')
+                                  : 'Bilinmiyor'
+                                }
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <MapPin className="h-4 w-4 text-gray-500" />
+                              <span className="font-medium">Şehir:</span>
+                              <span>{viewingUserProfile.city || 'Belirtilmemiş'}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline">
+                                ID: {viewingUserProfile.id}
+                              </Badge>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* User's Items */}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            <Package className="h-5 w-5" />
+                            Kullanıcının İlanları ({profileUserItems.length})
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          {loadingProfileItems ? (
+                            <div className="text-center py-8">
+                              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                              <p className="text-gray-600">İlanlar yükleniyor...</p>
+                            </div>
+                          ) : profileUserItems.length === 0 ? (
+                            <div className="text-center py-8">
+                              <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                              <p className="text-gray-600">Bu kullanıcının henüz ilanı bulunmuyor</p>
+                            </div>
+                          ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                              {profileUserItems.map((item: any) => (
+                                <div
+                                  key={item.id}
+                                  className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                                  data-testid={`user-item-${item.id}`}
+                                >
+                                  <div className="space-y-2">
+                                    <h4 className="font-medium text-sm line-clamp-2">{item.title}</h4>
+                                    <div className="flex items-center justify-between">
+                                      <Badge variant={
+                                        item.status === 'active' ? 'default' : 
+                                        item.status === 'pending' ? 'secondary' : 
+                                        'destructive'
+                                      }>
+                                        {item.status === 'active' ? 'Aktif' :
+                                         item.status === 'pending' ? 'Beklemede' :
+                                         item.status === 'rejected' ? 'Reddedildi' : 
+                                         item.status}
+                                      </Badge>
+                                      <span className="text-xs text-gray-500">
+                                        {CATEGORY_LABELS[item.category as keyof typeof CATEGORY_LABELS] || item.category}
+                                      </span>
+                                    </div>
+                                    <p className="text-xs text-gray-600">
+                                      {item.createdAt ? new Date(item.createdAt).toLocaleDateString('tr-TR') : 'Tarih yok'}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+
+                      {/* Action Buttons */}
+                      <div className="flex justify-end space-x-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setSelectedUser(viewingUserProfile)}
+                          data-testid="button-send-message-from-profile"
+                        >
+                          <Send className="h-4 w-4 mr-2" />
+                          Mesaj Gönder
+                        </Button>
+                        <Button
+                          onClick={closeUserProfile}
+                          data-testid="button-close-profile"
+                        >
+                          Kapat
                         </Button>
                       </div>
                     </div>

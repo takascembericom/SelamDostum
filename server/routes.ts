@@ -299,6 +299,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Kullanıcının ilanlarını getiren endpoint - admin için
+  app.get("/api/admin/users/:userId/items", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      
+      const { db } = await import("../client/src/lib/firebase");
+      const { collection, getDocs, query, where, orderBy } = await import("firebase/firestore");
+      
+      const itemsQuery = query(
+        collection(db, 'items'),
+        where('userId', '==', userId),
+        orderBy('createdAt', 'desc')
+      );
+      
+      const itemsSnapshot = await getDocs(itemsQuery);
+      const items = itemsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
+          updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt,
+        };
+      });
+      
+      res.json(items);
+    } catch (error: any) {
+      console.error("User items fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch user items" });
+    }
+  });
+
+  // Kullanıcı detay bilgilerini getiren endpoint - admin için
+  app.get("/api/admin/users/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      
+      const { db } = await import("../client/src/lib/firebase");
+      const { doc, getDoc } = await import("firebase/firestore");
+      
+      const userRef = doc(db, 'users', userId);
+      const userSnap = await getDoc(userRef);
+      
+      if (!userSnap.exists()) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      
+      const userData = userSnap.data();
+      
+      res.json({
+        id: userSnap.id,
+        ...userData,
+        createdAt: userData.createdAt?.toDate ? userData.createdAt.toDate() : userData.createdAt,
+        // Hassas bilgileri çıkar
+        password: undefined,
+      });
+    } catch (error: any) {
+      console.error("User detail fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch user details" });
+    }
+  });
+
   // put other application routes here
   // prefix all routes with /api
 
