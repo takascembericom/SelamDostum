@@ -608,7 +608,7 @@ export default function AddItem() {
                       <div className="aspect-square">
                         <label className="w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
                           <Camera className="h-8 w-8 text-gray-400 mb-2" />
-                          <span className="text-sm text-gray-500">Fotoğraf Ekle</span>
+                          <span className="text-sm text-gray-500">{t.addItem.addPhoto}</span>
                           <input
                             type="file"
                             accept="image/jpeg,image/jpg,image/png,image/webp"
@@ -623,7 +623,7 @@ export default function AddItem() {
                   </div>
                   
                   <p className="text-xs text-gray-500">
-                    En fazla 5 fotoğraf. İlk fotoğraf kapak olur.
+                    {t.addItem.photoHint}
                   </p>
                 </div>
 
