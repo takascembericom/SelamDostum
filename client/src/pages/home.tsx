@@ -137,11 +137,8 @@ export default function Home() {
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight transition-opacity duration-500" data-testid="title-hero">
             {t.home.heroTexts[currentTextIndex].title}
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl mb-4 font-semibold transition-opacity duration-500" data-testid="welcome-text">
+          <p className="text-lg sm:text-xl md:text-2xl mb-8 font-semibold transition-opacity duration-500" data-testid="welcome-text">
             {t.home.heroTexts[currentTextIndex].subtitle}
-          </p>
-          <p className="text-sm sm:text-base md:text-lg mb-8 max-w-xl mx-auto opacity-90 px-4" data-testid="description-hero">
-            {t.home.heroDescription}
           </p>
         </div>
       </section>
