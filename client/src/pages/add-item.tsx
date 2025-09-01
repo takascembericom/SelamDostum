@@ -569,9 +569,9 @@ export default function AddItem() {
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl" data-testid="title-add-item">Yeni İlan Ekle</CardTitle>
+            <CardTitle className="text-2xl" data-testid="title-add-item">{t.addItem.title}</CardTitle>
             <p className="text-gray-600">
-              Takas etmek istediğiniz ilanınızın bilgilerini ekleyin
+              {t.addItem.subtitle}
             </p>
             
           </CardHeader>
@@ -582,7 +582,7 @@ export default function AddItem() {
                 {/* Images */}
                 <div className="space-y-4">
                   <label className="block text-sm font-medium text-gray-700">
-                    Fotoğraflar *
+                    {t.addItem.photos} {t.addItem.required}
                   </label>
                   
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -634,7 +634,7 @@ export default function AddItem() {
                     name="category"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Kategori *</FormLabel>
+                        <FormLabel>{t.addItem.category} {t.addItem.required}</FormLabel>
                         
                         {/* Mobile: Native Select */}
                         <div className="block sm:hidden">
@@ -666,7 +666,7 @@ export default function AddItem() {
                           }} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-category-desktop" className="h-10 text-sm">
-                                <SelectValue placeholder="Kategori seçin" />
+                                <SelectValue placeholder={t.addItem.selectCategory} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -690,7 +690,7 @@ export default function AddItem() {
                       name="subcategory"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Alt Kategori *</FormLabel>
+                          <FormLabel>{t.addItem.subcategory} {t.addItem.required}</FormLabel>
                           
                           {/* Mobile: Native Select */}
                           <div className="block sm:hidden">
@@ -715,7 +715,7 @@ export default function AddItem() {
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger data-testid="select-subcategory-desktop">
-                                  <SelectValue placeholder="Alt Kategori" />
+                                  <SelectValue placeholder={t.addItem.selectSubcategory} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
@@ -743,7 +743,7 @@ export default function AddItem() {
                       name="carBrand"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Marka *</FormLabel>
+                          <FormLabel>{t.addItem.carBrand} {t.addItem.required}</FormLabel>
                           
                           {/* Mobile: Native Select */}
                           <div className="block sm:hidden">
@@ -768,7 +768,7 @@ export default function AddItem() {
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger data-testid="select-car-brand-desktop">
-                                  <SelectValue placeholder="Marka seçin" />
+                                  <SelectValue placeholder={t.addItem.selectCarBrand} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
@@ -791,10 +791,10 @@ export default function AddItem() {
                       name="carModel"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Model *</FormLabel>
+                          <FormLabel>{t.addItem.carModel} {t.addItem.required}</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Model girin"
+                              placeholder={t.addItem.enterCarModel}
                               {...field}
                               data-testid="input-car-model"
                             />
@@ -809,10 +809,10 @@ export default function AddItem() {
                       name="carKm"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>KM *</FormLabel>
+                          <FormLabel>{t.addItem.carKm} {t.addItem.required}</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Kilometre"
+                              placeholder={t.addItem.enterCarKm}
                               type="number"
                               {...field}
                               data-testid="input-car-km"
@@ -831,7 +831,7 @@ export default function AddItem() {
                   name="condition"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Durum *</FormLabel>
+                      <FormLabel>{t.addItem.condition} {t.addItem.required}</FormLabel>
                       
                       {/* Mobile: Native Select */}
                       <div className="block sm:hidden">
@@ -856,7 +856,7 @@ export default function AddItem() {
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger data-testid="select-condition-desktop">
-                              <SelectValue placeholder="Durum" />
+                              <SelectValue placeholder={t.addItem.selectCondition} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -881,7 +881,7 @@ export default function AddItem() {
                     name="city"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>İl *</FormLabel>
+                        <FormLabel>{t.addItem.city} {t.addItem.required}</FormLabel>
                         
                         {/* Mobile: Native Select */}
                         <div className="block sm:hidden">
@@ -906,7 +906,7 @@ export default function AddItem() {
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-city-desktop">
-                                <SelectValue placeholder="İl seçin" />
+                                <SelectValue placeholder={t.addItem.selectCity} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -929,10 +929,10 @@ export default function AddItem() {
                     name="district"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>İlçe *</FormLabel>
+                        <FormLabel>{t.addItem.district} {t.addItem.required}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="İlçe girin"
+                            placeholder={t.addItem.enterDistrict}
                             {...field}
                             data-testid="input-district"
                           />
@@ -947,10 +947,10 @@ export default function AddItem() {
                     name="neighborhood"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Mahalle *</FormLabel>
+                        <FormLabel>{t.addItem.neighborhood} {t.addItem.required}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Mahalle girin"
+                            placeholder={t.addItem.enterNeighborhood}
                             {...field}
                             data-testid="input-neighborhood"
                           />
@@ -967,10 +967,10 @@ export default function AddItem() {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Başlık *</FormLabel>
+                      <FormLabel>{t.addItem.title_field} {t.addItem.required}</FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="Başlık ekleyin" 
+                          placeholder={t.addItem.enterTitle} 
                           {...field}
                           data-testid="input-title"
                         />
@@ -986,10 +986,10 @@ export default function AddItem() {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Açıklama *</FormLabel>
+                      <FormLabel>{t.addItem.description} {t.addItem.required}</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Açıklama ekleyin"
+                          placeholder={t.addItem.enterDescription}
                           rows={4}
                           {...field}
                           data-testid="textarea-description"
@@ -1011,12 +1011,12 @@ export default function AddItem() {
                     {uploading ? (
                       <>
                         <Upload className="h-4 w-4 mr-2 animate-spin" />
-                        Yükleniyor...
+                        {t.common.uploading}...
                       </>
                     ) : loadingListingCount ? (
-                      "İlan Ver"
+                      {t.addItem.submitButton}
                     ) : (
-                      "İlanı Ekle (30 gün süreli)"
+                      {t.addItem.submitButton}
                     )}
                   </Button>
                   <Button 
@@ -1025,7 +1025,7 @@ export default function AddItem() {
                     onClick={() => setLocation('/profile')}
                     data-testid="button-cancel"
                   >
-                    İptal
+                    {t.addItem.cancel}
                   </Button>
                 </div>
               </form>
