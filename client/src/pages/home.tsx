@@ -31,7 +31,7 @@ export default function Home() {
       setCurrentTextIndex((prevIndex) => 
         (prevIndex + 1) % t.home.heroTexts.length
       );
-    }, 60000);
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [t.home.heroTexts.length]);
