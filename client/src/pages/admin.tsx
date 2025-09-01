@@ -11,8 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminChat } from "@/components/admin-chat";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, X, Eye, MessageCircle, LogOut, Shield, Settings, Key, Trash2, Users, Send, User, Phone, MapPin, Calendar, Package } from "lucide-react";
+import { Check, X, Eye, MessageCircle, LogOut, Shield, Settings, Key, Trash2, Users, Send, User, Phone, MapPin, Calendar, Package, Megaphone, AlertTriangle, Info } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LiveChat } from "@/components/live-chat";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CATEGORY_LABELS, CONDITION_LABELS } from "@shared/schema";
@@ -43,6 +44,12 @@ export default function AdminPanel() {
   const [viewingUserProfile, setViewingUserProfile] = useState<any>(null);
   const [profileUserItems, setProfileUserItems] = useState<any[]>([]);
   const [loadingProfileItems, setLoadingProfileItems] = useState(false);
+  
+  // Broadcast notification state
+  const [broadcastTitle, setBroadcastTitle] = useState("");
+  const [broadcastMessage, setBroadcastMessage] = useState("");
+  const [broadcastType, setBroadcastType] = useState("info");
+  const [sendingBroadcast, setSendingBroadcast] = useState(false);
   
   // Check admin authentication
   const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
@@ -204,6 +211,57 @@ export default function AdminPanel() {
     setViewingUserProfile(null);
     setProfileUserItems([]);
     setLoadingProfileItems(false);
+  };
+
+  // Send broadcast notification function
+  const sendBroadcastNotification = async () => {
+    if (!broadcastTitle.trim() || !broadcastMessage.trim()) {
+      toast({
+        title: "Hata",
+        description: "Başlık ve mesaj alanları zorunludur",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSendingBroadcast(true);
+    try {
+      const response = await fetch('/api/admin/broadcast-notification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: broadcastTitle,
+          message: broadcastMessage,
+          type: broadcastType,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Başarılı",
+          description: result.message,
+        });
+        
+        // Clear form
+        setBroadcastTitle("");
+        setBroadcastMessage("");
+        setBroadcastType("info");
+      } else {
+        throw new Error(result.error || "Bildirim gönderilirken hata oluştu");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "Bildirim gönderilirken hata oluştu",
+        variant: "destructive",
+      });
+    } finally {
+      setSendingBroadcast(false);
+    }
   };
 
   // Fetch rejected items
@@ -607,6 +665,10 @@ export default function AdminPanel() {
               <TabsTrigger value="chat" className="flex items-center gap-2">
                 <MessageCircle className="h-4 w-4" />
                 Canlı Destek
+              </TabsTrigger>
+              <TabsTrigger value="broadcast" className="flex items-center gap-2">
+                <Megaphone className="h-4 w-4" />
+                Toplu Bildirim
               </TabsTrigger>
               <TabsTrigger value="settings" className="flex items-center gap-2">
                 <Settings className="h-4 w-4" />
@@ -1029,6 +1091,121 @@ export default function AdminPanel() {
 
             <TabsContent value="chat">
               <AdminChat />
+            </TabsContent>
+
+            <TabsContent value="broadcast">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Megaphone className="h-5 w-5" />
+                    Tüm Kullanıcılara Toplu Bildirim Gönder
+                  </CardTitle>
+                  <p className="text-sm text-gray-600">
+                    Buradan tüm kayıtlı kullanıcılara aynı anda bildirim gönderebilirsiniz.
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Notification Type */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Bildirim Türü</label>
+                    <Select value={broadcastType} onValueChange={setBroadcastType}>
+                      <SelectTrigger data-testid="select-broadcast-type">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="info">
+                          <div className="flex items-center gap-2">
+                            <Info className="h-4 w-4 text-blue-500" />
+                            Bilgi
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="warning">
+                          <div className="flex items-center gap-2">
+                            <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                            Uyarı
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="announcement">
+                          <div className="flex items-center gap-2">
+                            <Megaphone className="h-4 w-4 text-green-500" />
+                            Duyuru
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Title */}
+                  <div className="space-y-2">
+                    <label htmlFor="broadcast-title" className="text-sm font-medium">
+                      Başlık *
+                    </label>
+                    <Input
+                      id="broadcast-title"
+                      value={broadcastTitle}
+                      onChange={(e) => setBroadcastTitle(e.target.value)}
+                      placeholder="Bildirim başlığını yazın"
+                      maxLength={100}
+                      data-testid="input-broadcast-title"
+                    />
+                    <p className="text-xs text-gray-500">
+                      {broadcastTitle.length}/100 karakter
+                    </p>
+                  </div>
+
+                  {/* Message */}
+                  <div className="space-y-2">
+                    <label htmlFor="broadcast-message" className="text-sm font-medium">
+                      Mesaj *
+                    </label>
+                    <Textarea
+                      id="broadcast-message"
+                      value={broadcastMessage}
+                      onChange={(e) => setBroadcastMessage(e.target.value)}
+                      placeholder="Bildirim mesajını yazın"
+                      rows={5}
+                      maxLength={500}
+                      data-testid="textarea-broadcast-message"
+                    />
+                    <p className="text-xs text-gray-500">
+                      {broadcastMessage.length}/500 karakter
+                    </p>
+                  </div>
+
+                  {/* Preview */}
+                  {(broadcastTitle || broadcastMessage) && (
+                    <div className="border rounded-lg p-4 bg-gray-50">
+                      <h4 className="font-medium text-sm mb-2">Önizleme:</h4>
+                      <div className="bg-white border rounded-lg p-3 space-y-2">
+                        <div className="flex items-center gap-2">
+                          {broadcastType === 'info' && <Info className="h-4 w-4 text-blue-500" />}
+                          {broadcastType === 'warning' && <AlertTriangle className="h-4 w-4 text-yellow-500" />}
+                          {broadcastType === 'announcement' && <Megaphone className="h-4 w-4 text-green-500" />}
+                          <span className="font-medium text-sm">
+                            {broadcastTitle || "Başlık"}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          {broadcastMessage || "Mesaj içeriği"}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Send Button */}
+                  <div className="flex justify-end">
+                    <Button
+                      onClick={sendBroadcastNotification}
+                      disabled={sendingBroadcast || !broadcastTitle.trim() || !broadcastMessage.trim()}
+                      className="flex items-center gap-2"
+                      data-testid="button-send-broadcast"
+                    >
+                      <Megaphone className="h-4 w-4" />
+                      {sendingBroadcast ? "Gönderiliyor..." : "Tüm Kullanıcılara Gönder"}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             <TabsContent value="settings">

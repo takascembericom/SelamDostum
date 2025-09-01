@@ -361,6 +361,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Tüm kullanıcılara toplu bildirim gönderen endpoint - admin için
+  app.post("/api/admin/broadcast-notification", async (req, res) => {
+    try {
+      const { title, message, type = 'info' } = req.body;
+      
+      if (!title || !message) {
+        return res.status(400).json({ error: "Title and message are required" });
+      }
+
+      const { db } = await import("../client/src/lib/firebase");
+      const { collection, getDocs, doc, setDoc } = await import("firebase/firestore");
+      const { serverTimestamp } = await import("firebase/firestore");
+      
+      // Tüm kullanıcıları getir
+      const usersSnapshot = await getDocs(collection(db, 'users'));
+      
+      let sentCount = 0;
+      let errorCount = 0;
+      
+      // Her kullanıcı için bildirim oluştur
+      const promises = usersSnapshot.docs.map(async (userDoc) => {
+        try {
+          const notificationId = `broadcast_${Date.now()}_${userDoc.id}`;
+          
+          await setDoc(doc(db, 'notifications', notificationId), {
+            userId: userDoc.id,
+            title: title,
+            message: message,
+            type: type,
+            read: false,
+            createdAt: serverTimestamp(),
+            isFromAdmin: true,
+            source: 'admin_broadcast'
+          });
+          
+          sentCount++;
+        } catch (error) {
+          console.error(`Error sending notification to user ${userDoc.id}:`, error);
+          errorCount++;
+        }
+      });
+      
+      await Promise.all(promises);
+      
+      res.json({ 
+        success: true, 
+        sentCount, 
+        errorCount,
+        totalUsers: usersSnapshot.docs.length,
+        message: `${sentCount} kullanıcıya bildirim gönderildi${errorCount > 0 ? `, ${errorCount} hata` : ''}`
+      });
+    } catch (error: any) {
+      console.error("Broadcast notification error:", error);
+      res.status(500).json({ error: "Failed to send broadcast notification" });
+    }
+  });
+
   // put other application routes here
   // prefix all routes with /api
 
