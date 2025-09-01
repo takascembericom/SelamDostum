@@ -6,7 +6,7 @@ import { db } from "@/lib/firebase";
 import { Item } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, UserPlus, Plus, ArrowRight, Star, HelpCircle, Lock, Phone, Smartphone, Info, Scale, Cookie } from "lucide-react";
+import { Search, UserPlus, Plus, ArrowRight, Star, HelpCircle, Lock, Phone, Smartphone, Info, Scale, Cookie, AlertTriangle } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -121,7 +121,11 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary to-green-600 text-white py-12">
+      <section className={`relative py-12 text-white transition-all duration-500 ${
+        currentTextIndex === 0 
+          ? 'bg-gradient-to-br from-orange-500 to-red-600' 
+          : 'bg-gradient-to-br from-primary to-green-600'
+      }`}>
         <div className="absolute inset-0 bg-black bg-opacity-20"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -134,10 +138,21 @@ export default function Home() {
             />
           </div>
           
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight transition-opacity duration-500" data-testid="title-hero">
+          {/* Warning Icon for first text */}
+          {currentTextIndex === 0 && (
+            <div className="mb-4 flex justify-center">
+              <AlertTriangle className="h-12 w-12 text-yellow-300 animate-pulse" />
+            </div>
+          )}
+          
+          <h1 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight transition-all duration-500 ${
+            currentTextIndex === 0 ? 'text-yellow-100' : 'text-white'
+          }`} data-testid="title-hero">
             {t.home.heroTexts[currentTextIndex].title}
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl mb-8 font-semibold transition-opacity duration-500" data-testid="welcome-text">
+          <p className={`text-lg sm:text-xl md:text-2xl mb-8 font-semibold transition-all duration-500 ${
+            currentTextIndex === 0 ? 'text-yellow-50 bg-red-800 bg-opacity-30 p-4 rounded-lg border-2 border-yellow-300' : 'text-white'
+          }`} data-testid="welcome-text">
             {t.home.heroTexts[currentTextIndex].subtitle}
           </p>
         </div>
