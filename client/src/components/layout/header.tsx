@@ -18,7 +18,7 @@ import { useMessageNotifications } from "@/hooks/useMessageNotifications";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { markNotificationAsRead, markAllNotificationsAsRead } from "@/lib/notifications-db";
-import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
+import logoImage from "@assets/şeffaf_1756729496603.png";
 
 export function Header() {
   const { user, profile } = useAuth();

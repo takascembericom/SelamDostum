@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { collection, query, where, limit, getDocs } from "firebase/firestore";
@@ -15,7 +15,7 @@ import { RegisterModal } from "@/components/auth/register-modal";
 import { CategoryButtons } from "@/components/category-buttons";
 import { ItemGrid } from "@/components/items/item-grid";
 import { Skeleton } from "@/components/ui/skeleton";
-import logoImage from "@assets/generated_images/Professional_Takas_Çemberi_Logo_7b3581dc.png";
+import logoImage from "@assets/şeffaf_1756729496603.png";
 
 export default function Home() {
   const { user } = useAuth();
@@ -23,6 +23,18 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+
+  // Rotate hero text every 4 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTextIndex((prevIndex) => 
+        (prevIndex + 1) % t.home.heroTexts.length
+      );
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [t.home.heroTexts.length]);
 
   // Fetch latest 20 items for homepage
   const { data: latestItems = [], isLoading: itemsLoading } = useQuery({
@@ -122,11 +134,11 @@ export default function Home() {
             />
           </div>
           
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight" data-testid="title-hero">
-            {t.home.welcomeTitle}
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight transition-opacity duration-500" data-testid="title-hero">
+            {t.home.heroTexts[currentTextIndex].title}
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl mb-4 font-semibold" data-testid="welcome-text">
-            {t.home.welcomeSubtitle}
+          <p className="text-lg sm:text-xl md:text-2xl mb-4 font-semibold transition-opacity duration-500" data-testid="welcome-text">
+            {t.home.heroTexts[currentTextIndex].subtitle}
           </p>
           <p className="text-sm sm:text-base md:text-lg mb-8 max-w-xl mx-auto opacity-90 px-4" data-testid="description-hero">
             {t.home.heroDescription}

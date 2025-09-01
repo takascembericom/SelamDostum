@@ -229,6 +229,16 @@ export const translations = {
       welcomeTitle: "Takas Çemberi'ne Hoş Geldiniz",
       welcomeSubtitle: "Sürdürülebilir bir gelecek için eşyalarınızı takas edin",
       heroDescription: "Burada alışveriş yerine paylaşım... Harcama yerine kazanım... Tüketim yerine üretim var...",
+      heroTexts: [
+        {
+          title: "Takas Çemberi'ne Hoş Geldiniz",
+          subtitle: "Sürdürülebilir bir gelecek için eşyalarınızı takas edin"
+        },
+        {
+          title: "Burada alışveriş yerine paylaşım...",
+          subtitle: "Harcama yerine kazanım... Tüketim yerine üretim var..."
+        }
+      ],
       getStarted: "Hemen Başla",
       howItWorks: "Nasıl Çalışır?",
       step1Title: "Hesap Oluştur",
@@ -377,7 +387,7 @@ export const translations = {
       adsSharesTitle: "3. İlan ve Paylaşımlar",
       adsShares: [
         "Kullanıcılar yalnızca kendilerine ait veya takas hakkına sahip oldukları ürünleri paylaşabilir.",
-        "Kapora, ön ödeme veya kullanıcılar arası para transferi kesinlikle yasaktır.",
+        "Kapora, ön ödeme veya kullanıcılar arası para transferi kesinlikle yasaktır, bu tür durumlarda Takas Çemberi sorumlu değildir.",
         "Platform, şüpheli veya kural dışı ilanları kaldırma hakkını saklı tutar."
       ],
       liabilityDisclaimerTitle: "4. Sorumluluk Reddi",
@@ -650,6 +660,16 @@ export const translations = {
       welcomeTitle: "Welcome to Barter Circle",
       welcomeSubtitle: "Trade your items for a sustainable future",
       heroDescription: "Here is sharing instead of shopping... Gain instead of spending... Production instead of consumption...",
+      heroTexts: [
+        {
+          title: "Welcome to Barter Circle",
+          subtitle: "Trade your items for a sustainable future"
+        },
+        {
+          title: "Here is sharing instead of shopping...",
+          subtitle: "Gain instead of spending... Production instead of consumption..."
+        }
+      ],
       getStarted: "Get Started",
       howItWorks: "How It Works?",
       step1Title: "Create Account",
@@ -799,7 +819,7 @@ export const translations = {
       adsSharesTitle: "3. Listings and Shares",
       adsShares: [
         "Users can only share products that belong to them or that they have the right to trade.",
-        "Deposits, advance payments or money transfers between users are strictly prohibited.",
+        "Deposits, advance payments or money transfers between users are strictly prohibited, Takas Çemberi is not responsible in such cases.",
         "The platform reserves the right to remove suspicious or non-compliant listings."
       ],
       liabilityDisclaimerTitle: "4. Disclaimer of Liability",
@@ -1072,6 +1092,16 @@ export const translations = {
       welcomeTitle: "مرحباً بك في دائرة المقايضة",
       welcomeSubtitle: "تبادل العناصر من أجل مستقبل مستدام",
       heroDescription: "هنا التقاسم بدلاً من التسوق... الكسب بدلاً من الإنفاق... الإنتاج بدلاً من الاستهلاك...",
+      heroTexts: [
+        {
+          title: "مرحباً بك في دائرة المقايضة",
+          subtitle: "تبادل العناصر من أجل مستقبل مستدام"
+        },
+        {
+          title: "هنا التقاسم بدلاً من التسوق...",
+          subtitle: "الكسب بدلاً من الإنفاق... الإنتاج بدلاً من الاستهلاك..."
+        }
+      ],
       getStarted: "ابدأ الآن",
       howItWorks: "كيف يعمل؟",
       step1Title: "إنشاء حساب",
@@ -1221,7 +1251,7 @@ export const translations = {
       adsSharesTitle: "3. الإعلانات والمشاركات",
       adsShares: [
         "يمكن للمستخدمين مشاركة المنتجات التي تخصهم فقط أو التي لديهم حق في تداولها.",
-        "الودائع أو الدفعات المقدمة أو التحويلات المالية بين المستخدمين محظورة تماماً.",
+        "الودائع أو الدفعات المقدمة أو التحويلات المالية بين المستخدمين محظورة تماماً، تاكاس تشمبري غير مسؤول في مثل هذه الحالات.",
         "المنصة تحتفظ بحق إزالة الإعلانات المشبوهة أو غير المتوافقة."
       ],
       liabilityDisclaimerTitle: "4. إخلاء المسؤولية",
