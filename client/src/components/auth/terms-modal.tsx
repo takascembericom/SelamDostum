@@ -35,16 +35,15 @@ export function TermsModal({ open, onClose, onAccept, loading = false }: TermsMo
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-4xl w-[90vw] max-h-[90vh] flex flex-col" data-testid="modal-terms">
+      <DialogContent className="sm:max-w-4xl w-[90vw] h-[90vh] flex flex-col" data-testid="modal-terms">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="text-xl font-semibold text-center" data-testid="title-terms">
             {t.terms.title}
           </DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 min-h-0" data-testid="scroll-terms">
-          <div className="pr-4 pb-4">
-          <div className="space-y-6 text-sm">
+        <ScrollArea className="flex-1 pr-4" data-testid="scroll-terms">
+          <div className="space-y-6 text-sm pb-4">
             
             {/* Kullanım Şartları */}
             <div className="space-y-4">
@@ -174,7 +173,7 @@ export function TermsModal({ open, onClose, onAccept, loading = false }: TermsMo
           </div>
         </ScrollArea>
 
-        <DialogFooter className="flex flex-col space-y-4 pt-4 border-t">
+        <DialogFooter className="flex-shrink-0 flex flex-col space-y-4 pt-4 border-t">
           {/* Kabul Checkbox'ı */}
           <div className="flex items-start space-x-3 w-full">
             <Checkbox
