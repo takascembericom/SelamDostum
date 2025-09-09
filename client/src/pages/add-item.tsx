@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "@/lib/firebase";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -1011,7 +1013,7 @@ export default function AddItem() {
                     {uploading ? (
                       <>
                         <Upload className="h-4 w-4 mr-2 animate-spin" />
-                        {t.common.uploading}...
+                        {t.common.loading}...
                       </>
                     ) : loadingListingCount ? (
                       t.addItem.submitButton
