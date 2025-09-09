@@ -72,27 +72,21 @@ export default function AddItem() {
   // Cleanup function for blob URLs
   useEffect(() => {
     return () => {
-      // Cleanup all blob URLs when component unmounts
       imageURLs.forEach(url => {
-        try {
-          URL.revokeObjectURL(url);
-        } catch (error) {
-          console.warn('Cleanup error:', error);
-        }
+        try { URL.revokeObjectURL(url); } catch {}
       });
     };
   }, [imageURLs]);
+
   // Check user's current listing count for display purposes only
   useEffect(() => {
     const checkUserListings = async () => {
       if (!user) return;
-      
       try {
         setLoadingListingCount(true);
         const q = query(collection(db, 'items'), where('ownerId', '==', user.uid));
         const querySnapshot = await getDocs(q);
         const count = querySnapshot.size;
-        
         setUserListingCount(count);
       } catch (error) {
         console.error('Error checking user listings:', error);
@@ -100,7 +94,6 @@ export default function AddItem() {
         setLoadingListingCount(false);
       }
     };
-
     checkUserListings();
   }, [user]);
 
@@ -125,56 +118,35 @@ export default function AddItem() {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    // Reset the input value to allow selecting the same files again if needed
     e.target.value = '';
 
-    // Check if adding these files would exceed the limit
     if (files.length + selectedImages.length > 5) {
-      toast({
-        title: "Çok fazla fotoğraf",
-        description: "En fazla 5 fotoğraf ekleyebilirsiniz.",
-        variant: "destructive",
-      });
+      toast({ title: "Çok fazla fotoğraf", description: "En fazla 5 fotoğraf ekleyebilirsiniz.", variant: "destructive" });
       return;
     }
 
-    // Check individual file sizes (max 10MB per file)
     const oversizedFiles = files.filter(file => file.size > 10 * 1024 * 1024);
     if (oversizedFiles.length > 0) {
-      toast({
-        title: "Dosya boyutu çok büyük",
-        description: "Her fotoğraf en fazla 10MB olabilir.",
-        variant: "destructive",
-      });
+      toast({ title: "Dosya boyutu çok büyük", description: "Her fotoğraf en fazla 10MB olabilir.", variant: "destructive" });
       return;
     }
 
-    // Validate file types
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     const invalidFiles = files.filter(file => !allowedTypes.includes(file.type));
     if (invalidFiles.length > 0) {
-      toast({
-        title: "Desteklenmeyen dosya türü",
-        description: "Sadece JPG, PNG ve WebP formatları desteklenir.",
-        variant: "destructive",
-      });
+      toast({ title: "Desteklenmeyen dosya türü", description: "Sadece JPG, PNG ve WebP formatları desteklenir.", variant: "destructive" });
       return;
     }
 
     setSelectedImages(prev => [...prev, ...files]);
-    
-    // Create preview URLs with error handling
+
     files.forEach(file => {
       try {
         const url = URL.createObjectURL(file);
         setImageURLs(prev => [...prev, url]);
       } catch (error) {
         console.error('Error creating preview URL:', error);
-        toast({
-          title: "Fotoğraf önizleme hatası",
-          description: "Bazı fotoğraflar önizlenemedi, ancak yüklenecekler.",
-          variant: "destructive",
-        });
+        toast({ title: "Fotoğraf önizleme hatası", description: "Bazı fotoğraflar önizlenemedi, ancak yüklenecekler.", variant: "destructive" });
       }
     });
   };
@@ -182,252 +154,112 @@ export default function AddItem() {
   const removeImage = (index: number) => {
     setSelectedImages(prev => prev.filter((_, i) => i !== index));
     setImageURLs(prev => {
-      // Safely clean up blob URL
-      try {
-        if (prev[index]) {
-          URL.revokeObjectURL(prev[index]);
-        }
-      } catch (error) {
-        console.warn('URL cleanup error:', error);
-      }
+      try { if (prev[index]) URL.revokeObjectURL(prev[index]); } catch {}
       return prev.filter((_, i) => i !== index);
     });
   };
 
+  // 🔁 Firebase Storage ile yükleme
   const uploadImages = async (): Promise<string[]> => {
-    if (selectedImages.length === 0) {
-      throw new Error("En az 1 fotoğraf ekleyin");
-    }
+    if (selectedImages.length === 0) throw new Error("En az 1 fotoğraf ekleyin");
 
-    // Show progress
     toast({
       title: `${selectedImages.length} resim yükleniyor...`,
-      description: "Hızlı yükleme için paralel işlem yapılıyor...",
+      description: "Lütfen bekleyin.",
     });
 
-    // Upload multiple images in parallel (2-3 at a time for optimal performance)
+    const urls: string[] = [];
     const batchSize = 3;
-    const uploadedPaths: string[] = [];
-    
+
     for (let i = 0; i < selectedImages.length; i += batchSize) {
       const batch = selectedImages.slice(i, i + batchSize);
-      
-      // Process batch in parallel using Promise.all
-      const batchResults = await Promise.all(
-        batch.map(async (file, batchIndex) => {
-          const globalIndex = i + batchIndex;
-          
-          try {
-            // Skip compression - upload files as-is for better mobile performance
-            // Backend can handle compression if needed
-            
-            // Get upload URL from backend
-            const uploadResponse = await fetch('/api/objects/upload', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-            
-            if (!uploadResponse.ok) {
-              throw new Error(`Resim ${globalIndex + 1} için yükleme URL'si alınamadı`);
-            }
-            
-            const { uploadURL } = await uploadResponse.json();
-            
-            // Upload file to object storage without compression
-            const fileUploadResponse = await fetch(uploadURL, {
-              method: 'PUT',
-              body: file, // Upload original file directly
-              headers: {
-                'Content-Type': file.type,
-              },
-            });
-            
-            if (!fileUploadResponse.ok) {
-              throw new Error(`Resim ${globalIndex + 1} yükleme başarısız`);
-            }
-            
-            // Return the object storage path
-            const objectPath = uploadURL.split('?')[0].split('/').slice(-2).join('/');
-            return `/objects/${objectPath}`;
-            
-          } catch (error) {
-            console.error(`Error uploading image ${globalIndex + 1}:`, error);
-            throw error;
-          }
+      const results = await Promise.all(
+        batch.map(async (file) => {
+          const path = `items/${Date.now()}-${file.name}`;
+          const r = ref(storage, path);
+          await uploadBytes(r, file);
+          return await getDownloadURL(r);
         })
       );
-      
-      uploadedPaths.push(...batchResults);
-      
-      // Show progress for each batch
-      if (i + batchSize < selectedImages.length) {
-        toast({
-          title: `${uploadedPaths.length}/${selectedImages.length} resim tamamlandı`,
-          description: "Devam ediyor...",
-        });
-      }
+      urls.push(...results);
     }
 
-    return uploadedPaths;
+    return urls;
   };
 
-  // Mobile-optimized image compression function
+  // Mobile-optimized image compression function (kept for future use)
   const compressImageMobile = (file: File): Promise<File> => {
     return new Promise((resolve) => {
       try {
-        // For mobile, use simpler compression
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        
-        if (!ctx) {
-          resolve(file); // Fallback to original file
-          return;
-        }
-        
+        if (!ctx) { resolve(file); return; }
         const img = new Image();
-        
         img.onload = () => {
           try {
-            // Smaller max size for mobile to reduce processing time
             const maxSize = 800;
             let { width, height } = img;
-            
-            if (width > height) {
-              if (width > maxSize) {
-                height = (height * maxSize) / width;
-                width = maxSize;
-              }
-            } else {
-              if (height > maxSize) {
-                width = (width * maxSize) / height;
-                height = maxSize;
-              }
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            
-            // Use requestAnimationFrame to prevent UI blocking
+            if (width > height) { if (width > maxSize) { height = (height * maxSize) / width; width = maxSize; } }
+            else { if (height > maxSize) { width = (width * maxSize) / height; height = maxSize; } }
+            canvas.width = width; canvas.height = height;
             requestAnimationFrame(() => {
               ctx.drawImage(img, 0, 0, width, height);
-              
               canvas.toBlob((blob) => {
                 try {
-                  if (blob) {
-                    resolve(new File([blob], file.name, { type: 'image/jpeg' }));
-                  } else {
-                    resolve(file);
-                  }
-                  // Clean up
+                  if (blob) resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                  else resolve(file);
                   URL.revokeObjectURL(img.src);
-                } catch (error) {
-                  console.warn('Blob creation error:', error);
-                  resolve(file);
-                }
-              }, 'image/jpeg', 0.7); // Lower quality for faster processing
+                } catch { resolve(file); }
+              }, 'image/jpeg', 0.7);
             });
-          } catch (error) {
-            console.warn('Canvas processing error:', error);
-            resolve(file);
-          }
+          } catch { resolve(file); }
         };
-        
-        img.onerror = () => {
-          console.warn('Image load error');
-          resolve(file);
-        };
-        
+        img.onerror = () => { resolve(file); };
         img.src = URL.createObjectURL(file);
-      } catch (error) {
-        console.warn('Compression setup error:', error);
-        resolve(file);
-      }
+      } catch { resolve(file); }
     });
   };
 
-  // Keep original compression function for fallback
+  // Full compression (kept for future use)
   const compressImage = (file: File): Promise<File> => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       try {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        
-        if (!ctx) {
-          resolve(file); // Fallback to original file
-          return;
-        }
-        
+        if (!ctx) { resolve(file); return; }
         const img = new Image();
-        
         img.onload = () => {
           try {
-            // Calculate new dimensions (max 1200px width/height)
             const maxSize = 1200;
             let { width, height } = img;
-            
-            if (width > height) {
-              if (width > maxSize) {
-                height = (height * maxSize) / width;
-                width = maxSize;
-              }
-            } else {
-              if (height > maxSize) {
-                width = (width * maxSize) / height;
-                height = maxSize;
-              }
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            
+            if (width > height) { if (width > maxSize) { height = (height * maxSize) / width; width = maxSize; } }
+            else { if (height > maxSize) { width = (width * maxSize) / height; height = maxSize; } }
+            canvas.width = width; canvas.height = height;
             ctx.drawImage(img, 0, 0, width, height);
-            
             canvas.toBlob((blob) => {
               try {
-                if (blob) {
-                  resolve(new File([blob], file.name, { type: 'image/jpeg' }));
-                } else {
-                  resolve(file);
-                }
-                // Clean up
+                if (blob) resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                else resolve(file);
                 URL.revokeObjectURL(img.src);
-              } catch (error) {
-                console.warn('Blob creation error:', error);
-                resolve(file);
-              }
+              } catch { resolve(file); }
             }, 'image/jpeg', 0.8);
-          } catch (error) {
-            console.warn('Canvas processing error:', error);
-            resolve(file);
-          }
+          } catch { resolve(file); }
         };
-        
-        img.onerror = () => {
-          console.warn('Image load error');
-          resolve(file);
-        };
-        
+        img.onerror = () => { resolve(file); };
         img.src = URL.createObjectURL(file);
-      } catch (error) {
-        console.warn('Compression setup error:', error);
-        resolve(file);
-      }
+      } catch { resolve(file); }
     });
   };
 
   const handleSubmit = async () => {
-    // Altıncı ilan için ödeme kontrolü
     if (userListingCount >= 5) {
       toast({
         title: "6. İlan İçin Ödeme Gerekli",
-        description: "İlk 5 ilan ücretsiz! 6. ilan ve sonrasında her ilan için 10 TL ödeme yapmanız gerekmektedir. Lütfen ödeme paketinizi satın alın.",
+        description: "İlk 5 ilan ücretsiz! 6. ilan ve sonrasında her ilan için 10 TL ödeme gereklidir.",
         variant: "destructive",
       });
       return;
     }
-    
     return await submitItem();
   };
 
@@ -436,27 +268,16 @@ export default function AddItem() {
 
     setUploading(true);
     try {
-      // Upload images first with progress feedback
-      toast({
-        title: "Resimler yükleniyor...",
-        description: "Lütfen bekleyin, resimler Firebase'e yükleniyor.",
-      });
-      
+      toast({ title: "Resimler yükleniyor...", description: "Lütfen bekleyin, resimler Firebase'e yükleniyor." });
       const imageUrls = await uploadImages();
-      
-      toast({
-        title: "İlan kaydediliyor...",
-        description: "Resimler yüklendi, ilan veritabanına kaydediliyor.",
-      });
 
-      // Calculate expiry date (30 days from now)
+      toast({ title: "İlan kaydediliyor...", description: "Resimler yüklendi, ilan veritabanına kaydediliyor." });
+
       const expireDate = new Date();
       expireDate.setDate(expireDate.getDate() + 30);
 
-      // Generate simple item number (faster than transaction)
       const itemNumber = Date.now() + Math.floor(Math.random() * 1000) + 500000;
 
-      // Create item document
       const currentTime = new Date();
       const itemData = {
         ...form.getValues(),
@@ -472,12 +293,11 @@ export default function AddItem() {
         updatedAt: currentTime,
       };
 
-      // Attempt to add document with retry and detailed logging
       console.log('About to save item to Firestore:', itemData);
       let addDocSuccess = false;
       let retryCount = 0;
       const maxRetries = 3;
-      
+
       while (!addDocSuccess && retryCount < maxRetries) {
         try {
           console.log(`Save attempt ${retryCount + 1}...`);
@@ -487,67 +307,38 @@ export default function AddItem() {
         } catch (docError: any) {
           retryCount++;
           console.error(`Add document attempt ${retryCount} failed:`, docError);
-          console.error('Error code:', docError.code);
-          console.error('Error message:', docError.message);
-          console.error('Full error:', docError);
-          
-          if (retryCount >= maxRetries) {
-            throw new Error(`Veritabanı hatası: ${docError.code || docError.message}`);
-          }
-          
-          // Wait before retry
+          if (retryCount >= maxRetries) throw new Error(`Veritabanı hatası: ${docError.code || docError.message}`);
           await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
         }
       }
 
-      // Update user's listing count in profile (non-blocking)
       if (profile.totalListings !== undefined) {
         const userRef = doc(db, 'users', user.uid);
-        updateDoc(userRef, {
-          totalListings: (profile.totalListings || 0) + 1
-        }).catch(console.error); // Don't block on this
+        updateDoc(userRef, { totalListings: (profile.totalListings || 0) + 1 }).catch(console.error);
       }
 
-      // Verify the item was actually saved by fetching it
-      console.log('Verifying item was saved...');
       const verifyQuery = query(
         collection(db, 'items'),
         where('itemNumber', '==', itemNumber),
         where('ownerId', '==', user.uid)
       );
-      
       const verifySnapshot = await getDocs(verifyQuery);
-      
-      if (verifySnapshot.empty) {
-        throw new Error('İlan kaydedilemedi - veritabanında bulunamadı');
-      }
-      
-      console.log('Item verified in database:', verifySnapshot.docs[0].data());
+      if (verifySnapshot.empty) throw new Error('İlan kaydedilemedi - veritabanında bulunamadı');
 
-      // Invalidate user items cache to show the new item
       queryClient.invalidateQueries({ queryKey: ['user-items'] });
       queryClient.invalidateQueries({ queryKey: ['admin-pending-items'] });
 
-      toast({
-        title: "✅ İlanınız onay sürecindedir",
-        description: "Onaylandıktan sonra yayınlanacaktır. Admin panelinde beklemede.",
-      });
-
-      // Redirect to profile
+      toast({ title: "✅ İlanınız onay sürecindedir", description: "Onaylandıktan sonra yayınlanacaktır. Admin panelinde beklemede." });
       setLocation('/profile');
     } catch (error: any) {
       console.error('Add item error:', error);
-      toast({
-        title: "❌ Hata",
-        description: error.message || "İlan eklenirken bir hata oluştu. Tekrar deneyin.",
-        variant: "destructive",
-      });
+      toast({ title: "❌ Hata", description: error.message || "İlan eklenirken bir hata oluştu. Tekrar deneyin.", variant: "destructive" });
     } finally {
       setUploading(false);
     }
   };
 
-  const onSubmit = async (data: AddItemFormData) => {
+  const onSubmit = async (_data: AddItemFormData) => {
     await handleSubmit();
   };
 
@@ -562,9 +353,7 @@ export default function AddItem() {
     );
   }
 
-  if (!user) {
-    return <Redirect to="/" />;
-  }
+  if (!user) return <Redirect to="/" />;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -572,12 +361,9 @@ export default function AddItem() {
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl" data-testid="title-add-item">{t.addItem.title}</CardTitle>
-            <p className="text-gray-600">
-              {t.addItem.subtitle}
-            </p>
-            
+            <p className="text-gray-600">{t.addItem.subtitle}</p>
           </CardHeader>
-          
+
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -586,15 +372,11 @@ export default function AddItem() {
                   <label className="block text-sm font-medium text-gray-700">
                     {t.addItem.photos} {t.addItem.required}
                   </label>
-                  
+
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {imageURLs.map((url, index) => (
                       <div key={index} className="relative aspect-square" data-testid={`image-preview-${index}`}>
-                        <img
-                          src={url}
-                          alt={`Preview ${index + 1}`}
-                          className="w-full h-full object-cover rounded-lg border"
-                        />
+                        <img src={url} alt={`Preview ${index + 1}`} className="w-full h-full object-cover rounded-lg border" />
                         <button
                           type="button"
                           onClick={() => removeImage(index)}
@@ -605,7 +387,7 @@ export default function AddItem() {
                         </button>
                       </div>
                     ))}
-                    
+
                     {imageURLs.length < 5 && (
                       <div className="aspect-square">
                         <label className="w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
@@ -623,10 +405,8 @@ export default function AddItem() {
                       </div>
                     )}
                   </div>
-                  
-                  <p className="text-xs text-gray-500">
-                    {t.addItem.photoHint}
-                  </p>
+
+                  <p className="text-xs text-gray-500">{t.addItem.photoHint}</p>
                 </div>
 
                 {/* Category & Subcategory */}
@@ -637,35 +417,25 @@ export default function AddItem() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t.addItem.category} {t.addItem.required}</FormLabel>
-                        
-                        {/* Mobile: Native Select */}
+
                         <div className="block sm:hidden">
                           <FormControl>
-                            <select 
+                            <select
                               {...field}
-                              onChange={(e) => {
-                                field.onChange(e.target.value);
-                                setSelectedCategory(e.target.value);
-                              }}
+                              onChange={(e) => { field.onChange(e.target.value); setSelectedCategory(e.target.value); }}
                               className="flex h-12 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                               data-testid="select-category-mobile"
                             >
                               <option value="">Kategori seçin</option>
                               {ITEM_CATEGORIES.map((category) => (
-                                <option key={category} value={category}>
-                                  {CATEGORY_LABELS[category]}
-                                </option>
+                                <option key={category} value={category}>{CATEGORY_LABELS[category]}</option>
                               ))}
                             </select>
                           </FormControl>
                         </div>
 
-                        {/* Desktop: Custom Select */}
                         <div className="hidden sm:block">
-                          <Select onValueChange={(value) => {
-                            field.onChange(value);
-                            setSelectedCategory(value);
-                          }} defaultValue={field.value}>
+                          <Select onValueChange={(value) => { field.onChange(value); setSelectedCategory(value); }} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-category-desktop" className="h-10 text-sm">
                                 <SelectValue placeholder={t.addItem.selectCategory} />
@@ -673,14 +443,12 @@ export default function AddItem() {
                             </FormControl>
                             <SelectContent>
                               {ITEM_CATEGORIES.map((category) => (
-                                <SelectItem key={category} value={category}>
-                                  {CATEGORY_LABELS[category]}
-                                </SelectItem>
+                                <SelectItem key={category} value={category}>{CATEGORY_LABELS[category]}</SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
                         </div>
-                        
+
                         <FormMessage />
                       </FormItem>
                     )}
@@ -693,26 +461,22 @@ export default function AddItem() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t.addItem.subcategory} {t.addItem.required}</FormLabel>
-                          
-                          {/* Mobile: Native Select */}
+
                           <div className="block sm:hidden">
                             <FormControl>
-                              <select 
+                              <select
                                 {...field}
                                 className="flex h-12 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 data-testid="select-subcategory-mobile"
                               >
                                 <option value="">Alt Kategori seçin</option>
                                 {Object.entries(TASINMAZLAR_SUBCATEGORIES).map(([key, label]) => (
-                                  <option key={key} value={key}>
-                                    {label}
-                                  </option>
+                                  <option key={key} value={key}>{label}</option>
                                 ))}
                               </select>
                             </FormControl>
                           </div>
 
-                          {/* Desktop: Custom Select */}
                           <div className="hidden sm:block">
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
@@ -722,14 +486,12 @@ export default function AddItem() {
                               </FormControl>
                               <SelectContent>
                                 {Object.entries(TASINMAZLAR_SUBCATEGORIES).map(([key, label]) => (
-                                  <SelectItem key={key} value={key}>
-                                    {label}
-                                  </SelectItem>
+                                  <SelectItem key={key} value={key}>{label}</SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
                           </div>
-                          
+
                           <FormMessage />
                         </FormItem>
                       )}
@@ -746,26 +508,22 @@ export default function AddItem() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t.addItem.carBrand} {t.addItem.required}</FormLabel>
-                          
-                          {/* Mobile: Native Select */}
+
                           <div className="block sm:hidden">
                             <FormControl>
-                              <select 
+                              <select
                                 {...field}
                                 className="flex h-12 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 data-testid="select-car-brand-mobile"
                               >
                                 <option value="">Marka seçin</option>
                                 {CAR_BRANDS.map((brand) => (
-                                  <option key={brand} value={brand}>
-                                    {brand}
-                                  </option>
+                                  <option key={brand} value={brand}>{brand}</option>
                                 ))}
                               </select>
                             </FormControl>
                           </div>
 
-                          {/* Desktop: Custom Select */}
                           <div className="hidden sm:block">
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
@@ -775,14 +533,12 @@ export default function AddItem() {
                               </FormControl>
                               <SelectContent>
                                 {CAR_BRANDS.map((brand) => (
-                                  <SelectItem key={brand} value={brand}>
-                                    {brand}
-                                  </SelectItem>
+                                  <SelectItem key={brand} value={brand}>{brand}</SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
                           </div>
-                          
+
                           <FormMessage />
                         </FormItem>
                       )}
@@ -795,11 +551,7 @@ export default function AddItem() {
                         <FormItem>
                           <FormLabel>{t.addItem.carModel} {t.addItem.required}</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder={t.addItem.enterCarModel}
-                              {...field}
-                              data-testid="input-car-model"
-                            />
+                            <Input placeholder={t.addItem.enterCarModel} {...field} data-testid="input-car-model" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -813,12 +565,7 @@ export default function AddItem() {
                         <FormItem>
                           <FormLabel>{t.addItem.carKm} {t.addItem.required}</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder={t.addItem.enterCarKm}
-                              type="number"
-                              {...field}
-                              data-testid="input-car-km"
-                            />
+                            <Input placeholder={t.addItem.enterCarKm} type="number" {...field} data-testid="input-car-km" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -834,26 +581,22 @@ export default function AddItem() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t.addItem.condition} {t.addItem.required}</FormLabel>
-                      
-                      {/* Mobile: Native Select */}
+
                       <div className="block sm:hidden">
                         <FormControl>
-                          <select 
+                          <select
                             {...field}
                             className="flex h-12 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             data-testid="select-condition-mobile"
                           >
                             <option value="">Durum seçin</option>
                             {Object.entries(CONDITION_LABELS).map(([key, label]) => (
-                              <option key={key} value={key}>
-                                {label}
-                              </option>
+                              <option key={key} value={key}>{label}</option>
                             ))}
                           </select>
                         </FormControl>
                       </div>
 
-                      {/* Desktop: Custom Select */}
                       <div className="hidden sm:block">
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
@@ -863,14 +606,12 @@ export default function AddItem() {
                           </FormControl>
                           <SelectContent>
                             {Object.entries(CONDITION_LABELS).map(([key, label]) => (
-                              <SelectItem key={key} value={key}>
-                                {label}
-                              </SelectItem>
+                              <SelectItem key={key} value={key}>{label}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </div>
-                      
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -884,26 +625,22 @@ export default function AddItem() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t.addItem.city} {t.addItem.required}</FormLabel>
-                        
-                        {/* Mobile: Native Select */}
+
                         <div className="block sm:hidden">
                           <FormControl>
-                            <select 
+                            <select
                               {...field}
                               className="flex h-12 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                               data-testid="select-city-mobile"
                             >
                               <option value="">İl seçin</option>
                               {TURKISH_CITIES.map((city) => (
-                                <option key={city} value={city}>
-                                  {city}
-                                </option>
+                                <option key={city} value={city}>{city}</option>
                               ))}
                             </select>
                           </FormControl>
                         </div>
 
-                        {/* Desktop: Custom Select */}
                         <div className="hidden sm:block">
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
@@ -913,14 +650,12 @@ export default function AddItem() {
                             </FormControl>
                             <SelectContent>
                               {TURKISH_CITIES.map((city) => (
-                                <SelectItem key={city} value={city}>
-                                  {city}
-                                </SelectItem>
+                                <SelectItem key={city} value={city}>{city}</SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
                         </div>
-                        
+
                         <FormMessage />
                       </FormItem>
                     )}
@@ -933,11 +668,7 @@ export default function AddItem() {
                       <FormItem>
                         <FormLabel>{t.addItem.district} {t.addItem.required}</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder={t.addItem.enterDistrict}
-                            {...field}
-                            data-testid="input-district"
-                          />
+                          <Input placeholder={t.addItem.enterDistrict} {...field} data-testid="input-district" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -951,11 +682,7 @@ export default function AddItem() {
                       <FormItem>
                         <FormLabel>{t.addItem.neighborhood} {t.addItem.required}</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder={t.addItem.enterNeighborhood}
-                            {...field}
-                            data-testid="input-neighborhood"
-                          />
+                          <Input placeholder={t.addItem.enterNeighborhood} {...field} data-testid="input-neighborhood" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -971,11 +698,7 @@ export default function AddItem() {
                     <FormItem>
                       <FormLabel>{t.addItem.title_field} {t.addItem.required}</FormLabel>
                       <FormControl>
-                        <Input 
-                          placeholder={t.addItem.enterTitle} 
-                          {...field}
-                          data-testid="input-title"
-                        />
+                        <Input placeholder={t.addItem.enterTitle} {...field} data-testid="input-title" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -990,12 +713,7 @@ export default function AddItem() {
                     <FormItem>
                       <FormLabel>{t.addItem.description} {t.addItem.required}</FormLabel>
                       <FormControl>
-                        <Textarea
-                          placeholder={t.addItem.enterDescription}
-                          rows={4}
-                          {...field}
-                          data-testid="textarea-description"
-                        />
+                        <Textarea placeholder={t.addItem.enterDescription} rows={4} {...field} data-testid="textarea-description" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -1004,12 +722,7 @@ export default function AddItem() {
 
                 {/* Submit */}
                 <div className="flex gap-4">
-                  <Button 
-                    type="submit" 
-                    className="flex-1" 
-                    disabled={uploading || loadingListingCount}
-                    data-testid="button-submit-add-item"
-                  >
+                  <Button type="submit" className="flex-1" disabled={uploading || loadingListingCount} data-testid="button-submit-add-item">
                     {uploading ? (
                       <>
                         <Upload className="h-4 w-4 mr-2 animate-spin" />
@@ -1021,12 +734,7 @@ export default function AddItem() {
                       t.addItem.submitButton
                     )}
                   </Button>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={() => setLocation('/profile')}
-                    data-testid="button-cancel"
-                  >
+                  <Button type="button" variant="outline" onClick={() => setLocation('/profile')} data-testid="button-cancel">
                     {t.addItem.cancel}
                   </Button>
                 </div>
@@ -1037,4 +745,17 @@ export default function AddItem() {
       </div>
     </div>
   );
+}
+
+// --- Firebase Storage upload helper ---
+async function uploadImagesToFirebase(files: File[]): Promise<string[]> {
+  const urls: string[] = [];
+  for (const file of files) {
+    const path = `items/${Date.now()}-${file.name}`;
+    const r = ref(storage, path);
+    await uploadBytes(r, file);
+    const url = await getDownloadURL(r);
+    urls.push(url);
+  }
+  return urls;
 }
