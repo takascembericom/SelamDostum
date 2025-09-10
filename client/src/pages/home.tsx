@@ -112,7 +112,7 @@ export default function Home() {
     {
       name: "Zeynep Özkan",
       location: "İzmir",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b494?w=40&h=40&fit=crop&crop=face",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40https://images.unsplash.com/photo-1494790108755-2616b612b494?w=40&h=40&fit=crop&crop=faceh=40https://images.unsplash.com/photo-1494790108755-2616b612b494?w=40&h=40&fit=crop&crop=facefit=crophttps://images.unsplash.com/photo-1494790108755-2616b612b494?w=40&h=40&fit=crop&crop=facecrop=face",
       rating: 5,
       text: t.common.testimonial3
     }
