@@ -52,7 +52,7 @@ export default function Items() {
         if (categoryFilter && categoryFilter !== 'all') params.append('category', categoryFilter);
         if (conditionFilter && conditionFilter !== 'all') params.append('condition', conditionFilter);
         
-        const url = `/api/items${params.toString() ? `?${params.toString()}` : ''}`;
+        const url = `/api/items.json${params.toString() ? `?${params.toString()}` : ''}`;
         const response = await fetch(url);
         
         if (!response.ok) {
