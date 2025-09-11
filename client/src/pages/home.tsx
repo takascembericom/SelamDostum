@@ -41,7 +41,7 @@ export default function Home() {
     queryKey: ['homepage-items'],
     queryFn: async (): Promise<Item[]> => {
       try {
-        const response = await fetch('/api/items.json');
+        const response = await /*fetch('/api/items.json*/');
         const items = await response.json();
         return items.slice(0, 20); // Limit to 20 items for homepage
       } catch (error) {
