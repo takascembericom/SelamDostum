@@ -48,6 +48,8 @@ function Router() {
 function App() {
   const path = window.location.pathname;
   const isAdminPage = path === '/admin' || path === '/admin-panel';
+
+  if (isAdminPage) {
     return (
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
@@ -93,3 +95,5 @@ function AuthenticatedContent() {
 }
 
 export default App;
+TSX
+
