@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Takas Çemberi • Bakımdayız</title>
+  <style>
+    body {
+      margin:0; height:100vh; display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(-45deg, #ff6b6b, #feca57, #48dbfb, #7c4dff);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      color:#fff; font-family:Inter, sans-serif; text-align:center; overflow:hidden;
+    }
+    @keyframes gradientBG {
+      0% {background-position:0% 50%}
+      50% {background-position:100% 50%}
+      100% {background-position:0% 50%}
+    }
+    .card {
+      z-index:2;
+      padding:40px 28px; border-radius:24px;
+      background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,.25);
+      box-shadow:0 20px 50px rgba(0,0,0,.45); max-width:720px;
+    }
+    h1 { font-size:clamp(26px,4vw,38px); margin:0 0 12px; }
+    p { font-size:18px; color:#eee; margin:0 0 18px; }
+    .emoji { font-size:40px; margin:12px 0; }
+    .footer { margin-top:16px; font-size:13px; color:#ccc }
+    .confetti { position: fixed; inset:0; pointer-events:none; overflow:hidden; }
+    .confetti-piece { position:absolute; width:10px; height:10px; background:var(--c); top:-10px; animation: fall linear forwards; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="emoji">❤️ 🌸 🎆 ✨ 🎉</div>
+    <h1>Size daha iyi hizmet verebilmek için<br/>uygulamamızda <u>bazı değişiklikler</u> yapıyoruz.</h1>
+    <p>Kısacık bir bakım sürecindeyiz. Çok yakında <strong>takascemberi.com</strong> yeniden yayında olacak.<br/> İlginiz ve sabrınız için teşekkür ederiz!</p>
+    <div class="emoji">🎇 💜 🎉</div>
+    <div class="footer">© Takas Çemberi • takascemberi.com</div>
+  </div>
+  <div class="confetti" id="confetti"></div>
+  <script>
+    const colors = ["#ff6b6b","#feca57","#1dd1a1","#54a0ff","#5f27cd","#ee5253","#10ac84"];
+    const confettiContainer = document.getElementById('confetti');
+    for(let i=0;i<150;i++){
+      const piece=document.createElement('div');
+      piece.className='confetti-piece';
+      piece.style.left=Math.random()*100+'%';
+      piece.style.background=colors[Math.floor(Math.random()*colors.length)];
+      piece.style.animationDuration=(3+Math.random()*5)+'s';
+      piece.style.width=piece.style.height=(6+Math.random()*6)+'px';
+      confettiContainer.appendChild(piece);
+    }
+  </script>
+</body>
+</html>
